@@ -1,4 +1,4 @@
-package com.example.ooad.controller;
+package com.oo.controller;
 
 import lombok.Getter;
 import lombok.Setter;

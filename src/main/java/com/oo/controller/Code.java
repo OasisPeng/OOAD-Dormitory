@@ -1,6 +1,4 @@
-package com.example.ooad.controller;
-
-import java.lang.reflect.ParameterizedType;
+package com.oo.controller;
 
 public class Code {
         public static final Integer SAVE_OK = 20011;
