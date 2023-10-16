@@ -1,6 +1,7 @@
 package com.oo.controller;
 
-import com.example.ooad.service.StudentService;
+
+import com.oo.service.impl.StudentServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class Login {
     @Autowired
-    StudentService service;
+    StudentServiceImpl service;
 
     @PostMapping("/login")
     @ResponseBody
