@@ -23,6 +23,7 @@ public class DormController {
     DormServiceImpl dormService;
     @PostMapping
     public Result insert(@RequestBody Dorm dorm) {
+        System.out.println(dorm);
         boolean flag = dormService.insert(dorm);
         Result result = new Result();
         if (flag) {

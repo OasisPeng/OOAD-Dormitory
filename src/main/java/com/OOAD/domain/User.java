@@ -1,6 +1,7 @@
 package com.OOAD.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import java.io.Serializable;
 import lombok.Data;
@@ -16,6 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@TableName("users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,8 +55,8 @@ public class User implements Serializable {
 
     private String isQuiet;
 
-    @TableField("characters")
-    private String character;
+
+    private String characters;
 
 
 }

@@ -27,17 +27,15 @@ public class DormServiceImpl implements IDormService {
     DormDao dormDao;
     @Override
     public boolean insert(Dorm dorm) {
-        Dorm ori = dormDao.selectById(dorm.getId());
-        if (ori != null) {
+        LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Dorm::getDistribution, dorm.getDistribution()).eq(Dorm::getBuilding, dorm.getBuilding()).eq(Dorm::getRoom, dorm.getRoom());;
+        List<Dorm> dorms = dormDao.selectList(lqw);
+        System.out.println(dorms);
+        if (!dorms.isEmpty()) {
             return false;
-        } else {
-            int i = dormDao.insert(dorm);
-            if (i == 1) {
-                return true;
-            } else {
-                return false;
-            }
         }
+            int i = dormDao.insert(dorm);
+        return i == 1;
     }
 
     @Override
@@ -52,6 +50,7 @@ public class DormServiceImpl implements IDormService {
 
     @Override
     public Dorm selectByID(int id) {
+
         Dorm dorm = dormDao.selectById(id);
         if (dorm == null) {
             return null;
