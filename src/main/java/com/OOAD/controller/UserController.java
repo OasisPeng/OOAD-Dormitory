@@ -101,7 +101,25 @@ public class UserController {
         }
         return result;
     }
-
+    @GetMapping("/team/{id}")
+    public Result getTeamID(@PathVariable int id){
+        int teamid = userService.selectTeamID(id);
+        Result result = new Result();
+        if (teamid == -1) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("用户不存在请重试");
+        } else if (teamid == -2){
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("用户尚未加入组队");
+        } else {
+            result.setData(teamid);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
 }
 
 

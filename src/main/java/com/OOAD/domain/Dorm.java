@@ -28,7 +28,7 @@ public class Dorm implements Serializable {
 
     private String building;
 
-    private Integer floor;
+    private Integer room;
 
     private Integer favourite;
 

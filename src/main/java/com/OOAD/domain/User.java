@@ -1,5 +1,6 @@
 package com.OOAD.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.Version;
 import java.io.Serializable;
 import lombok.Data;
@@ -52,7 +53,8 @@ public class User implements Serializable {
 
     private String isQuiet;
 
-    private String characters;
+    @TableField("characters")
+    private String character;
 
 
 }

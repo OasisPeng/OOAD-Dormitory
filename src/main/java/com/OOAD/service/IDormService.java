@@ -1,8 +1,11 @@
 package com.OOAD.service;
 
 import com.OOAD.domain.Dorm;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,5 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface IDormService {
-
+    public boolean insert(Dorm dorm);
+    public boolean deleteByID(int id);
+    public Dorm selectByID(int id);
+    public boolean updateByID(Dorm dorm);
+    public List<Dorm> getAll();
+    public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis);
+    public List<Dorm> selectByBuilding(int pageSize, int pageNumber, String building);
+    public List<Dorm> selectByRoomNumber(int pageSize, int pageNumber, String building, String roomNumber);
 }

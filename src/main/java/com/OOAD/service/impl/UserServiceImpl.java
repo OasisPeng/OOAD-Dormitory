@@ -82,4 +82,16 @@ public class UserServiceImpl implements IUserService {
             return false;
         }
     }
+
+    @Override
+    public int selectTeamID(int id) {
+        User user = userDao.selectById(id);
+        if (user == null) {
+            return -1;
+        } else if (user.getTeamId() == null) {
+            return -2;
+        } else {
+            return user.getTeamId();
+        }
+    }
 }

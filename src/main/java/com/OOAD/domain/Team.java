@@ -25,6 +25,7 @@ public class Team implements Serializable {
     private Integer id;
 
     private Integer head_Id;
-
+    @Version
+    private Integer version;
 
 }

@@ -26,4 +26,5 @@ public interface IUserService {
     public boolean deleteById(int id);
 
     public boolean insert(User user);
+    public int selectTeamID(int id);
 }

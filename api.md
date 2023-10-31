@@ -2,7 +2,7 @@
 
 ## Restful风格
 
-​	我们所有开发的接口都是restful风格的接口，对于某一个类的方法接口名字都是一样的，区别在于访问的方法，例如对于 user/{1}, method = GET, 表示获得id == 1的user的信息，同样的user/{1}, method = delete，表示删除id == 1的user信息以此类推。
+​	我们所有开发的接口都是restful风格的接口，对于某一个类的方法接口名字都是一样的，区别在于访问的方法，例如对于 user/{1}, method = GET, 表示获得id == 1的user的信息，同样的user/{1}, method = delete，表示删除id == 1的user信息以此类推。**用{}扩起来的表示路径参数需要通过访问路径传递，但是传的时候不用加上{}**
 
 ## 返回格式
 
@@ -14,7 +14,7 @@
 
 # 接口文档
 
-## login接口
+## login接口Y
 
 ### 处理登录请求
 
@@ -48,7 +48,7 @@ message：登录失败，账户名或者密码错误
 
 ## User相关接口
 
-## 返回所有用户
+## 返回所有用户Y
 
 访问接口：/users
 
@@ -72,7 +72,7 @@ code: 2011
 
 message: 查询全部用户失败，请检查网络
 
-### 查询一个用户
+### 查询一个用户Y
 
 接收数据：无
 
@@ -98,13 +98,15 @@ code: 2011
 
 message: 查询失败，用户不存在
 
-### 更新一个用户
+### 更新一个用户Y
 
 接收数据：User
 
-访问接口：/user/{id}
+（这里之间通过传过来的user的id进行匹配，所以就不用传别的路径参数了）
 
-方法：update
+访问接口：/user
+
+方法：put
 
 #### 返回值
 
@@ -124,7 +126,7 @@ code：2021
 
 message：更新失败，请重试
 
-### 删除一个用户
+### 删除一个用户Y
 
 接收数据：无
 
@@ -150,13 +152,13 @@ code：2031
 
 message：删除失败，请重试
 
-### 增加一个用户
+### 增加一个用户Y
 
 接收数据：User
 
 访问接口：/user
 
-方法：insert
+方法：post
 
 #### 返回值
 
@@ -176,9 +178,43 @@ code：2041
 
 message：增加失败，请重试
 
+## 查询当前用户组队idY
+
+接收数据：User
+
+访问接口：/user/team/{id}
+
+方法：GET
+
+#### 返回值
+
+##### 成功
+
+data：组队id
+
+code：2010
+
+message：查询成功
+
+##### 失败分两种
+
+data：Err
+
+code：2011
+
+message：用户不存在，请重试
+
+第二种
+
+data：Err
+
+code：2011
+
+message：用户尚未加入组队
+
 ## Dorm相关接口
 
-## 返回所有寝室
+## 返回所有寝室Y
 
 访问接口：/dorms
 
@@ -202,7 +238,7 @@ code: 2011
 
 message: 查询全部寝室失败，请检查网络
 
-### 查询一个寝室
+### 查询一个寝室Y
 
 接收数据：无
 
@@ -228,13 +264,13 @@ code: 2011
 
 message: 查询失败，寝室不存在
 
-### 更新一个寝室
+### 更新一个寝室Y
 
 接收数据：Dorm
 
-访问接口：/dorm/{id}
+访问接口：/dorm
 
-方法：update
+方法：put
 
 #### 返回值
 
@@ -254,7 +290,7 @@ code：2021
 
 message：更新失败，请重试
 
-### 删除一个寝室
+### 删除一个寝室Y
 
 接收数据：无
 
@@ -280,13 +316,13 @@ code：2031
 
 message：删除失败，请重试
 
-### 增加一个寝室
+### 增加一个寝室Y
 
 接收数据：Drom
 
 访问接口：/dorm
 
-方法：insert
+方法：post
 
 #### 返回值
 
@@ -306,11 +342,11 @@ code：2041
 
 message：增加失败，请重试
 
-### 条件查询寝室1（根据distribution）
+### 条件查询寝室1（根据distribution）Y
 
 接收数据：pageSize，pageNum，distribution
 
-访问接口：/dorm2/{distribution}
+访问接口：/dorm2/{distribution}?pageSize=xx&pageNum=xx
 
 方法：GET
 
@@ -332,11 +368,11 @@ code：2011
 
 message：查询失败，请重试
 
-### 条件查询寝室2（根据building）
+### 条件查询寝室2（根据building）Y
 
 接收数据：pageSize，pageNum，building
 
-访问接口：/dorm3/{building}
+访问接口：/dorm3/{building}?pageSize=xx&pageNum=xx
 
 方法：GET
 
@@ -358,11 +394,11 @@ code：2011
 
 message：查询失败，请重试
 
-### 条件查询寝室3根据（building， roomNumber）
+### 条件查询寝室3根据（building， roomNumber）Y
 
 接收数据：pageSize，pageNum，building， roomNumber
 
-访问接口：/dorm3/{building}/{} roomNumber}
+访问接口：/dorm3/{building}/{roomNumber}?pageSize=xx&pageNum=xx
 
 方法：GET
 
@@ -440,9 +476,9 @@ message: 查询失败，组队不存在
 
 接收数据：Team
 
-访问接口：/Team/{id}
+访问接口：/Team
 
-方法：update
+方法：put
 
 #### 返回值
 
@@ -494,7 +530,7 @@ message：删除失败，请重试
 
 访问接口：/team
 
-方法：insert
+方法：post
 
 #### 返回值
 
@@ -520,7 +556,7 @@ message：增加失败，请重试
 
 访问接口：/{teamID}/{id}
 
-方法：insert
+方法：post
 
 #### 返回值
 
