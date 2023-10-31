@@ -1,7 +1,6 @@
 package com.example.ooad;
 
 import com.example.ooad.bean.Team;
-import com.example.ooad.dao.TeamDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

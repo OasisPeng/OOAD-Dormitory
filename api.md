@@ -24,7 +24,7 @@ id：xxxxx
 
 password：xxxx
 
-接口：/login
+接口：admin(或者user)/login
 
 方法：post
 
@@ -40,7 +40,7 @@ message：登录成功
 
 ##### 失败
 
-data：字符串Error
+data：Error
 
 code: 2001
 
@@ -86,7 +86,7 @@ message: 查询全部用户失败，请检查网络
 
 data: User
 
-code: 2020
+code: 2010
 
 message: 查询成功
 
@@ -94,7 +94,7 @@ message: 查询成功
 
 data: Err
 
-code: 2021
+code: 2011
 
 message: 查询失败，用户不存在
 
@@ -112,7 +112,7 @@ message: 查询失败，用户不存在
 
 data：OK
 
-code：2030
+code：2020
 
 message：更新成功
 
@@ -120,7 +120,7 @@ message：更新成功
 
 data：Err
 
-code：2031
+code：2021
 
 message：更新失败，请重试
 
@@ -138,7 +138,7 @@ message：更新失败，请重试
 
 data：OK
 
-code：2040
+code：2030
 
 message：删除成功
 
@@ -146,7 +146,7 @@ message：删除成功
 
 data：Err
 
-code：2041
+code：2031
 
 message：删除失败，请重试
 
@@ -164,7 +164,7 @@ message：删除失败，请重试
 
 data：OK
 
-code：2050
+code：2040
 
 message：增加成功
 
@@ -172,7 +172,7 @@ message：增加成功
 
 data：Err
 
-code：2051
+code：2041
 
 message：增加失败，请重试
 
@@ -190,7 +190,7 @@ message：增加失败，请重试
 
 data: List<Dorm>
 
-code: 3000
+code: 2010
 
 message: 查询全部寝室成功
 
@@ -198,7 +198,7 @@ message: 查询全部寝室成功
 
 data: Err
 
-code: 3001
+code: 2011
 
 message: 查询全部寝室失败，请检查网络
 
@@ -216,7 +216,7 @@ message: 查询全部寝室失败，请检查网络
 
 data: Dorm
 
-code: 3010
+code: 2010
 
 message: 查询成功
 
@@ -224,7 +224,7 @@ message: 查询成功
 
 data: Err
 
-code: 3031
+code: 2011
 
 message: 查询失败，寝室不存在
 
@@ -242,7 +242,7 @@ message: 查询失败，寝室不存在
 
 data：OK
 
-code：3030
+code：2020
 
 message：更新成功
 
@@ -250,7 +250,7 @@ message：更新成功
 
 data：Err
 
-code：3031
+code：2021
 
 message：更新失败，请重试
 
@@ -268,7 +268,7 @@ message：更新失败，请重试
 
 data：OK
 
-code：3040
+code：2030
 
 message：删除成功
 
@@ -276,7 +276,7 @@ message：删除成功
 
 data：Err
 
-code：3041
+code：2031
 
 message：删除失败，请重试
 
@@ -294,7 +294,7 @@ message：删除失败，请重试
 
 data：OK
 
-code：3050
+code：2040
 
 message：增加成功
 
@@ -302,7 +302,7 @@ message：增加成功
 
 data：Err
 
-code：3051
+code：2041
 
 message：增加失败，请重试
 
@@ -320,7 +320,7 @@ message：增加失败，请重试
 
 data：List<Dorm>
 
-code：3060
+code：2010
 
 message：查询成功
 
@@ -328,7 +328,7 @@ message：查询成功
 
 data：Err
 
-code：3061
+code：2011
 
 message：查询失败，请重试
 
@@ -346,7 +346,7 @@ message：查询失败，请重试
 
 data：List<Dorm>
 
-code：3070
+code：2010
 
 message：查询成功
 
@@ -354,7 +354,7 @@ message：查询成功
 
 data：Err
 
-code：3071
+code：2011
 
 message：查询失败，请重试
 
@@ -372,7 +372,7 @@ message：查询失败，请重试
 
 data：Dorm
 
-code：3080
+code：2010
 
 message：查询成功
 
@@ -380,7 +380,7 @@ message：查询成功
 
 data：Err
 
-code：3081
+code：2011
 
 message：查询失败，请重试
 
@@ -398,7 +398,7 @@ message：查询失败，请重试
 
 data: List<Team>
 
-code: 4000
+code: 2010
 
 message: 查询全部组队成功
 
@@ -406,7 +406,7 @@ message: 查询全部组队成功
 
 data: Err
 
-code: 4001
+code: 2011
 
 message: 查询全部组队失败，请重试
 
@@ -424,7 +424,7 @@ message: 查询全部组队失败，请重试
 
 data: Team
 
-code: 4010
+code: 2010
 
 message: 查询成功
 
@@ -432,7 +432,7 @@ message: 查询成功
 
 data: Err
 
-code: 4011
+code: 2011
 
 message: 查询失败，组队不存在
 
@@ -450,7 +450,7 @@ message: 查询失败，组队不存在
 
 data：OK
 
-code：4030
+code：2020
 
 message：更新成功
 
@@ -458,7 +458,7 @@ message：更新成功
 
 data：Err
 
-code：4031
+code：2021
 
 message：更新失败，请重试
 
@@ -476,7 +476,7 @@ message：更新失败，请重试
 
 data：OK
 
-code：4040
+code：2030
 
 message：删除成功
 
@@ -484,7 +484,7 @@ message：删除成功
 
 data：Err
 
-code：4041
+code：2031
 
 message：删除失败，请重试
 
@@ -502,7 +502,7 @@ message：删除失败，请重试
 
 data：OK
 
-code：4050
+code：2040
 
 message：增加成功
 
@@ -510,7 +510,7 @@ message：增加成功
 
 data：Err
 
-code：4051
+code：2041
 
 message：增加失败，请重试
 
@@ -528,7 +528,7 @@ message：增加失败，请重试
 
 data：OK
 
-code：4060
+code：2040
 
 message：添加成功
 
@@ -536,7 +536,7 @@ message：添加成功
 
 data：Err
 
-code：4061
+code：2041
 
 message：添加失败，请重试
 
