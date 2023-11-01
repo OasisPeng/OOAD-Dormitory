@@ -1,14 +1,11 @@
 package com.OOAD.controller;
 
 
+import com.OOAD.domain.Account;
 import com.OOAD.domain.Admin;
 import com.OOAD.service.impl.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -25,7 +22,9 @@ public class AdminController {
     AdminServiceImpl adminService;
 
     @PostMapping("/login")
-    public Result loginCheck(@RequestParam("id") int id, @RequestParam("password") String password) {
+    public Result loginCheck(@RequestBody Account account) {
+        int id = account.getUsername();
+        String password = account.getPassword();
         Admin admin = adminService.login(id, password);
         Result result = new Result();
         if (admin == null) {

@@ -24,7 +24,7 @@ public class Admin implements Serializable {
     private int id;
     private String password;
     @Version
-    private Integer version;
+    private int version;
 
 
 }

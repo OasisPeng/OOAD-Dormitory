@@ -1,8 +1,10 @@
 package com.OOAD.controller;
 
 
+import com.OOAD.domain.Account;
 import com.OOAD.domain.User;
 import com.OOAD.service.impl.UserServiceImpl;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,9 @@ public class UserController {
     UserServiceImpl userService;
 
     @PostMapping("/login")
-    public Result loginCheck(@RequestParam("id") int id, @RequestParam("password") String password) {
+    public Result loginCheck(@RequestBody Account account) {
+        int id = account.getUsername();
+        String password = account.getPassword();
         User user = userService.login(id, password);
         Result result = new Result();
         if (user == null) {
