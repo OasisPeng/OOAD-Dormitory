@@ -19,6 +19,7 @@ import java.util.List;
  * @author hailong
  * @since 2023-10-30
  */
+@CrossOrigin(origins = "localhost:8080")
 @RestController
 @RequestMapping("/user")
 public class UserController {

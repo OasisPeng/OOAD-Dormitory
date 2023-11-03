@@ -38,7 +38,7 @@
                       fill="#ffffff" p-id="3809"></path></svg>
                 </span>
             <span>用户名</span>
-            <input maxlength="16" placeholder="   UserName" type="text">
+            <input maxlength="16" placeholder="loginUsername" type="text">
           </label>
         </div>
         <div class="password">
@@ -52,7 +52,7 @@
                       fill="#ffffff" p-id="4679"></path></svg>
                 </span>
             <span>密码</span>
-            <input maxlength="16" placeholder="   Password" type="password">
+            <input maxlength="16" placeholder="loginPassword" type="password">
           </label>
         </div>
         <div class="buttons2">
@@ -155,23 +155,26 @@ export default {
       this.button1Visible=false;
       this.button2Visible =false;
     },
-    async login() {
-      try {
-        const response = await axios.post('/user/login', {
-          username: this.loginUsername,
-          password: this.loginPassword,
-        });
-        if (response.data.success) {
+    login() {
+      //去后台验证用户密码
+      this.$axios.post(this.$httpUrl+'/user/login',{
+        username: this.loginUsername,
+        password: this.loginPassword,
+      }).then(res=>res.data).then(res=>{
+        console.log(this.loginUsername)
+        console.log(this.loginPassword)
+        console.log(res)
+        if (res.data.code===2000) {
           // 登录成功，可以执行相应操作，如跳转页面
-          console.log('登录成功');
+          this.$router.push({ name: 'index' });
+          console.log(res.data.msg);
+
         } else {
           // 登录失败，可以显示错误消息
-          console.log('登录失败');
+          console.log(res.data.msg);
         }
-      } catch (error) {
-        console.error('登录出错', error);
-      }
-      await this.$router.push({ name: 'index' });
+      })
+
 
     },
 
