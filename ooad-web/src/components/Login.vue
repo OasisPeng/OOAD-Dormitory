@@ -130,6 +130,7 @@
 
 <script>
 import { onMounted, ref } from "vue";
+import axios from 'axios';
 export default {
   name: 'Login',
   data() {
@@ -154,12 +155,48 @@ export default {
       this.button1Visible=false;
       this.button2Visible =false;
     },
-    login() {
+    async login() {
+      try {
+        const response = await axios.post('/user/login', {
+          username: this.loginUsername,
+          password: this.loginPassword,
+        });
+        if (response.data.success) {
+          // 登录成功，可以执行相应操作，如跳转页面
+          console.log('登录成功');
+        } else {
+          // 登录失败，可以显示错误消息
+          console.log('登录失败');
+        }
+      } catch (error) {
+        console.error('登录出错', error);
+      }
+      await this.$router.push({ name: 'index' });
 
     },
-    check() {
 
+    async check() {
+      try {
+        const response = await axios.post('/api/check', {
+          username: this.loginUsername,
+          password: this.loginPassword,
+        });
+        if (response.data.valid) {
+          // 用户名和密码匹配
+          console.log('用户名和密码匹配');
+        } else {
+          // 用户名和密码不匹配
+          console.log('用户名和密码不匹配');
+        }
+      } catch (error) {
+        console.error('验证出错', error);
+      }
     },
+
+
+
+
+
     out() {
       this.loginDialogVisible = false;
       this.registerDialogVisible= false;

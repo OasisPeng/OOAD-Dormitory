@@ -43,7 +43,7 @@ export default {
             <el-header style="text-align: right; font-size: 12px;height: 100%;border-bottom: rgba(108,108,108,0.3) 1px solid" >
                 <Header @doCollapse="doCollapse" :icon="icon"></Header>
             </el-header>
-<!--            三-->
+<!--         三-->
             <el-main style="height: 100%;">
                 <router-view/>
             </el-main>

@@ -1,11 +1,11 @@
 import VueRouter  from 'vue-router';
 
 const routes =[
-    // {
-    //     path:'/',
-    //     name:'login',
-    //     component:()=>import('../components/Login')
-    // },
+    {
+        path:'/',
+        name:'login',
+        component:()=>import('../components/Login')
+    },
     {
         path: '/',
         name: 'index',
@@ -90,9 +90,28 @@ const routes =[
                     title: '收藏'
                 },
                 component: () => import('../components/home/MyPrefer.vue')
-            }
+            },
+            {
+                path: '/HuPanDormitoryView.vue',
+                name: 'huPanDormitoryView.vue',
+                meta: {
+                    title: '湖畔寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/HuPanDormitoryView.vue')
+            },
+            // {
+            //     path: '/Login.vue',
+            //     name: 'login.vue',
+            //     meta: {
+            //         title: '湖畔寝室查看' // 自定义页面标题
+            //     },
+            //     component: () => import('../components/roommates/Login.vue')
+            // }
+
         ]
-    }
+    },
+
+
 ]
 
 const router = new VueRouter({
