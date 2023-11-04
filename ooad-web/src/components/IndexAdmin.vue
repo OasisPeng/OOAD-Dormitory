@@ -1,0 +1,68 @@
+<script>
+
+
+import Aside from "@/components/Aside.vue";
+import Header from "@/components/Header.vue";
+import AsideAdmin from "@/components/AsideAdmin.vue";
+
+export default {
+    name:"IndexAdmin",
+    components: {
+        AsideAdmin,
+        Header,
+        Aside
+    },
+    methods:{
+        doCollapse(){
+            this.isCollapse=!this.isCollapse
+            if(!this.isCollapse){//展开
+                this.aside_width='200px'
+                this.icon='el-icon-s-fold'
+            }else {
+                this.aside_width='64px'
+                this.icon='el-icon-s-unfold'
+            }
+        }
+    },
+    data(){
+        return{
+            isCollapse:false,
+            aside_width:'200px',
+            icon:'el-icon-s-fold'
+        }
+    }
+};
+</script>
+
+<template>
+    <el-container style="height: 100%; border: 1px solid #eee">
+        <!--        一-->
+        <el-aside :width="aside_width" style="height: 100vh;background-color: rgb(238, 241, 246);margin-left: -1px;">
+            <AsideAdmin :isCollapse="isCollapse"></AsideAdmin>
+        </el-aside>
+        <!--        二-->
+        <el-container style="height: 100%;">
+            <el-header style="text-align: right; font-size: 12px;height: 100%;border-bottom: rgba(108,108,108,0.3) 1px solid" >
+                <Header @doCollapse="doCollapse" :icon="icon"></Header>
+            </el-header>
+            <!--         三-->
+            <el-main style="height: 100%;">
+                <router-view/>
+            </el-main>
+        </el-container>
+    </el-container>
+</template>
+
+<style scoped>
+.el-header {
+##background-color: #B3C0D1;
+    color: #333;
+    line-height: 60px;
+}
+.el-main {
+    padding: 5px;
+}
+.el-aside {
+    color: #333;
+}
+</style>

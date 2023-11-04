@@ -7,7 +7,7 @@ const routes =[
         component:()=>import('../components/Login')
     },
     {
-        path: '/',
+        path: '/index',
         name: 'index',
         component:()=>import('../components/Index'),
         children:[
@@ -107,6 +107,47 @@ const routes =[
             //     },
             //     component: () => import('../components/roommates/Login.vue')
             // }
+
+        ]
+    },
+    {
+        path: '/indexAdmin',
+        name: 'indexAdmin',
+        component:()=>import('../components/IndexAdmin'),
+        children:[
+
+            {
+                path: '/DormitoryManage',
+                name: 'dormitoryManage',
+                meta: {
+                    title: '寝室管理'
+                },
+                component: () => import('../components/Admin/DormitoryManage.vue')
+            },
+            {
+                path: '/OpenSystem',
+                name: 'openSystem',
+                meta: {
+                    title: '开放系统'
+                },
+                component: () => import('../components/Admin/OpenSystem.vue')
+            },
+            {
+                path: '/SendBroadcast',
+                name: 'sendBroadcast',
+                meta: {
+                    title: '发送广播'
+                },
+                component: () => import('../components/Admin/SendBroadcast.vue')
+            },
+            {
+                path: '/StudentManage',
+                name: 'studentManage',
+                meta: {
+                    title: '学生管理'
+                },
+                component: () => import('../components/Admin/StudentManage.vue')
+            },
 
         ]
     },

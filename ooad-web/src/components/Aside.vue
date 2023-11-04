@@ -1,9 +1,12 @@
 <script>
+ import {computed} from "vue/src/v3";
+
  export default {
      name: "Aside",
      data(){
          return{
             // isCollapse:false,
+             user:JSON.parse(sessionStorage.getItem('CurUser')),
              menu:[
                  {
                      menuClick:'DormitoryView',
@@ -24,39 +27,19 @@
                      menuClick:'Post',
                      menuName:'帖子广场',
                      menuIcon:'el-icon-s-promotion'
-                 },
-                 // {
-                 //     menuClick:'DormitoryManage',
-                 //     menuName:'寝室管理',
-                 //     menuIcon:'el-icon-s-order'
-                 // },
-                 // {
-                 //     menuClick:'StudentManage',
-                 //     menuName:'学生管理',
-                 //     menuIcon:'el-icon-user-solid'
-                 // },
-                 // {
-                 //     menuClick:'Broadcast',
-                 //     menuName:'发送广播',
-                 //     menuIcon:'el-icon-s-promotion'
-                 // },
-                 // {
-                 //     menuClick:'OpenSystem',
-                 //     menuName:'开放系统',
-                 //     menuIcon:'el-icon-s-opportunity'
-                 // },
+                 }
              ]
-
          }
      },
-     // computed:{
-     //   "menu":{
-     //       get(){//将菜单状态从store中取出来
-     //           console.log(this.$store.state.menu)
-     //           return this.$store.state.menu
-     //       }
-     //   }
-     // },
+     computed:{
+       // "menu":{
+       //     get(){//将菜单状态从store中取出来
+       //         console.log(this.$store.state.menu)
+       //         return this.$store.state.menu
+       //     }
+       // }
+
+     },
      props:{
          isCollapse:Boolean
      }
