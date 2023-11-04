@@ -38,7 +38,7 @@
                       fill="#ffffff" p-id="3809"></path></svg>
                 </span>
             <span>用户名</span>
-            <input maxlength="16" placeholder="loginUsername" type="text">
+            <input maxlength="16" placeholder="   UserName" type="text" v-model="loginUsername">
           </label>
         </div>
         <div class="password">
@@ -52,7 +52,7 @@
                       fill="#ffffff" p-id="4679"></path></svg>
                 </span>
             <span>密码</span>
-            <input maxlength="16" placeholder="loginPassword" type="password">
+            <input maxlength="16" placeholder="   Password" type="password" v-model="loginPassword">
           </label>
         </div>
         <div class="buttons2">
@@ -155,29 +155,51 @@ export default {
       this.button1Visible=false;
       this.button2Visible =false;
     },
-    login() {
-      //去后台验证用户密码
-      this.$axios.post(this.$httpUrl+'/user/login',{
-        username: this.loginUsername,
-        password: this.loginPassword,
-      }).then(res=>res.data).then(res=>{
-        console.log(this.loginUsername)
-        console.log(this.loginPassword)
-        console.log(res)
-        if (res.data.code===2000) {
-          // 登录成功，可以执行相应操作，如跳转页面
-          this.$router.push({ name: 'index' });
-          console.log(res.data.msg);
+    // async login() {
+    //   try {
+    //     const response = await this.$axios.post('localhost:8090/user/login', {
+    //       username: this.loginUsername,
+    //       password: this.loginPassword,
+    //     });
+    //     if (response.data.code===2000) {
+    //       // 登录成功，可以执行相应操作，如跳转页面
+    //       await this.$router.push({ name: 'index' });
+    //       console.log(response.data.msg);
+    //
+    //     } else {
+    //       // 登录失败，可以显示错误消息
+    //       console.log(response.data.msg);
+    //     }
+    //   } catch (error) {
+    //     console.error('登录出错', error);
+    //   }
+    //
+    // },
 
-        } else {
-          // 登录失败，可以显示错误消息
-          console.log(res.data.msg);
-        }
-      })
+    login() {
+          //去后台验证用户密码
+          this.$axios.post(this.$httpUrl+'/user/login',{
+                  username: this.loginUsername,
+                  password: this.loginPassword,
+                },{
+            withCredentials: true // 允许跨域请求中的Cookie
+          }).then(res=>res.data).then(res=>{
+            console.log(this.loginUsername)
+            console.log(this.loginPassword)
+            console.log(res)
+                if (res.data.code===2000) {
+                        // 登录成功，可以执行相应操作，如跳转页面
+                  this.$router.push({ name: 'index' });
+                  console.log(res.data.msg);
+
+                      } else {
+                        // 登录失败，可以显示错误消息
+                        console.log(res.data.msg);
+                      }
+          })
 
 
     },
-
     async check() {
       try {
         const response = await axios.post('/api/check', {
