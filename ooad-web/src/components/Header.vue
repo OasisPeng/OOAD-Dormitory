@@ -60,11 +60,7 @@
           icon:String
       },
       created() {
-          if(this.user.roleId===1) {
-              this.$router.push("/Home")
-          } else {
-              this.$router.push("/DormitoryManage")
-          }
+          this.$router.push("/Home")
       }
   };
 </script>

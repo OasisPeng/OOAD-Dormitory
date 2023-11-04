@@ -4,10 +4,12 @@
 import Aside from "@/components/Aside.vue";
 import Header from "@/components/Header.vue";
 import AsideAdmin from "@/components/AsideAdmin.vue";
+import HeaderAdmin from "@/components/HeaderAdmin.vue";
 
 export default {
     name:"IndexAdmin",
     components: {
+        HeaderAdmin,
         AsideAdmin,
         Header,
         Aside
@@ -43,7 +45,7 @@ export default {
         <!--        二-->
         <el-container style="height: 100%;">
             <el-header style="text-align: right; font-size: 12px;height: 100%;border-bottom: rgba(108,108,108,0.3) 1px solid" >
-                <Header @doCollapse="doCollapse" :icon="icon"></Header>
+                <HeaderAdmin @doCollapse="doCollapse" :icon="icon"></HeaderAdmin>
             </el-header>
             <!--         三-->
             <el-main style="height: 100%;">
