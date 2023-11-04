@@ -7,7 +7,7 @@ const routes =[
         component:()=>import('../components/Login')
     },
     {
-        path: '/index',
+        path: '/',
         name: 'index',
         component:()=>import('../components/Index'),
         children:[

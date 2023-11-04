@@ -1,5 +1,4 @@
 <script>
- import {computed} from "vue/src/v3";
 
  export default {
      name: "Aside",
