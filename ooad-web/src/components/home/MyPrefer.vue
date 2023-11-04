@@ -120,7 +120,7 @@ export default {
             // })
         }
     },
-    beforeMount() {
+    beforeMount() { //beforeMount 是Vue.js生命周期钩子函数之一，它在Vue组件实例被挂载到DOM之前执行。这个钩子允许您在组件渲染到页面之前执行一些逻辑和准备工作。
         this.loadPost();
     },
     data() {

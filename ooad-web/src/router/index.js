@@ -7,7 +7,7 @@ const routes =[
         component:()=>import('../components/Login')
     },
     {
-        path: '/',
+        path: '/Index',
         name: 'index',
         component:()=>import('../components/Index'),
         children:[
@@ -68,14 +68,6 @@ const routes =[
                 component: () => import('../components/dormitory/DormitoryView.vue')
             },
             {
-                path: '/DormitoryManage',
-                name: 'dormitoryManage',
-                meta: {
-                    title: '寝室管理'
-                },
-                component: () => import('../components/Admin/DormitoryManage.vue')
-            },
-            {
                 path: '/Home',
                 name: 'home',
                 meta: {
@@ -111,7 +103,7 @@ const routes =[
         ]
     },
     {
-        path: '/indexAdmin',
+        path: '/IndexAdmin',
         name: 'indexAdmin',
         component:()=>import('../components/IndexAdmin'),
         children:[
@@ -133,7 +125,7 @@ const routes =[
                 component: () => import('../components/Admin/OpenSystem.vue')
             },
             {
-                path: '/SendBroadcast',
+                path: '/Broadcast',
                 name: 'sendBroadcast',
                 meta: {
                     title: '发送广播'
@@ -151,8 +143,6 @@ const routes =[
 
         ]
     },
-
-
 ]
 
 const router = new VueRouter({
