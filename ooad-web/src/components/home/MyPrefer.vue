@@ -166,7 +166,6 @@ export default {
                             <el-row>
                                 <el-button type="text" class="button" style="margin-left: 7px;">查看详情</el-button>
                                 <el-button type="text" class="button">取消收藏</el-button>
-                                <el-button type="text" class="button" disabled>申请该寝室</el-button>
                             </el-row>
                         </div>
                     </div>
@@ -180,7 +179,6 @@ export default {
                         <div class="bottom clearfix">
                             <el-button type="text" class="button" style="margin-left: 7px;">查看详情</el-button>
                             <el-button type="text" class="button">取消收藏</el-button>
-                            <el-button type="text" class="button" disabled>申请该寝室</el-button>
                         </div>
                     </div>
                 </el-card>
