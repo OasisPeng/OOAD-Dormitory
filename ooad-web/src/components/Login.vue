@@ -210,15 +210,16 @@ export default {
                   password: this.loginPassword,
                 },{
             withCredentials: true // 允许跨域请求中的Cookie
-          }).then(res=>res.data).then(res=>{
+          }).then(res=>{
             console.log(this.loginUsername)
             console.log(this.loginPassword)
             console.log(res)
                 if (res.data.code===2000) {
-                        // 登录成功，可以执行相应操作，如跳转页面
-                  this.$router.push({ name: 'index' });
-                  console.log(res.data.msg);
-
+                        // 登录成功，可以执行相应操作，如跳转页
+                    this.$router.push({ name: 'index' });
+                    console.log(res.data.msg);
+                    sessionStorage.setItem("CurUser",JSON.stringify(res.data.data))
+                    console.log(JSON.parse(sessionStorage.getItem('CurUser')))
                       } else {
                         // 登录失败，可以显示错误消息
                         console.log(res.data.msg);

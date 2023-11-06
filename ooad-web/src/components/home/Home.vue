@@ -17,7 +17,7 @@
                   nap:'偶尔',
                   temperature:'26度及以上',
                   isQuiet:'安静',
-                  character:'社恐型',
+                  characters:'社恐型',
                   hobbies:null
                   //['游戏','摄影','KPOP']
               },
