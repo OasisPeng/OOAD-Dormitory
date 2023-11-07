@@ -422,6 +422,8 @@ message：查询失败，请重试
 
 ## Team接口
 
+![](pic/team.png)
+
 ## 返回所有组队
 
 访问接口：/teams
