@@ -23,9 +23,14 @@ public class Team implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
-    private Integer head_Id;
+    //队长的学号
+    private Integer headId;
     @Version
     private Integer version;
-
+    //容量
+    private Integer capacity;
+    //选择房间号
+    private Integer dorm;
+    //当前人数
+    private Integer current;
 }

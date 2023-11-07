@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-10-30
  */
 @Mapper
-public interface StudentDao extends BaseMapper<User> {
+public interface UserDao extends BaseMapper<User> {
 
 }

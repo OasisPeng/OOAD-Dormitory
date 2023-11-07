@@ -1,6 +1,5 @@
 package com.OOAD.service;
 
-import com.OOAD.domain.Msg;
 import org.springframework.transaction.annotation.Transactional;
 
 

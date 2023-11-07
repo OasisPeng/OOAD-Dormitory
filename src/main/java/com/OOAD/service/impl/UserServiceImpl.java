@@ -1,6 +1,6 @@
 package com.OOAD.service.impl;
 
-import com.OOAD.dao.StudentDao;
+import com.OOAD.dao.UserDao;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements IUserService {
     @Autowired
-    StudentDao userDao;
+    UserDao userDao;
     @Override
     public User login(int id, String password) {
         User user = userDao.selectById(id);

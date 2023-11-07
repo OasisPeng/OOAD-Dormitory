@@ -4,6 +4,8 @@ import com.OOAD.domain.Team;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -14,5 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface ITeamService {
-
+    public Team selectByID(int id);
+    public List<Team> selectAll();
+    public int addUser(int teamID, int userID);
+    public int deleteUser(int teamID, int userID);
+    public int creat(Team team);
 }

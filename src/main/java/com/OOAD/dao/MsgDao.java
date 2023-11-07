@@ -1,6 +1,6 @@
 package com.OOAD.dao;
 
-import com.OOAD.domain.Msg;
+import com.OOAD.domain.DormMsg;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,6 +14,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
 @Mapper
-public interface MsgDao extends BaseMapper<Msg> {
+public interface MsgDao extends BaseMapper<DormMsg> {
 
 }

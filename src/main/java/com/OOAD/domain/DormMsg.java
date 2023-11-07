@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Msg implements Serializable {
+public class DormMsg implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class Msg implements Serializable {
     private Integer id;
 
     private LocalDate time;
-
+    private Integer grades;
     private Integer owner;
 
     private Integer type;
