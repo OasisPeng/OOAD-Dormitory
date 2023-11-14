@@ -12,6 +12,10 @@
 
 ![接收示例](pic/axios.png)
 
+所有的状态码
+
+![](pic/code.png)
+
 # 接口文档
 
 ## login接口Y
@@ -552,3 +556,96 @@ code：2031
 
 message：删除失败，请重试
 
+### 帖子相关 （目前实现组队帖子和个人帖子）
+
+![组队帖子](pic/teampost.png)
+
+![](pic/personpost.png)
+
+实现了增删改查（为了方便以后书写，只写接口和需要的输入，结果状态码统一一下放在最上面）
+
+## 对于Teampost
+
+最基础的/teamPost
+
+有post请求新增，需要提供一个完整的teampost（除了version字段和id字段）
+
+有put请求，需要提供一个teampost（必须包含id，其他无所谓只会更改对应id的帖子）
+
+/teamPost/{id}
+
+有delete方法，删除对应id的帖子
+
+/teamPost/team/{id}
+
+Get方法表示获取teamid == id的所有帖子
+
+/teamPosts
+
+Get方法获取所有帖子
+
+## 对于Personpost
+
+最基础的/personPost
+
+有post请求新增，需要提供一个完整的personpost（除了version字段和id字段）
+
+有put请求，需要提供一个personpost（必须包含id，其他无所谓只会更改对应id的帖子，如果没有其他属性表示不更改）
+
+/personPost/{id}
+
+有delete方法，删除对应id的帖子
+
+/personPost/user/{id}
+
+Get方法表示获取personid == id的所有帖子
+
+/personPosts
+
+Get方法获取所有帖子
+
+### 对于点赞帖子
+
+对于这两类分别做了实现但是大体上一样
+
+![](pic/fp.png)
+
+![](pic/ft.png)
+
+这两者的接口大致相同
+
+### 点赞personpost/TeamPost
+
+接口`/favouritePersonPost` 或者`/favouriteTeamPost`
+
+方法post，表示新增一个点赞需要提供postid和personid，前者是被点赞的帖子id后者是点赞人
+
+方法delete，删除点赞需要提供postid和personid，前者是被点赞的帖子id后者是点赞人
+
+接口`/favouritePersonPost/post/{id}` 或者`/favouriteTeamPost/post/{id}`
+
+方法get获取某个id帖子的情况
+
+接口`/favouritePersonPost/user/{id}` 或者`/favouriteTeamPost/user/{id}`
+
+方法get获取某个人的点赞情况
+
+## 对于申请部分
+
+![](pic/application.png)
+
+有四个接口
+
+/application
+
+post方法，提供application类进行申请
+
+delete方法，提供application类进行删除
+
+/application/team/{id}
+
+根据teamid查询申请，返回申请列表
+
+/application/user/{id}
+
+根据userid查询申请，返回申请项

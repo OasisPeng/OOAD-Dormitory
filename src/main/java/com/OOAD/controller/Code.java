@@ -12,9 +12,6 @@ public class Code {
         public static final Integer INSERT_OK = 2040;
         public static final Integer INSERT_ERR = 2041;
         public static final Integer DELETE_OK = 2030;
-        public static final Integer SYSTEM_ERR = 50001;
-        public static final Integer SYSTEM_TIMEOUT_ERR = 50002;
-        public static final Integer SYSTEM_UNKNOWN_ERR = 59999;
-        public static final Integer BUSINESS_ERR = 60002;
+
 
 }
