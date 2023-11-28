@@ -649,3 +649,21 @@ delete方法，提供application类进行删除
 /application/user/{id}
 
 根据userid查询申请，返回申请项
+
+## DistributionGrade（帖子打分相关）
+
+![](pic/dg.png)
+
+#### 相关接口
+
+/distributionGrade/{distribution}
+
+方法：GET
+
+需求：路径参数{distribution},返回特定区域的所有评分：**如果返回数组长度为0也会报错**
+
+/distributionGrade
+
+方法：POST
+
+需求：一个DistributionGrade类（JSON），插入一条评分记录
