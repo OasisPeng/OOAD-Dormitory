@@ -10,4 +10,5 @@ import lombok.EqualsAndHashCode;
 public class DistributionGrade {
     String distribution;
     Integer grade;
+    String msg;
 }
