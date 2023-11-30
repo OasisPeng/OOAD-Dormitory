@@ -4,6 +4,7 @@ const routes =[
     {
         path:'/',
         name:'login',
+        redirect:'/MyRoommates',
         component:()=>import('../components/Login')
     },
     {
@@ -52,7 +53,7 @@ const routes =[
                 component: () => import('../components/roommates/OtherRoommates.vue')
             },
             {
-                path: '/Roommates',
+                path: '/MyRoommates',
                 name: 'MyRoommates',
                 meta: {
                     title: '我的组队'

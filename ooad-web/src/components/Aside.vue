@@ -13,9 +13,14 @@
                      menuIcon:'el-icon-menu'
                  },
                  {
-                     menuClick:'Roommates',
-                     menuName:'室友组队',
+                     menuClick:'MyRoommates',
+                     menuName:'我的组队',
                      menuIcon:'el-icon-s-custom'
+                 },
+                 {
+                   menuClick:'OtherRoommates',
+                   menuName:'查看组队',
+                   menuIcon:'el-icon-s-custom'
                  },
                  {
                      menuClick:'DormitoryPropose',
