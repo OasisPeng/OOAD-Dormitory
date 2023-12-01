@@ -15,8 +15,8 @@
         </el-carousel-item>
       </el-carousel>
 
-      <div style="  font-family: '宋体',sans-serif; font-weight: bold; " >
-        <p >湖畔宿舍区位于阅湖旁，风景优美、设施完备，同学们可以乘坐校巴到达“学生宿舍站”或“社康中心站”步行一段距离到达。同时也可以从校园内部步行，走过迎新桥即可到达。走过迎新桥，由南至北共有六栋宿舍楼，其中1,2,3栋为本科生宿舍，4,5,6栋为研究生宿舍。宿舍楼旁为书院活动室，是平时同学们活动的公共场所。大家可以约上三五好友，聚会聊天~</p>
+      <div style=" font-family: '宋体',sans-serif; font-weight: bold; " >
+        <p >　二期宿舍区位于学生宿舍站的两侧，是学校的新建筑群。</p>
       </div>
 
       <div class="right">
@@ -31,9 +31,9 @@
           </el-col>
         </el-row>
         <div class="content-container" >
-          <p class="content">宿舍楼下有球馆、健身房、超市等公共设施设备。走进湖畔，二栋楼下为台球区，三栋旁有健身房、舞蹈室，四栋楼下则是乒乓球馆。同学们平时需要购物，可以去三栋楼下的湖畔超市，麻雀虽小五脏俱全。或者可以网上购物，直接快递邮寄到位于五栋楼下的书院收发室。</p>
+          <p class="content" style="text-align: center" >二期宿舍区的公共设施应有尽有，7栋和13栋楼下各有一个收发室，为学生宿舍收发室，方便居住在二期宿舍区的同学取寄快递。13栋收发室旁就是天虹微喔超市，同学们平时如果想购买些生活用品，在超市公共区域吃饭聊天，这里是一个非常方便的去处。同时，二期宿舍9栋和10栋楼下有一个食堂，为第二学生餐厅，居住在附近的同学下楼即可吃上美味可口的饭菜。</p>
         </div>
-          <el-row>
+        <el-row>
           <el-col :span="24"><div class="grid-content bg-purple-dark">
             <div style="flex: 1; font-size: 30px; text-align: center; font-weight: bold; color: #282626; font-family: 'Arial', sans-serif;">
               <span>缺点</span>
@@ -41,7 +41,7 @@
           </div></el-col>
         </el-row>
         <div class="content-container" >
-          <p class="content">蚊虫多</p>
+          <p class="content">二期宿舍内不设阳台。</p>
         </div>
       </div>
     </div>
@@ -49,17 +49,17 @@
 
     <div v-if="activeIndex === '2'">
 
-        <div class="title-container">
-          <h2  class="conference-title" >总分</h2>
-          <el-rate
-              v-model="value"
-              disabled
-              show-score
-              text-color="#ff9900"
-              score-template="{value}">
+      <div class="title-container">
+        <h2  class="conference-title" >总分</h2>
+        <el-rate
+            v-model="value"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
 
-          </el-rate>
-        </div>
+        </el-rate>
+      </div>
       <div class="content-above" ref="tableContainer" >
         <el-table :header-cell-style="{ background: '#f2f5fc', color: '#555555', fontSize: '20px', fontWeight: 'bold', height: '50px', lineHeight: '50px' }"
                   :data="displayedFlights"
@@ -255,10 +255,10 @@
 </template>
 
 <script>
-import pictur1 from  '@/picture/微信图片_20231030165413.jpg'
-import pictur2 from   '@/picture/微信图片_20231030165504.jpg'
-import pictur3 from  '@/picture/微信图片_20231030165510.jpg'
-import pictur4 from  '@/picture/微信图片_20231030165518.jpg'
+import pictur1 from '@/picture/微信图片_20231130202658.jpg'
+import pictur2 from '@/picture/微信图片_20231130202754.jpg'
+import pictur3 from '@/picture/640.png'
+import pictur4 from '@/picture/641.png'
 
 export default {
   data() {
@@ -291,8 +291,8 @@ export default {
 
       ],
 
-      
-       Room: [],
+
+      Room: [],
       RoomForm: {
         distribution: "",
         building: "",
@@ -316,7 +316,7 @@ export default {
       if (Array.isArray(data)) {
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
         const flights = data
-            .filter(evo => evo.distribution === "湖畔") // 过滤符合条件的数据
+            .filter(evo => evo.distribution === "二期") // 过滤符合条件的数据
             .map(evo => {
               return {
                 distribution: evo.distribution || "",
@@ -345,7 +345,7 @@ export default {
       if (Array.isArray(data)) {
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
         const flights = data
-            .filter(roomData => roomData.distribution === "湖畔") // 过滤符合条件的数据
+            .filter(roomData => roomData.distribution === "二期") // 过滤符合条件的数据
             .map(roomData => {
               return {
                 distribution: roomData.distribution || "",
@@ -445,7 +445,7 @@ export default {
 
 
 
-          this.$message.success('Deleted successfully');
+        this.$message.success('Deleted successfully');
 
       }).catch(() => {
         // User clicked the Cancel button, cancel the delete operation
@@ -464,7 +464,7 @@ export default {
           //   "content": this.comment.content,
           // });
           this.$axios.post(this.$httpUrl+'/distributionGrade',{
-            distribution:"湖畔",
+            distribution:"二期",
             grade: this.comment.grade,
             msg: this.comment.content,
           },{
@@ -476,10 +476,11 @@ export default {
           })
 
           this.flights.push({
-            "distribution": "湖畔",
+            "distribution": "二期",
             "grade": this.comment.grade,
             "content": this.comment.content,
           });
+
 
 
 
