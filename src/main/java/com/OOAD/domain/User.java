@@ -57,6 +57,6 @@ public class User implements Serializable {
 
 
     private String characters;
-
+    private String avatar;
 
 }
