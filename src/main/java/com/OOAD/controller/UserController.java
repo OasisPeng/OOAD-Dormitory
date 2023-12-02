@@ -44,7 +44,7 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // ??
     public Result getByID(@PathVariable int id) {
         User user = userService.getById(id);
         Result result = new Result();
@@ -57,10 +57,12 @@ public class UserController {
             result.setCode(Code.GET_OK);
             result.setMsg("查询成功");
         }
+//        System.out.println(user);
         return result;
     }
-    @PutMapping()
+    @PutMapping("/updateAUser")
     public Result updateAUser(@RequestBody User user) {
+        System.out.println(user);
         boolean flag = userService.updateById(user);
         Result result = new Result();
         if (flag) {

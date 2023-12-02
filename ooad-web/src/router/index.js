@@ -167,6 +167,71 @@ const routes =[
 
         ]
     },
+    {
+        path: '/Message',
+        name: 'message',
+        meta: {
+            title: '消息中心'
+        },
+        component: () => import('../components/message/Message.vue'),
+        children:[
+            {
+                path: '/MyMessage',
+                name: 'myMessage',
+                meta: {
+                    title: '我的消息'
+                },
+                component: () => import('../components/message/MyMessage.vue')
+            },
+            {
+                path: '/Like',
+                name: 'like',
+                meta: {
+                    title: '点赞'
+                },
+                component: () => import('../components/message/Like.vue')
+            },
+            {
+                path: '/Comment',
+                name: 'comment',
+                meta: {
+                    title: '评论'
+                },
+                component: () => import('../components/message/Comment.vue')
+            },
+            {
+                path: '/Comment',
+                name: 'comment',
+                meta: {
+                    title: '评论'
+                },
+                component: () => import('../components/message/Comment.vue')
+            },
+            {
+                path: '/BroadcastMessages',
+                name: 'broadcastMessages',
+                meta: {
+                    title: '广播通知'
+                },
+                component: () => import('../components/message/BroadcastMessages.vue')
+            },
+            {
+                path: '/TeamInvitation',
+                name: 'teamInvitation',
+                meta: {
+                    title: '组队邀请'
+                },
+                component: () => import('../components/message/TeamInvitation.vue')
+            },{
+                path: '/TeamOffer',
+                name: 'teamOffer',
+                meta: {
+                    title: '组队申请'
+                },
+                component: () => import('../components/message/TeamOffer.vue')
+            },
+        ]
+    },
 ]
 
 const router = new VueRouter({

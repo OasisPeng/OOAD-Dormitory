@@ -3,61 +3,64 @@
       name: "Home",
       data(){
           return{
-              user:{
-                  name:'普通学生111',
-                  no:'121111111',
-                  sex:'女',
-                  college:'致诚书院',
-                  //匹配信息
-                  timetable1:'8:00-9:00',
-                  timetable2:'23:00-24:00',
-                  smoke:'从不',
-                  sleepHabit:'从不',
-                  clean:'较为在意',
-                  nap:'偶尔',
-                  temperature:'26度及以上',
-                  isQuiet:'安静',
-                  characters:'社恐型',
-                  hobbies:null
-                  //['游戏','摄影','KPOP']
-              },
+              user: {},
+              userSID:'',
               isMissingBaseInfo: false, // 控制提示框显示
-              isMissingMoreInfo:false,
+              isMissingMoreInfo: false,
               editingBase: false, // 添加编辑状态变量
               editingMore: false,
               isExplanationVisible: false,
+              currentRoute: '/Home', // 设置默认选中的路由
           }
       },
       computed:{
-
       },
       methods:{
-          init(){
-            //  this.user=JSON.parse(sessionStorage.getItem('CurUser'))
+          handleSelect(index) {
+              this.currentRoute = index; // 更新选中的路由
+              this.$router.push(this.currentRoute)
           },
-          UserBaseInfo() {
-              // 判断用户信息是否完整，如果不完整则显示提示框
-              this.isMissingBaseInfo = !this.user.name || !this.user.no || !this.user.college || !this.user.sex;//待改进：性别未填的时候会自动为0
+          getUser(){
+              this.$axios.get(this.$httpUrl+'/user/'+this.userSID).then(res=>{
+                  if (res.data.code===2010) {
+                      this.user = res.data.data
+                      this.UserMoreInfo()
+                      console.log(this.user)
+                  } else {
+                      console.log(res.data.msg)
+                      // 登录失败，可以显示错误消息
+                  }
+              })
+          },
+          init(){
+              this.userSID=JSON.parse(sessionStorage.getItem('CurUser')).id
+              console.log(this.userSID)
+              this.getUser()
+              console.log(this.user)
           },
           UserMoreInfo() {
               // 判断用户信息是否完整，如果不完整则显示提示框
-              this.isMissingMoreInfo = !this.user.timetable1|| !this.user.timetable2 || !this.user.hobbies ;//待改进：性别未填的时候会自动为0
-          },
-          editUserBaseInfo() {
-              this.editingBase = true; // 进入编辑状态
-          },
-          submitUserBaseInfo() {
-              // 在这里执行提交到后台的逻辑，例如使用axios或者Vue Resource发送HTTP请求
-
-              // 提交成功后，离开编辑状态
-              this.editingBase = false;
+              this.isMissingMoreInfo = !this.user.timetable1|| !this.user.timetable2 ||!this.user.nap
+                  || !this.user.smoke || !this.user.sleepHabit || !this.user.clean || !this.user.characters
+                  || !this.user.isQuiet || !this.user.temperature;
+                  // || !this.user.hobbies ;
           },
           editUserMoreInfo() {
               this.editingMore = true; // 进入编辑状态
           },
           submitUserMoreInfo() {
               // 在这里执行提交到后台的逻辑，例如使用axios或者Vue Resource发送HTTP请求
-
+              this.$axios.put(this.$httpUrl+'/user/updateAUser',this.user).then(res=>{
+                  if (res.data.code===2020) {
+                      console.log( res.data.msg)
+                      this.getUser()
+                      console.log(this.user)
+                  } else {
+                      console.log( res.data.msg)
+                      // 登录失败，可以显示错误消息
+                  }
+              }),
+              this.UserMoreInfo()
               // 提交成功后，离开编辑状态
               this.editingMore = false;
           },
@@ -67,33 +70,20 @@
       },
       created() {
           this.init()
-          this.UserBaseInfo()
-          this.UserMoreInfo()
       }
   }
 </script>
 
 <template>
   <div>
-      <div style="text-align: center;height: 100%;padding: 0px;margin-left: 65px;margin-top: 17px;margin-bottom: 13px;">
-          <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item :to="{ path: '/Home' }">个人信息</el-breadcrumb-item>
-              <el-breadcrumb-item :to="{ path: '/MyPrefer'}" >我的收藏</el-breadcrumb-item>
-          </el-breadcrumb>
-      </div>
-      <el-divider></el-divider>
-      <div style="text-align: center;background-color: #f1f1f3;height: 100%;padding: 0px;margin-top: 0px;">
-      <el-alert
-          v-if="isMissingBaseInfo"
-          title="请完善基本信息"
-          type="error"
-          show-icon
-          center
-          closable
-          @close="isMissingBaseInfo = false"
-          style="margin-top: 5px"
-      />
-      <el-descriptions title="基本信息" :column="2" size="40"  border>
+
+      <el-menu :default-active="this.currentRoute" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <el-menu-item index="/Home" style="font-family: arial, sans-serif">个人信息</el-menu-item>
+          <el-menu-item index="/MyPrefer" style="font-family: arial, sans-serif">我的收藏</el-menu-item>
+      </el-menu>
+      <div style="text-align: center;background-color: #f1f1f3;height: 100%;padding: 0px;margin-top: 30px;">
+
+      <el-descriptions class="el-descriptions" title="基本信息" :column="2" size="40"  border>
              <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-edit"></i>
@@ -115,7 +105,7 @@
                   <el-input v-model="user.no"></el-input>
               </span>
               <span v-else>
-                {{ user.no}}
+                {{ user.id}}
               </span>
           </el-descriptions-item>
           <el-descriptions-item>
@@ -127,7 +117,7 @@
                   <el-input v-model="user.sex"></el-input>
               </span>
               <span v-else>
-                {{user.sex==1?"男":"女"}}
+                {{ user.sex==1?"男":"女"}}
               </span>
           </el-descriptions-item>
           <el-descriptions-item>
@@ -143,13 +133,6 @@
               </span>
           </el-descriptions-item>
       </el-descriptions>
-<!--      <div style="display: flex;align-items: center">-->
-<!--          <div style="margin: 5px auto 5px 65px;">-->
-<!--              <el-button type="success"  @click="editUserBaseInfo" >编辑</el-button>-->
-<!--              <el-button type="primary"  @click="submitUserBaseInfo" style="margin-left: 5px">提交</el-button>-->
-<!--          </div>-->
-<!--      </div>-->
-
 
       <el-alert
           v-if="isMissingMoreInfo"
@@ -161,7 +144,7 @@
           @close="isMissingMoreInfo = false"
           style="margin-top: 5px"
       />
-      <el-descriptions title="匹配信息（生活习惯、爱好等）" :column="3" size="40" border>
+      <el-descriptions class="el-descriptions" title="匹配信息（生活习惯、爱好等）" :column="3" size="40" border>
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-alarm-clock"></i>
@@ -302,39 +285,39 @@
                   性格倾向
               </template>
               <span v-if="editingMore">
-                   <el-select v-model="user.character">
+                   <el-select v-model="user.characters">
                       <el-option label="社牛型" value="社牛型"></el-option>
                       <el-option label="社恐型" value="社恐型"></el-option>
                   </el-select>
               </span>
               <span v-else>
-                {{ user.character}}
+                {{ user.characters}}
               </span>
           </el-descriptions-item>
-          <el-descriptions-item>
-              <template slot="label">
-                  <i class="el-icon-trophy"></i>
-                  兴趣爱好
-              </template>
-              <span v-if="editingMore">
-                   <el-select v-model="user.hobbies" clearable multiple placeholder="请选择" >
-                       <el-option label="跑步" value="跑步"></el-option>
-                       <el-option label="摄影" value="摄影"></el-option>
-                       <el-option label="Kpop" value="Kpop"></el-option>
-                       <el-option label="睡觉" value="睡觉"></el-option>
-                       <el-option label="游戏" value="游戏"></el-option>
-                       <el-option label="动漫" value="动漫"></el-option>
-                       <el-option label="原神" value="原神"></el-option>
-                       <el-option label="音乐" value="音乐"></el-option>
-                       <el-option label="二次元" value="二次元"></el-option>
-                       <el-option label="篮球" value="篮球"></el-option>
-                       <el-option label="购物" value="购物"></el-option>
-                   </el-select>
-              </span>
-              <span v-else>
-                  {{user.hobbies}}
-              </span>
-          </el-descriptions-item>
+<!--          <el-descriptions-item>-->
+<!--              <template slot="label">-->
+<!--                  <i class="el-icon-trophy"></i>-->
+<!--                  兴趣爱好-->
+<!--              </template>-->
+<!--              <span v-if="editingMore">-->
+<!--                   <el-select v-model="user.hobbies" clearable multiple placeholder="请选择" >-->
+<!--                       <el-option label="跑步" value="跑步"></el-option>-->
+<!--                       <el-option label="摄影" value="摄影"></el-option>-->
+<!--                       <el-option label="Kpop" value="Kpop"></el-option>-->
+<!--                       <el-option label="睡觉" value="睡觉"></el-option>-->
+<!--                       <el-option label="游戏" value="游戏"></el-option>-->
+<!--                       <el-option label="动漫" value="动漫"></el-option>-->
+<!--                       <el-option label="原神" value="原神"></el-option>-->
+<!--                       <el-option label="音乐" value="音乐"></el-option>-->
+<!--                       <el-option label="二次元" value="二次元"></el-option>-->
+<!--                       <el-option label="篮球" value="篮球"></el-option>-->
+<!--                       <el-option label="购物" value="购物"></el-option>-->
+<!--                   </el-select>-->
+<!--              </span>-->
+<!--              <span v-else>-->
+<!--                  {{user.hobbies}}-->
+<!--              </span>-->
+<!--          </el-descriptions-item>-->
 
       </el-descriptions>
       <div style="display: flex;align-items: center">

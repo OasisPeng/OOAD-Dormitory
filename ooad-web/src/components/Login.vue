@@ -217,11 +217,11 @@ export default {
 
                 if (res.data.code===2000) {
                         // 登录成功，可以执行相应操作，如跳转页
-                  sessionStorage.setItem("CurUser",JSON.stringify(res.data.msg))
                     this.$router.push({ name: 'index' });
                     console.log(res.data.msg);
-                     console.log("1");
-                    sessionStorage.setItem("CurUser",JSON.stringify(res.data.msg))
+                    console.log("1");
+                    sessionStorage.setItem("CurUser",JSON.stringify(res.data.data))
+                    localStorage.setItem("CurUser",JSON.stringify(res.data.data))
                     console.log(JSON.parse(sessionStorage.getItem('CurUser')))
                       } else {
                         // 登录失败，可以显示错误消息
