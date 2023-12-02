@@ -211,23 +211,27 @@ export default {
                 },{
             withCredentials: true // 允许跨域请求中的Cookie
           }).then(res=>{
-            console.log(this.loginUsername)
-            console.log(this.loginPassword)
+            // console.log(this.loginUsername)
+            // console.log(this.loginPassword)
             console.log(res)
+
                 if (res.data.code===2000) {
                         // 登录成功，可以执行相应操作，如跳转页
+                  sessionStorage.setItem("CurUser",JSON.stringify(res.data.msg))
                     this.$router.push({ name: 'index' });
                     console.log(res.data.msg);
-                    sessionStorage.setItem("CurUser",JSON.stringify(res.data.data))
+                     console.log("1");
+                    sessionStorage.setItem("CurUser",JSON.stringify(res.data.msg))
                     console.log(JSON.parse(sessionStorage.getItem('CurUser')))
                       } else {
                         // 登录失败，可以显示错误消息
-                        console.log(res.data.msg);
+
+                        console.log(res.msg);
+                    this.$message.success(res.msg);
                       }
           })
-
-
     },
+
     check2() {
       //去后台验证用户密码
       console.log('check');

@@ -91,6 +91,30 @@ const routes =[
                 },
                 component: () => import('../components/dormitory/HuPanDormitoryView.vue')
             },
+            {
+                path: '/ErQiDormitoryView.vue',
+                name: 'erqiDormitoryView.vue',
+                meta: {
+                    title: '二期寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/ErQiDormitoryView.vue')
+            },
+            {
+                path: '/XingYuanDormitoryView.vue',
+                name: 'xinyuanDormitoryView.vue',
+                meta: {
+                    title: '欣园寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/XingYuanDormitoryView.vue')
+            },
+            {
+                path: '/LiYuanDormitoryView.vue',
+                name: 'liyuanDormitoryView.vue',
+                meta: {
+                    title: '荔园寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/LiYuanDormitoryView.vue')
+            },
             // {
             //     path: '/Login.vue',
             //     name: 'login.vue',
