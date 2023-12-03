@@ -4,7 +4,7 @@ const routes =[
     {
         path:'/',
         name:'login',
-        redirect:'/MyRoommates',
+        // redirect:'/MyRoommates',
         component:()=>import('../components/Login')
     },
     {

@@ -3,13 +3,13 @@
 
   <div>
 
-    <ul>
-      <li v-for="term in terms" :key="term.id">{{ term.name }}</li>
-    </ul>
+<!--    <ul>-->
+<!--      <li v-for="term in terms" :key="term.id">{{ term.name }}</li>-->
+<!--    </ul>-->
 
     <el-descriptions  title="组队信息" border = "True" column="1" size="large">
-      <el-descriptions-item label="组队编号">{{ list.num }}</el-descriptions-item>
-      <el-descriptions-item label="已选宿舍号">{{ list.currentRoomSelection }}</el-descriptions-item>
+      <el-descriptions-item label="组队编号">{{ this.user.id }}</el-descriptions-item>
+      <el-descriptions-item label="已选宿舍号">{{ team["team_id"] }}</el-descriptions-item>
       <el-descriptions-item label="楼号">{{ list.building }}</el-descriptions-item>
       <el-descriptions-item label="状态">
         <el-tag size="small">{{ status }}</el-tag>
@@ -33,7 +33,7 @@
       </el-table-column>
     </el-table>
 
-    <el-button type="primary" style="margin-left:30px" @click="">退出组队</el-button>
+    <el-button type="primary" style="margin-left:30px" @click="exitTeam">退出组队</el-button>
   </div>
 
 
@@ -45,9 +45,12 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      user: null,
+      team: [],
       isLoading: false,
       error: '',
       userTeamId: null,
+
 
       teamData:[{
         name: 'xxx',
@@ -67,18 +70,48 @@ export default {
 
     };
   },
+
   created() {
-    this.fetchTerms();
+    this.user = JSON.parse(sessionStorage.getItem('CurUser'));
+    this.getUserTeam()
+
   },
+
   methods: {
-    async fetchTerms(){
-      // try {
-      //   const response = await axios.get()
-      // }
+    async getUserTeam() {
+      try {
+        const response = await axios.get(this.$httpUrl + '/user/team/'+ String(this.user.id),
+            {user: this.user} );
+        // 处理成功返回的数据
+        if (response.code === 2010) {
+          console.log('查询成功，组队ID为：', response.data);
+          this.team = response.data;
+        } else {
+          console.error('查询失败：', response.msg);
+        }
+      } catch (error) {
+        console.error('请求失败：', error);
+      }
+    },
+    async exitTeam(){
+      try {
+        const response = await axios.delete(this.$httpUrl +'/' + this.team['team_id']+ '/'+ String(this.user.id),
+            {user: this.user} );
+        // 处理成功返回的数据
+        if (response.code === 2030) {
+          console.log('删除成功');
+        } else {
+          console.error('删除失败，请重试');
+        }
+      } catch (error) {
+        console.error('请求失败：', error);
+      }
     }
   },
 
+  // computed内容回自动计算并动态变化
   computed: {
+    // 此处定义了一个status变量
     status() {
       // 根据目前的member数量和capacity判断是否满员
       if (this.list.capacity === this.list.currentMembers) {
@@ -91,11 +124,8 @@ export default {
     },
   },
 
-
-
 };
 </script>
-
 
 <style>
 .el-descriptions{

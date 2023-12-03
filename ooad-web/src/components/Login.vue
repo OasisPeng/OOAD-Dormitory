@@ -285,8 +285,6 @@ export default {
   },
 
 
-
-
   setup() {
     let starsRef = ref(null);
     const starsCount = 800; //星星数量

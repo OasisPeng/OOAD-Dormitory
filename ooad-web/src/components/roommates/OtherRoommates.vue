@@ -6,19 +6,19 @@
         ref="filterTable"
         :data="teams"
         style="width: 100%">
-      <el-table-column
-          prop="name"
-          label="组队名"
-          sortable
-          width="180">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          prop="name"-->
+<!--          label="组队名"-->
+<!--          sortable-->
+<!--          width="180">-->
+<!--      </el-table-column>-->
       <el-table-column
           prop="leaderName"
           label="队长名"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="currentMember"
+          prop="current"
           label="当前人数"
           width="180">
       </el-table-column>
@@ -28,7 +28,7 @@
           width="180">
       </el-table-column>
       <el-table-column
-          prop="currentRoomSelection"
+          prop="dorm"
           label="当前宿舍选择"
           :formatter="formatter">
       </el-table-column>
@@ -49,7 +49,12 @@
           </el-tag>
         </template>
 
+
       </el-table-column>
+      <el-table-column>
+        <el-button type="primary" @click="apply">申请加入</el-button>
+      </el-table-column>
+
     </el-table>
 
     <el-pagination
@@ -63,19 +68,20 @@
     ></el-pagination>
 
 
-    <el-button type="primary" @click="dialogVisible = true">创建组队</el-button>
+    <el-button type="primary" @click="showInputDialog">创建组队</el-button>
 
     <el-dialog
-        title="提示"
+        title="创建组队"
         :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="handleClose">
-      <span>这是一段信息</span>
+        width="30%">
+      <el-input v-model="input" placeholder="组队人数"></el-input>
+
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm">确 定</el-button>
       </span>
     </el-dialog>
+
 
   </div>
 
@@ -83,44 +89,51 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
+      user: null,
+      userId:null,
+      allTeams: [],
+      capacity: 3,
       dialogVisible : false,
-      // teams: [],
+
       teams: [{
-        name: 'test',
         leaderName: 'leader1',
-        currentMember: 1,
+        current: 1,
         capacity: 5,
-        currentRoomSelection: '1009',
+        dorm: '1009',
         region: '湖畔'
       }, {
-        name: 'test',
         leaderName: 'leader2',
-        currentMember: 2,
+        current: 2,
         capacity: 5,
-        currentRoomSelection: '1009',
+        dorm: '1010',
         region: '二期'
       }, {
-        name: 'test',
         leaderName: 'leader3',
-        currentMember: 3,
+        current: 3,
         capacity: 5,
-        currentRoomSelection: '1009',
+        dorm: '1011',
         region: '湖畔'
       }, {
-        name: 'test',
         leaderName: 'leader4',
-        currentMember: 4,
+        current: 4,
         capacity: 5,
-        currentRoomSelection: '1009',
+        dorm: '1019',
         region: '二期'
       }]
     };
   },
+  created() {
+    this.user = JSON.parse(sessionStorage.getItem('CurUser'));
+    this.getAllTeams();
+    // this.userId = this.user.id;
+  },
   mounted() {
-    this.getTeams();
+
   },
   methods: {
     showDialog() {
@@ -129,21 +142,48 @@ export default {
     closeDialog() {
       this.dialogVisible = false; // 隐藏窗口
     },
-    getTeams() {
-      // 发送请求获取数据，假设使用axios库
-      axios.get('/teams')
-          .then(response => {
-            const data = response.data;
-            if (data.code === 2010) {
-              this.teams = data.data;
-            } else if (data.code === 2011) {
-              console.error(data.message);
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
+    showInputDialog() {
+      this.dialogVisible = true;
     },
+    async apply(){
+
+    },
+
+    async getAllTeams(){
+      try {
+        const resopnse = await axios.get(this.$httpUrl + '/teams');
+        // if (resopnse.code == 2010){
+          this.allTeams = resopnse.data;
+          console.log('查询全部组队成功')
+        // }
+        // else
+          if (resopnse.code == 2011){
+          console.error('查询全部组队失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
+    },
+
+    async createTeam(){
+      try {
+        const resopnse = await axios.post(this.$httpUrl + '/team',{
+          headId: this.user.id,
+          capacity: this.capacity
+        });
+        if (resopnse.code == 2040){
+          console.log('成功添加寝室')
+        }
+        else if (resopnse.code == 2041){
+          console.error('增加失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
+
+    }
+    ,
+
     handleSizeChange(newSize) {
       this.pageSize = newSize;
       this.currentPage = 1;
