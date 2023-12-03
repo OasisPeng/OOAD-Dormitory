@@ -1,6 +1,6 @@
 <script>
 import emojis from "@/assets/emoji";
-import '@fortawesome/fontawesome-free/css/all.css';
+// import '@fortawesome/fontawesome-free/css/all.css';
 
 let client
 export default {
