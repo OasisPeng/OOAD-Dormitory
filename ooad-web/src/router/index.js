@@ -92,6 +92,30 @@ const routes =[
                 },
                 component: () => import('../components/dormitory/HuPanDormitoryView.vue')
             },
+            {
+                path: '/ErQiDormitoryView.vue',
+                name: 'erqiDormitoryView.vue',
+                meta: {
+                    title: '二期寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/ErQiDormitoryView.vue')
+            },
+            {
+                path: '/XingYuanDormitoryView.vue',
+                name: 'xinyuanDormitoryView.vue',
+                meta: {
+                    title: '欣园寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/XingYuanDormitoryView.vue')
+            },
+            {
+                path: '/LiYuanDormitoryView.vue',
+                name: 'liyuanDormitoryView.vue',
+                meta: {
+                    title: '荔园寝室查看' // 自定义页面标题
+                },
+                component: () => import('../components/dormitory/LiYuanDormitoryView.vue')
+            },
             // {
             //     path: '/Login.vue',
             //     name: 'login.vue',
@@ -142,6 +166,71 @@ const routes =[
                 component: () => import('../components/Admin/StudentManage.vue')
             },
 
+        ]
+    },
+    {
+        path: '/Message',
+        name: 'message',
+        meta: {
+            title: '消息中心'
+        },
+        component: () => import('../components/message/Message.vue'),
+        children:[
+            {
+                path: '/MyMessage',
+                name: 'myMessage',
+                meta: {
+                    title: '我的消息'
+                },
+                component: () => import('../components/message/MyMessage.vue')
+            },
+            {
+                path: '/Like',
+                name: 'like',
+                meta: {
+                    title: '点赞'
+                },
+                component: () => import('../components/message/Like.vue')
+            },
+            {
+                path: '/Comment',
+                name: 'comment',
+                meta: {
+                    title: '评论'
+                },
+                component: () => import('../components/message/Comment.vue')
+            },
+            {
+                path: '/Comment',
+                name: 'comment',
+                meta: {
+                    title: '评论'
+                },
+                component: () => import('../components/message/Comment.vue')
+            },
+            {
+                path: '/BroadcastMessages',
+                name: 'broadcastMessages',
+                meta: {
+                    title: '广播通知'
+                },
+                component: () => import('../components/message/BroadcastMessages.vue')
+            },
+            {
+                path: '/TeamInvitation',
+                name: 'teamInvitation',
+                meta: {
+                    title: '组队邀请'
+                },
+                component: () => import('../components/message/TeamInvitation.vue')
+            },{
+                path: '/TeamOffer',
+                name: 'teamOffer',
+                meta: {
+                    title: '组队申请'
+                },
+                component: () => import('../components/message/TeamOffer.vue')
+            },
         ]
     },
 ]

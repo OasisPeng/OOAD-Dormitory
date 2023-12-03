@@ -36,6 +36,21 @@ export default {
       this.$router.push( '/HuPanDormitoryView.vue')
       console.log('ok')
     },
+    toerqi(){
+      console.log('ok')
+      this.$router.push( '/ErQiDormitoryView.vue')
+      console.log('ok')
+    },
+    toliyuan(){
+      console.log('ok')
+      this.$router.push( '/LiYuanDormitoryView.vue')
+      console.log('ok')
+    },
+    toxingyuan(){
+      console.log('ok')
+      this.$router.push( '/XingYuanDormitoryView.vue')
+      console.log('ok')
+    },
     initMap() {
 
       AMapLoader.load({
@@ -191,9 +206,18 @@ export default {
           console.log('ok1');
           this.tohupan();
         });
-
-
-
+        this.polygon3.on('click', () => {
+          console.log('ok1');
+          this.toerqi();
+        });
+        this.polygon2.on('click', () => {
+          console.log('ok1');
+          this.toliyuan();
+        });
+        this.polygon4.on('click', () => {
+          console.log('ok1');
+          this.toxingyuan();
+        });
 // 创建信息窗口1
         var infoWindow1 = new AMap.InfoWindow({
           anchor: 'middle-right',

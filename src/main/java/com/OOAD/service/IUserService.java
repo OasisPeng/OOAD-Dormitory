@@ -27,4 +27,5 @@ public interface IUserService {
 
     public boolean insert(User user);
     public int selectTeamID(int id);
+
 }

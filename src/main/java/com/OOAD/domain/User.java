@@ -1,6 +1,7 @@
 package com.OOAD.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import java.io.Serializable;
@@ -45,6 +46,8 @@ public class User implements Serializable {
 
     private String timetable2;
 
+    private String smoke;
+
     private String sleepHabit;
 
     private String clean;
@@ -58,5 +61,6 @@ public class User implements Serializable {
 
     private String characters;
 
+    private String avatar;
 
 }

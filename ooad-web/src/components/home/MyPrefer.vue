@@ -1,147 +1,15 @@
 <script>
 export default {
     name:"MyPrefer",
-    methods:{
-        loadPost(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/listPage',{
-            //     pageSize:this.pageSize,
-            //     pageNum:this.pageNum,
-            //     param:{
-            //         name:this.name
-            //     }
-            // }).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.tableData=res.data
-            //         this.total=res.total
-            //     }else {
-            //         alert('获取数据失败')
-            //     }
-            // })
+    methods: {
+        handleSelect(index) {
+            this.currentRoute = index; // 更新选中的路由
+            this.$router.push(this.currentRoute)
         },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-            this.pageSize=val;
-            this.pageNum=1;
-            this.loadPost();
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-            this.pageNum=val;
-            this.loadPost()
-        },
-        resetParam(){
-            this.name='';
-            this.loadPost()
-        },
-        mod(row){//参数是拿到的一整行的数据
-            this.centerDialogVisible=true;
-            this.$nextTick(()=>{//异步处理
-                //赋值到表单,form是表单内容
-                this.form.id=row.id;
-                this.form.name=row.name;
-                this.form.remark=row.remark;
-            })
-        },
-        del(id){
-            // this.$axios.get(this.$httpUrl+'/goodstype/del?id='+id).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
-        },
-        add(){
-            this.centerDialogVisible=true;
-            this.$nextTick(()=>{//异步处理
-                this.resetForm();
-            })
-        },
-        save(){
-            this.$refs.form.validate((valid) => {
-                if (valid) {
-                    if(this.form.id){//表示修改
-                        this.doMod();
-                    }else {
-                        this.doSave();
-                    }
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-        },
-        resetForm() {
-            this.$refs.form.resetFields();//表单内容回到前一个状态
-        },
-        doSave(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/save',this.form).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.centerDialogVisible=false
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
-        },
-        doMod(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/update',this.form).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.centerDialogVisible=false
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
-        }
-    },
-    beforeMount() { //beforeMount 是Vue.js生命周期钩子函数之一，它在Vue组件实例被挂载到DOM之前执行。这个钩子允许您在组件渲染到页面之前执行一些逻辑和准备工作。
-        this.loadPost();
     },
     data() {
-
         return {
-            tableData: [],
-            pageSize:10,
-            pageNum:1,
-            total:0,
-            name:'',
-            centerDialogVisible:false,
-            form:{
-                id:'',
-                name:'',
-                remark:''
-            },
-            rules: {
-                name: [
-                    {required: true, message: '请输入分类名', trigger: 'blur'}
-                ]
-            }
+            currentRoute: '/MyPrefer', // 设置默认选中的路由
         }
     }
 }
@@ -149,13 +17,11 @@ export default {
 
 <template>
     <div>
-        <div style="text-align: center;height: 100%;padding: 0px;margin-left: 65px;margin-top: 17px;margin-bottom: 13px;">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/Home' }">个人信息</el-breadcrumb-item>
-                <el-breadcrumb-item :to="{ path: '/MyPrefer'}" >我的收藏</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <el-divider></el-divider>
+        <el-menu :default-active="this.currentRoute" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+            <el-menu-item index="/Home" style="font-family: arial, sans-serif">个人信息</el-menu-item>
+            <el-menu-item index="/MyPrefer" style="font-family: arial, sans-serif">我的收藏</el-menu-item>
+        </el-menu>
+        <div style="margin-top: 20px"></div>
         <el-row>
             <el-col :span="4" style="margin-left: 6px">
                 <el-card :body-style="{ padding: '0px' }">
@@ -184,69 +50,6 @@ export default {
                 </el-card>
             </el-col>
         </el-row>
-<!--        <div style="margin-bottom: 5px">-->
-<!--            <el-input v-model="name" placeholder="请输入分类名" suffix-icon="el-icon-search" style="width: 200px"-->
-<!--                      @keyup.enter.native="loadPost"></el-input>-->
-
-<!--            <el-button type="primary" style="margin-left: 5px" @click="loadPost">查询</el-button>-->
-<!--            <el-button type="success" @click="resetParam">重置</el-button>-->
-<!--            <el-button type="primary" style="margin-left: 5px" @click="add">新增</el-button>-->
-<!--        </div>-->
-<!--        <el-table :data="tableData"-->
-<!--                  :header-cell-style="{ background:'#f2f5fc', color: '#555555'}"-->
-<!--                  border-->
-<!--        >-->
-<!--            <el-table-column prop="id" label="ID" width="60">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="name" label="分类名" width="180">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="remark" label="备注" width="">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="operate" label="操作">-->
-<!--                <template slot-scope="scope">-->
-<!--                    <el-button size="small" type="success" @click="mod(scope.row)">编辑</el-button>-->
-<!--                    <el-popconfirm-->
-<!--                        title="确定删除这条数据吗？"-->
-<!--                        @confirm="del(scope.row.id)"-->
-<!--                        style="margin-left: 5px"-->
-<!--                    >-->
-<!--                        <el-button slot="reference" size="small" type="danger">删除</el-button>-->
-<!--                    </el-popconfirm>-->
-<!--                </template>>-->
-<!--            </el-table-column>-->
-<!--        </el-table>-->
-<!--        <el-pagination-->
-<!--            @size-change="handleSizeChange"-->
-<!--            @current-change="handleCurrentChange"-->
-<!--            :current-page="pageNum"-->
-<!--            :page-sizes="[5, 10, 20, 30]"-->
-<!--            :page-size="pageSize"-->
-<!--            layout="total, sizes, prev, pager, next, jumper"-->
-<!--            :total="total">-->
-<!--        </el-pagination>-->
-<!--        <el-dialog-->
-<!--            title="提示"-->
-<!--            :visible.sync="centerDialogVisible"-->
-<!--            width="30%"-->
-<!--            center>-->
-<!--            <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
-
-<!--                <el-form-item label="分类名" prop="name">-->
-<!--                    <el-col :span="20">-->
-<!--                        <el-input v-model="form.name"></el-input>-->
-<!--                    </el-col>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="备注" prop="remark">-->
-<!--                    <el-col :span="20">-->
-<!--                        <el-input type="textarea" v-model="form.remark"></el-input>-->
-<!--                    </el-col>-->
-<!--                </el-form-item>-->
-<!--            </el-form>-->
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--            <el-button @click="centerDialogVisible = false">取 消</el-button>-->
-<!--            <el-button type="primary" @click="save">确 定</el-button>-->
-<!--            </span>-->
-<!--        </el-dialog>-->
     </div>
 </template>
 
