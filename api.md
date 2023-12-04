@@ -432,6 +432,14 @@ code：2011
 
 message：查询失败，请重试
 
+### 根据楼层查询
+
+/dorm/floor/{id}
+
+方法：GET
+
+需求：路径参数
+
 # 上传文件
 
 /dorm/upload
