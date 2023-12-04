@@ -45,6 +45,9 @@
           showAvatarDialog() {
               // 点击头像时显示头像查看对话框
               this.avatarDialogVisible = true;
+          },
+          jumpToMessage(){
+              this.$router.push("/Message")
           }
       },
       props:{
@@ -66,12 +69,10 @@
       </div>
       <div >
           <el-dropdown trigger="hover">
-              <a href="/Message" target="_blank">
-                  <el-badge is-dot class="item" style="line-height: 45px;">
-                      <i class="el-icon-chat-dot-round" style="font-size: 25px; line-height: 30px; margin-right: 10px;"></i>
-                  </el-badge>
+              <el-badge is-dot class="item" style="line-height: 45px;">
+                  <i class="el-icon-chat-dot-round" style="font-size: 25px; line-height: 30px; margin-right: 10px;" @click= "jumpToMessage"></i>
+              </el-badge>
 
-              </a>
               <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item class="clearfix">
                       我的消息

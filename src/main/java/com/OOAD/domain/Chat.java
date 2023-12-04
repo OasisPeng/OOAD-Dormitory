@@ -3,54 +3,39 @@ package com.OOAD.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@ApiModel(value = "Chat对象", description = "")
 public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("主键")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty("聊天内容")
     private String content;
 
-    @ApiModelProperty("发送方")
     private String fromuser;
 
-    @ApiModelProperty("接收方")
     private String touser;
 
-    @ApiModelProperty("发送方头像")
     private String fromavatar;
 
-    @ApiModelProperty("接收方头像")
     private String toavatar;
 
-    @ApiModelProperty("时间")
     private LocalDateTime time;
 
-    @ApiModelProperty("消息类型")
     private String type;
 
-    @ApiModelProperty("是否已读")
     private int readed;
 
-    @ApiModelProperty("是否是群聊")
     @TableField("isGroup")
     private int isGroup;
 
-    @ApiModelProperty("发送方姓名")
     @TableField("fromuserName")
     private String fromuserName;
 
-    @ApiModelProperty("接收方姓名")
     @TableField("touserName")
     private String touserName;
     public Integer getId() {

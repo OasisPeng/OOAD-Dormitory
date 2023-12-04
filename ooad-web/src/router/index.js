@@ -240,6 +240,13 @@ const router = new VueRouter({
     routes
 })
 
+router.beforeEach(async (to, from,next) => {
+    if ((to.path !== '/' && !JSON.parse(sessionStorage.getItem('CurUser'))))
+        next('/');
+    else
+        next();
+});
+
 export function resetRouter(){
     router.matcher = new VueRouter({
         mode:'history',
