@@ -216,6 +216,14 @@ code：2011
 
 message：用户尚未加入组队
 
+# 上传文件
+
+/user/upload
+
+方法：GET
+
+需求：List<User>(JSON Array格式)
+
 ## Dorm相关接口
 
 ## 返回所有寝室Y
@@ -423,6 +431,14 @@ data：Err
 code：2011
 
 message：查询失败，请重试
+
+# 上传文件
+
+/dorm/upload
+
+方法：GET
+
+需求：List<Dorm>(JSON Array格式)
 
 ## Team接口
 
@@ -667,3 +683,119 @@ delete方法，提供application类进行删除
 方法：POST
 
 需求：一个DistributionGrade类（JSON），插入一条评分记录
+
+## 个人帖子的评论
+
+![](pic/cpp.png)
+
+### 按照postid查询
+
+/commentPersonPost/post/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 按照personID查询
+
+/commentPersonPost/person/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 添加
+
+/commentPersonPost/
+
+方法：GET
+
+需求：CommentPersonPost（JSON obj）
+
+### 删除
+
+/commentPersonPost/
+
+方法：delete
+
+需求：CommentPersonPost（JSON obj）（仅仅需要个人和帖子id两个参数）
+
+## 团队帖子的评论
+
+![](pic/cpp.png)
+
+### 按照postid查询
+
+/commentTeamPost/post/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 按照personID查询
+
+/commentTeamPost/person/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 添加
+
+/commentTeamPost/
+
+方法：POST
+
+需求：CommentTeamPost（JSON obj）
+
+### 删除
+
+/commentTeamPost/
+
+方法：delete
+
+需求：CommentTeamPost（JSON obj）（仅仅需要个人和帖子id两个参数）
+
+## 收藏帖子相关
+
+![](pic/fd.png)
+
+### 根据userId查询
+
+/favouriteDorm/user/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 根据dormId查询
+
+/favouriteDorm/dorm/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 根据teamId查询
+
+/favouriteDorm/team/{id}
+
+方法：GET
+
+需求：路径参数
+
+### 添加
+
+/favouriteDorm
+
+方法：POST
+
+需求：FavouriteDorm类（JSON obj）
+
+### 删除
+
+/favouriteDorm
+
+方法：delete
+
+需求：FavouriteDorm类（JSON obj）（仅仅需要个人和寝室两个参数）

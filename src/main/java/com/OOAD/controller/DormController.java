@@ -67,7 +67,22 @@ public class DormController {
         }
         return result;
     }
+    @GetMapping("/floor/{n}")
+    public Result SelectByFloor(@RequestParam int pageSize, @RequestParam int pageNum, @PathVariable int n) {
+        List<Dorm> dorms = dormService.selectByFloor(pageSize, pageNum, n);
+        Result result = new Result();
+        if (dorms != null) {
+            result.setCode(Code.GET_OK);
+            result.setData(dorms);
+            result.setMsg("查询成功");
+        } else {
+            result.setCode(Code.GET_Err);
+            result.setData("Err");
+            result.setMsg("查询失败");
+        }
+        return result;
 
+    }
     @PutMapping
     public Result update(@RequestBody Dorm dorm) {
         boolean flag = dormService.updateByID(dorm);
@@ -84,7 +99,21 @@ public class DormController {
         return result;
     }
 
-
+    @PostMapping("/upload")
+    public Result update(@RequestBody List<Dorm> dorms) {
+        Result result = new Result();
+        int re = dormService.insertByList(dorms);
+        if (re == dorms.size()) {
+            result.setCode(Code.INSERT_OK);
+            result.setData("OK");
+            result.setMsg("添加成功");
+        } else {
+            result.setCode(Code.INSERT_ERR);
+            result.setData("ERR");
+            result.setMsg("添加失败请重试");
+        }
+        return result;
+    }
 
 }
 

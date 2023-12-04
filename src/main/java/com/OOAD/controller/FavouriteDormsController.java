@@ -1,8 +1,7 @@
 package com.OOAD.controller;
 
-import com.OOAD.domain.TeamPost;
-import com.OOAD.service.TeamPostService;
-import com.OOAD.service.impl.TeamPostServiceImpl;
+import com.OOAD.domain.FavouriteDorm;
+import com.OOAD.service.IFavouriteDormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,24 +10,23 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/teamPosts")
-public class TeamPostsController {
+@RequestMapping("/favouriteDorms")
+public class FavouriteDormsController {
     @Autowired
-    TeamPostServiceImpl service;
+    IFavouriteDormService service;
     @GetMapping
-    public Result getAll() {
-        List<TeamPost> list = service.getAll();
+    public Result GetAll() {
         Result result = new Result();
-        if (list == null || list.isEmpty()) {
-            result.setData("Err");
+        List<FavouriteDorm> favouriteDorms = service.getAll();
+        if (favouriteDorms == null || favouriteDorms.isEmpty()) {
             result.setCode(Code.GET_Err);
-            result.setMsg("查询失败或查询为空，请重试");
+            result.setData("Err");
+            result.setMsg("查询失败，结果可能为空");
         } else {
-            result.setData(list);
             result.setCode(Code.GET_OK);
+            result.setData(favouriteDorms);
             result.setMsg("查询成功");
         }
         return result;
     }
-
 }

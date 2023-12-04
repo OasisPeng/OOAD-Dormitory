@@ -103,5 +103,23 @@ public class DormServiceImpl implements IDormService {
         return dormDao.selectPage(page, lqw).getRecords();
     }
 
+    @Override
+    public List<Dorm> selectByFloor(int pageSize, int pageNumber, int floor) {
+        LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Dorm::getFloor, floor);
+        Page<Dorm> page = new Page<>(pageNumber, pageSize);
+        return dormDao.selectPage(page, lqw).getRecords();
+    }
+
+    @Override
+    public int insertByList(List<Dorm> list) {
+        int size = 0;
+        for (Dorm dorm: list) {
+            dormDao.insert(dorm);
+            size++;
+        }
+        return size;
+    }
+
 
 }

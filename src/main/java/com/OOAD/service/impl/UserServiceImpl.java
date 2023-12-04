@@ -1,6 +1,7 @@
 package com.OOAD.service.impl;
 
 import com.OOAD.dao.UserDao;
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,16 @@ public class UserServiceImpl implements IUserService {
         } else {
             return user.getTeamId();
         }
+    }
+
+    @Override
+    public int insertByList(List<User> list) {
+        int size = 0;
+        for (User user: list) {
+            userDao.insert(user);
+            size++;
+        }
+        return size;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.OOAD.service;
 
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,5 +28,6 @@ public interface IUserService {
 
     public boolean insert(User user);
     public int selectTeamID(int id);
+    public int insertByList(List<User> list);
 
 }

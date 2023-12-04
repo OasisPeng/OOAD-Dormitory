@@ -2,6 +2,7 @@ package com.OOAD.controller;
 
 
 import com.OOAD.domain.Account;
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.User;
 import com.OOAD.service.impl.UserServiceImpl;
 import com.fasterxml.jackson.databind.util.JSONPObject;
@@ -124,6 +125,21 @@ public class UserController {
             result.setData(teamid);
             result.setCode(Code.GET_OK);
             result.setMsg("查询成功");
+        }
+        return result;
+    }
+    @PostMapping("/upload")
+    public Result update(@RequestBody List<User> users) {
+        Result result = new Result();
+        int re = userService.insertByList(users);
+        if (re == users.size()) {
+            result.setCode(Code.INSERT_OK);
+            result.setData("OK");
+            result.setMsg("添加成功");
+        } else {
+            result.setCode(Code.INSERT_ERR);
+            result.setData("ERR");
+            result.setMsg("添加失败请重试");
         }
         return result;
     }
