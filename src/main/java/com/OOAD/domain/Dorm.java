@@ -30,9 +30,10 @@ public class Dorm implements Serializable {
     private Integer floor;
     private Integer room;
     private Integer favourite;
-
+    private Integer size;
     private String detail;
-
+    private String floorSex;
+    private String available;
     @Version
     private Integer version;
 
