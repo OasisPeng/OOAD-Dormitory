@@ -220,7 +220,7 @@ message：用户尚未加入组队
 
 /user/upload
 
-方法：GET
+方法：POST
 
 需求：List<User>(JSON Array格式)
 
@@ -444,7 +444,7 @@ message：查询失败，请重试
 
 /dorm/upload
 
-方法：GET
+方法：POST
 
 需求：List<Dorm>(JSON Array格式)
 
@@ -807,3 +807,41 @@ delete方法，提供application类进行删除
 方法：delete
 
 需求：FavouriteDorm类（JSON obj）（仅仅需要个人和寝室两个参数）
+
+## 管理员设置开放时间
+
+![](pic/ot.png)
+
+### 查询全部
+
+/openTimes
+
+方法：GET
+
+### 根据id查询
+
+/openTime/{id}
+
+方法：GET
+
+### 根据id删除
+
+/openTime/{id}
+
+方法：delete
+
+### 更新（根据id，但是只需要传一个类就行类里面包含id）
+
+/openTime
+
+方法：put
+
+需求：一个opentime类
+
+### 添加
+
+/openTime
+
+方法：POST
+
+需求：一个opentime类

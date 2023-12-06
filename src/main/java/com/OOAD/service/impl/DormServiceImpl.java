@@ -75,8 +75,9 @@ public class DormServiceImpl implements IDormService {
     }
 
     @Override
-    public List<Dorm> getAll() {
-        return dormDao.selectList(null);
+    public List<Dorm> getAll(int pageSize, int pageNumber) {
+        Page<Dorm> page = new Page<>(pageNumber, pageSize);
+        return dormDao.selectPage(page,null).getRecords();
     }
 
     @Override
