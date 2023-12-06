@@ -183,6 +183,21 @@
                   clearable
               ></el-input>
               <!-- 添加其他查询输入框 -->
+              <el-input
+                  v-model="searchParams['floor']"
+                  placeholder="floor"
+                  clearable
+              ></el-input>
+              <el-input
+                  v-model="searchParams['floorSex']"
+                  placeholder="floorSex"
+                  clearable
+              ></el-input>
+              <el-input
+                  v-model="searchParams['availiable']"
+                  placeholder="availiable"
+                  clearable
+              ></el-input>
             </div>
 
 
@@ -200,7 +215,9 @@
             <el-table-column prop="building" label="building" :min-width="100" />
             <!-- 其他列 -->
             <el-table-column prop="room" label="room"/>
-
+            <el-table-column prop="floor" label="floor"/>
+            <el-table-column prop="floorSex" label="floorSex"/>
+            <el-table-column prop="availiable" label="availiable"/>
             <el-table-column label="Operations">
               <template #default="scope">
                 <div class="button-group">
@@ -292,7 +309,7 @@ export default {
       ],
 
       
-       Room: [],
+
       RoomForm: {
         distribution: "",
         building: "",
@@ -300,7 +317,11 @@ export default {
         detail: "",
         favourite:"",
         id:"",
-        version:""
+        version:"",
+        floor: " ",
+        floorSex:" ",
+        availiable:" "
+
       },
       value: 0
     }
@@ -354,7 +375,10 @@ export default {
                 detail: roomData.detail || "",
                 favourite: roomData.favourite || "",
                 id: roomData.id || "",
-                version: roomData.version || ""
+                version: roomData.version || "",
+                floor: roomData.floor || "",
+                floorSex: roomData.floorSex || "",
+                availiable: roomData.availiable|| "",
               };
             });
 
@@ -391,11 +415,11 @@ export default {
     calculateInitialAverageValue() {
       // 计算初始平均值
       let total = 0;
-      console.log("fliaghts",this.flights)
+      // console.log("fliaghts",this.flights)
       for (let i = 0; i < this.flights.length; i++) {
         total += parseFloat(this.flights[i].grade);
-        console.log("grade",this.flights[i].grade)
-        console.log("total",total)
+        // console.log("grade",this.flights[i].grade)
+        // console.log("total",total)
       }
       this.value = this.flights.length > 0 ? total / this.flights.length : 0;
       this.value=this.value.toFixed(2);
@@ -441,15 +465,31 @@ export default {
         type: 'warning'
       }).then(() => {
         // User clicked the OK button, execute delete operation
+        console.log("check",JSON.parse(sessionStorage.getItem('CurUser')))
 
+          //去后台验证用户密码
+          this.$axios.post(this.$httpUrl+'/favouriteDorm',{
+            FavouriteDorm: sessionStorage.getItem('CurUser')
 
+          },{
+            withCredentials: true // 允许跨域请求中的Cookie
+          }).then(res=>{
+            // console.log(this.loginUsername)
+            // console.log(this.loginPassword)
+            console.log(res)
+            if (res.data.code===2041){
+              this.$message.warning(res.data.msg);
+            }
+            else {
+              this.$message.success(res.data.msg);
+            }
 
+          })
 
-          this.$message.success('Deleted successfully');
 
       }).catch(() => {
         // User clicked the Cancel button, cancel the delete operation
-        this.$message.info('Deletion canceled');
+        this.$message.info('Favorite canceled');
       });
 
 
@@ -497,24 +537,37 @@ export default {
         }
       });
     },
-    deleteRoom(index) {
+    deleteRoom() {
       this.$confirm('确定取消收藏？', 'Tips', {
         confirmButtonText: 'Submit',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         // User clicked the OK button, execute delete operation
-        if (index !== -1) {
+        console.log("check", JSON.parse(sessionStorage.getItem('CurUser')));
 
-
-
-          this.$message.success('Deleted successfully');
-        }
+        //去后台验证用户密码
+        this.$axios.delete(this.$httpUrl + '/favouriteDorm', {
+          data: {
+            FavouriteDorm: sessionStorage.getItem('CurUser')
+          },
+          withCredentials: true // 允许跨域请求中的Cookie
+        }).then(res => {
+          // console.log(this.loginUsername)
+          // console.log(this.loginPassword)
+          console.log(res);
+          if (res.data.code === 2031) {
+            this.$message.warning(res.data.msg);
+          } else {
+            this.$message.success(res.data.msg);
+          }
+        });
       }).catch(() => {
         // User clicked the Cancel button, cancel the delete operation
         this.$message.info('Deletion canceled');
       });
     },
+
     cancel(){
       this.dialogVisible = false;
       this.$message.success('Cancel  operation');
@@ -545,7 +598,10 @@ export default {
         if (
             (!this.searchParams.distribution || flight.distribution.toLowerCase().includes(this.searchParams.distribution.toLowerCase())) &&
             (!this.searchParams.building || flight.building.toLowerCase().includes(this.searchParams.building.toLowerCase())) &&
-            (!this.searchParams.room || flight.room.toLowerCase().includes(this.searchParams.room.toLowerCase()))
+            (!this.searchParams.room || flight.room.toLowerCase().includes(this.searchParams.room.toLowerCase()))&&
+            (!this.searchParams.floor || flight.room.toLowerCase().includes(this.searchParams.floor.toLowerCase()))&&
+            (!this.searchParams.floorSex || flight.room.toLowerCase().includes(this.searchParams.floorSex.toLowerCase()))&&
+            (!this.searchParams.availiable || flight.room.toLowerCase().includes(this.searchParams.availiable.toLowerCase()))
         ) {
           return true;
         }

@@ -1,5 +1,6 @@
 <script>
 import emojis from "@/assets/emoji";
+// import '@fortawesome/fontawesome-free/css/all.css';
 
 let client
 export default {
@@ -8,7 +9,6 @@ export default {
       emojis
     },
     methods:{
-        //？？？load多久加载一次？？
         load(){
             this.$axios.get(this.$httpUrl+'/chat/listSingle?fromUser='+this.fromuser+'&toUser='+this.touser).then(res=>{
                 if (res.data.code===2010) {

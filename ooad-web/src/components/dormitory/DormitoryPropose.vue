@@ -147,7 +147,7 @@ export default {
             selectedDormitory:"湖畔1栋-3楼-333",
             submittedDormitory:"",
             centerDialogVisible: false,
-            active: 1,
+            active: 2,
             isGraduateOrUnder: 0, // 0是本科生，1是研究生
             activeName:'1',
             submitStartDate: new Date('2023/07/01 00:00:00'), // 提交宿舍开始日期

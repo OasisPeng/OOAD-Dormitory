@@ -445,7 +445,6 @@ export default {
 
 
 
-        this.$message.success('Deleted successfully');
 
       }).catch(() => {
         // User clicked the Cancel button, cancel the delete operation
