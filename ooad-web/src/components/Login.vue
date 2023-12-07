@@ -233,30 +233,53 @@ export default {
     },
 
     check2() {
-      //去后台验证用户密码
-      console.log('check');
-      this.$router.push({ name: 'indexAdmin' });
+      this.$axios.post(this.$httpUrl+'/user/login',{
+        username: this.loginAdminname,
+        password: this.loginAdminPassword,
+      },{
+        withCredentials: true // 允许跨域请求中的Cookie
+      }).then(res=>{
+        // console.log(this.loginUsername)
+        // console.log(this.loginPassword)
+        console.log(res)
 
-
-
-    },
-    async check() {
-      try {
-        const response = await axios.post('/api/check', {
-          username: this.loginUsername,
-          password: this.loginPassword,
-        });
-        if (response.data.valid) {
-          // 用户名和密码匹配
-          console.log('用户名和密码匹配');
+        if (res.data.code===2000) {
+          // 登录成功，可以执行相应操作，如跳转页
+          this.$router.push({ name: 'indexAdmin' });
+          console.log(res.data.msg);
+          console.log("1");
+          sessionStorage.setItem("CurUser",JSON.stringify(res.data.data))
+          localStorage.setItem("CurUser",JSON.stringify(res.data.data))
+          console.log(JSON.parse(sessionStorage.getItem('CurUser')))
         } else {
-          // 用户名和密码不匹配
-          console.log('用户名和密码不匹配');
+          // 登录失败，可以显示错误消息
+
+          console.log(res.msg);
+          this.$message.success(res.msg);
         }
-      } catch (error) {
-        console.error('验证出错', error);
-      }
+      })
+
+
+
+
     },
+    // async check() {
+    //   try {
+    //     const response = await axios.post('/api/check', {
+    //       username: this.loginUsername,
+    //       password: this.loginPassword,
+    //     });
+    //     if (response.data.valid) {
+    //       // 用户名和密码匹配
+    //       console.log('用户名和密码匹配');
+    //     } else {
+    //       // 用户名和密码不匹配
+    //       console.log('用户名和密码不匹配');
+    //     }
+    //   } catch (error) {
+    //     console.error('验证出错', error);
+    //   }
+    // },
 
 
 
@@ -265,6 +288,7 @@ export default {
     out() {
       this.loginDialogVisible = false;
       this.registerDialogVisible= false;
+      this.admDialogVisible=false;
       this.button1Visible=true;
       this.button2Visible =true;
     },
