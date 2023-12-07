@@ -810,6 +810,16 @@ delete方法，提供application类进行删除
 
 ## 管理员设置开放时间
 
+我们这里用id来区分不同的时段
+
+1表示本科生抢宿舍时间
+
+2表示研究生
+
+3表示博士生
+
+4表示候补选课
+
 ![](pic/ot.png)
 
 ### 查询全部
@@ -845,3 +855,49 @@ delete方法，提供application类进行删除
 方法：POST
 
 需求：一个opentime类
+
+## 广播
+
+![](pic/bc.png)
+
+### 查询全部
+
+/broadCasts
+
+方法：GET
+
+返回全部的广播信息
+
+### 根据id查询
+
+/broadCasts/{id}
+
+方法：GET
+
+### 根据管理员id查询（谁发的）
+
+/broadCasts/admin/{id}
+
+方法：GET
+
+### 根据id删除
+
+/broadCasts/{id}
+
+方法：delete
+
+### 更新
+
+/broadCasts
+
+方法：put
+
+需求：一个具体的broadCasts类（一定要传id，根据id确定修改哪一项）
+
+### 添加
+
+/broadCasts
+
+方法：put
+
+需求：一个具体的broadCasts类（不用传id，是自增的id）

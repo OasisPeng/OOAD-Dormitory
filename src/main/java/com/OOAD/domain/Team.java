@@ -23,6 +23,7 @@ public class Team implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+    private String name;
     //队长的学号
     private Integer headId;
     @Version
