@@ -82,6 +82,11 @@ public class DormServiceImpl implements IDormService {
     }
 
     @Override
+    public List<Dorm> getAll() {
+        return dormDao.selectList(null);
+    }
+
+    @Override
     public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.like(Dorm::getDistribution, dis);

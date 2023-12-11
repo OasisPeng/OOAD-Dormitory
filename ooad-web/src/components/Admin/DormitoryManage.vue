@@ -3,7 +3,7 @@ export default {
     name:"DomritoryManage",
     methods:{
         loadPost(){
-            this.$axios.get(this.$httpUrl+'/dorms?pageSize='+this.pageSize+'&pageNum='+this.pageNum
+            this.$axios.get(this.$httpUrl+'/dorms/loadPage?pageSize='+this.pageSize+'&pageNum='+this.pageNum
             ).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2010){

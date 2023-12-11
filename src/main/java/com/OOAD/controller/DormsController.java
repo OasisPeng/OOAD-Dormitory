@@ -16,8 +16,8 @@ import java.util.List;
 public class DormsController {
     @Autowired
     DormServiceImpl dormService;
-    @GetMapping()
-    public Result getAll(@RequestParam int pageSize, @RequestParam int pageNum) {
+    @GetMapping("/loadPage")
+    public Result loadPage(@RequestParam int pageSize, @RequestParam int pageNum) {
         List<Dorm> dorms = dormService.getAll(pageSize, pageNum);
         Result result = new Result();
         HashMap<String, Object> map = new HashMap<>();
@@ -29,6 +29,21 @@ public class DormsController {
             result.setMsg("查询失败或查询为空，请重试");
         } else {
             result.setData(map);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
+    @GetMapping()
+    public Result getAll() {
+        List<Dorm> dorms = dormService.getAll();
+        Result result = new Result();
+        if (dorms == null || dorms.isEmpty()) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败或查询为空，请重试");
+        } else {
+            result.setData(dorms);
             result.setCode(Code.GET_OK);
             result.setMsg("查询成功");
         }
