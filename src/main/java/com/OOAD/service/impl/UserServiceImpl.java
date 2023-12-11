@@ -4,6 +4,7 @@ import com.OOAD.dao.UserDao;
 import com.OOAD.domain.Dorm;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * @since 2023-10-30
  */
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl extends ServiceImpl<UserDao, User>  implements IUserService {
     @Autowired
     UserDao userDao;
     @Override

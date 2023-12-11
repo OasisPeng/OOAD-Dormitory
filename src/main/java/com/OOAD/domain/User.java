@@ -63,4 +63,8 @@ public class User implements Serializable {
 
     private String avatar;
 
+    private String grade;
+
+    @TableField("studentType")
+    private String studentType;
 }

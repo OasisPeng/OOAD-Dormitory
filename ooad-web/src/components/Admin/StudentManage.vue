@@ -3,21 +3,23 @@ export default {
     name:"StudentManage",
     methods:{
         loadPost(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/listPage',{
-            //     pageSize:this.pageSize,
-            //     pageNum:this.pageNum,
-            //     param:{
-            //         name:this.name
-            //     }
-            // }).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.tableData=res.data
-            //         this.total=res.total
-            //     }else {
-            //         alert('获取数据失败')
-            //     }
-            // })
+            this.$axios.get(this.$httpUrl + '/users/listPage', {
+                params: {
+                    pageNum: this.pageNum,
+                    pageSize: this.pageSize,
+                    name: this.name
+                }
+            }).then(res => res.data).then(res => {
+                console.log(res);
+                if (res.code === 2020) {
+                    this.tableData = res.data.records;
+                    this.total = res.data.total;
+                } else {
+                    alert('获取数据失败');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -40,25 +42,28 @@ export default {
                 //赋值到表单,form是表单内容
                 this.form.id=row.id;
                 this.form.name=row.name;
-                this.form.remark=row.remark;
+                this.form.sex = row.sex;
+                this.form.college = row.college;
+                this.form.studentType = row.studentType;
+                this.form.grade = row.grade;
             })
         },
         del(id){
-            // this.$axios.get(this.$httpUrl+'/goodstype/del?id='+id).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
+            this.$axios.delete(this.$httpUrl+'/user/'+id).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2030){
+                    this.$message({
+                        message: '操作成功~',
+                        type: 'success'
+                    });
+                    this.loadPost()
+                }else {
+                    this.$message({
+                        message: '操作失败！',
+                        type: 'error'
+                    });
+                }
+            })
         },
         add(){
             this.centerDialogVisible=true;
@@ -84,40 +89,40 @@ export default {
             this.$refs.form.resetFields();//表单内容回到前一个状态
         },
         doSave(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/save',this.form).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.centerDialogVisible=false
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
+            this.$axios.post(this.$httpUrl+'/user', this.form).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2040){
+                    this.$message({
+                        message: '操作成功~',
+                        type: 'success'
+                    });
+                    this.centerDialogVisible=false
+                    this.loadPost()
+                }else {
+                    this.$message({
+                        message: '操作失败！',
+                        type: 'error'
+                    });
+                }
+            })
         },
         doMod(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/update',this.form).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.centerDialogVisible=false
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
+            this.$axios.put(this.$httpUrl+'/user', this.form).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2020){
+                    this.$message({
+                        message: '操作成功~',
+                        type: 'success'
+                    });
+                    this.centerDialogVisible=false
+                    this.loadPost()
+                }else {
+                    this.$message({
+                        message: '操作失败！',
+                        type: 'error'
+                    });
+                }
+            })
         }
     },
     beforeMount() {
@@ -126,9 +131,7 @@ export default {
     data() {
 
         return {
-            tableData: [{id:1,name:'李云思',studentId:'12011555',academy:'致诚',studentType:'本科生',grade:'20'},
-                {id:2,name:'林乐清',studentId:'12112344',academy:'树仁',studentType:'本科生',grade:'21'},],
-
+            tableData: [],
             pageSize:10,
             pageNum:1,
             total:0,
@@ -137,11 +140,26 @@ export default {
             form:{
                 id:'',
                 name:'',
-                remark:''
+                sex:'',
+                college:'',
+                studentType:'',
+                grade:''
             },
             rules: {
                 name: [
-                    {required: true, message: '请输入名称', trigger: 'blur'}
+                    { required: true, message: '请输入姓名', trigger: 'blur' }
+                ],
+                sex: [
+                    { required: true, message: '请选择性别', trigger: 'change' }
+                ],
+                college: [
+                    { required: true, message: '请输入书院', trigger: 'blur' }
+                ],
+                studentType: [
+                    { required: true, message: '请输入学生类型', trigger: 'blur' }
+                ],
+                grade: [
+                    { required: true, message: '请输入年级', trigger: 'blur' }
                 ]
             }
         }
@@ -152,7 +170,7 @@ export default {
 <template>
     <div>
         <div style="margin-bottom: 5px">
-            <el-input v-model="name" placeholder="请输入名称" suffix-icon="el-icon-search" style="width: 200px"
+            <el-input v-model="name" placeholder="请输入学生姓名" suffix-icon="el-icon-search" style="width: 200px"
                       @keyup.enter.native="loadPost"></el-input>
 
             <el-button type="primary" style="margin-left: 5px" @click="loadPost">查询</el-button>
@@ -163,13 +181,13 @@ export default {
                   :header-cell-style="{ background:'#f2f5fc', color: '#555555'}"
                   border
         >
-            <el-table-column prop="id" label="ID" width="60">
+            <el-table-column prop="id" label="学号" width="140">
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
             </el-table-column>
-            <el-table-column prop="studentId" label="学号" width="100">
+            <el-table-column prop="sex" label="性别" width="120">
             </el-table-column>
-            <el-table-column prop="academy" label="书院" width="180">
+            <el-table-column prop="college" label="书院" width="180">
             </el-table-column>
             <el-table-column prop="studentType" label="学生类型" width="180">
             </el-table-column>
@@ -202,16 +220,44 @@ export default {
                 :visible.sync="centerDialogVisible"
                 width="30%"
                 center>
-            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
-                <el-form-item label="分类名" prop="name">
+            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+                <el-form-item label="姓名" prop="name">
                     <el-col :span="20">
                         <el-input v-model="form.name"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="备注" prop="remark">
+                <el-form-item label="性别" prop="sex">
                     <el-col :span="20">
-                        <el-input type="textarea" v-model="form.remark"></el-input>
+                        <el-radio-group v-model="form.sex">
+                            <el-radio label="男"></el-radio>
+                            <el-radio label="女"></el-radio>
+                        </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="学院" prop="college">
+                    <el-col :span="20">
+                        <el-select v-model="form.college">
+                            <el-option label="致诚" value="致诚"></el-option>
+                            <el-option label="致仁" value="致仁"></el-option>
+                            <el-option label="致新" value="致新"></el-option>
+                            <el-option label="树德" value="树德"></el-option>
+                            <el-option label="树礼" value="树礼"></el-option>
+                            <el-option label="树仁" value="树仁"></el-option>
+                        </el-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="学生类型" prop="studentType">
+                    <el-col :span="20">
+                        <el-radio-group v-model="form.studentType">
+                            <el-radio label="本科生"></el-radio>
+                            <el-radio label="研究生"></el-radio>
+                            <el-radio label="博士生"></el-radio>
+                        </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="年级" prop="grade">
+                    <el-col :span="20">
+                        <el-input v-model="form.grade" placeholder="例：21"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>

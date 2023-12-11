@@ -271,7 +271,7 @@ export default {
                                         <div class="emoji-box" style="display: flex; align-items: center; flex-wrap: wrap;">
                                             <span v-for="(item, index) in emojis" :key="index" style="margin-right: 5px" v-html="item" @click="clickEmoji(item)"></span>
                                         </div>
-                                        <i slot="reference" class="fa fa-smile" style="margin-right: 10px; color: #9f9f9f; font-size: 16px;"></i>
+                                        <i slot="reference" class="fa fa-smile" style="margin-right: 10px; color: #9f9f9f; font-size: 16px;">   </i>
                                     </el-popover>
                                     <!-- 输入框 -->
                                     <div id="im-content" contenteditable style="flex: 1; border: 1px solid #ddd; border-radius: 5px; padding: 5px; margin-right: 10px; background-color: white"></div>

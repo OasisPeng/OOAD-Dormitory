@@ -1,6 +1,7 @@
 package com.OOAD.service.impl;
 
 import com.OOAD.dao.DormDao;
+import com.OOAD.domain.Chat;
 import com.OOAD.domain.Dorm;
 import com.OOAD.service.IDormService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -83,7 +84,7 @@ public class DormServiceImpl implements IDormService {
     @Override
     public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Dorm::getDistribution, dis);
+        lqw.like(Dorm::getDistribution, dis);
         Page<Dorm> page = new Page<>(pageNumber, pageSize);
         return dormDao.selectPage(page, lqw).getRecords();
     }
