@@ -15,40 +15,43 @@
           },
           logout(){
               //退出确认
-              this.$confirm('您确定要退出登录吗？','提示',{
-                  confirmButtonText:'确定',
-                  type:'warning',
-                  center:true
-              }).then(()=>{
+              this.$confirm(this.$t('您确定要退出登录吗？'), this.$t('提示'), {
+                  confirmButtonText: this.$t('确定'),
+                  cancelButtonText: this.$t('取消'),
+                  type: 'warning',
+                  center: true
+              }).then(() => {
                   this.$message({
-                      type:'success',
-                      message:'退出登录成功'
-                  })
-                  this.$router.push('/');//路由
-                  sessionStorage.clear()
-              })
-                  .catch(()=>{
-                      this.$message({
-                          type:'info',
-                          message:'已取消退出登录'
-                      })
-                  })
+                      type: 'success',
+                      message: this.$t('退出登录成功')
+                  });
+                  this.$router.push('/'); //路由
+                  sessionStorage.clear();
+              }).catch(() => {
+                  this.$message({
+                      type: 'info',
+                      message: this.$t('已取消退出登录')
+                  });
+              });
           },
           collapse(){
               this.$emit('doCollapse')
           },
-          handleUploadSuccess(response,file) {
-              // 处理上传成功后的操作
-              this.avatar = URL.createObjectURL(file.raw); // 更新头像URL
-              console.log(this.avatar)
-          },
+          // handleUploadSuccess(response,file) {
+          //     // 处理上传成功后的操作
+          //     this.avatar = URL.createObjectURL(file.raw); // 更新头像URL
+          //     console.log(this.avatar)
+          // },
           showAvatarDialog() {
               // 点击头像时显示头像查看对话框
               this.avatarDialogVisible = true;
           },
           jumpToMessage(){
               this.$router.push("/Message")
-          }
+          },
+          switchLanguage(lang) {
+              this.$i18n.locale = lang;
+          },
       },
       props:{
           icon:String
@@ -64,8 +67,12 @@
       <div>
           <i :class="icon" style="font-size: 20px;line-height: 60px;cursor: pointer;" @click="collapse"></i>
       </div>
+      <div>
+          <el-button style="margin-left: 10px" type="text" @click="switchLanguage('en')">English</el-button>
+          <el-button type="text" @click="switchLanguage('zh')">中文</el-button>
+      </div>
       <div style="flex: 1; font-size: 30px; text-align: center; margin-left:110px;font-weight: bold; color: #282626; font-family: 'Arial', sans-serif;">
-          <span>Dormitory Selection System</span>
+          <span>{{ $t('宿舍选择系统') }}</span>
       </div>
       <div >
           <el-dropdown trigger="hover">
@@ -75,27 +82,27 @@
 
               <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item class="clearfix">
-                      我的消息
+                     {{$t('我的消息')}}
                       <el-badge class="mark" :value="10" />
                   </el-dropdown-item>
                   <el-dropdown-item class="clearfix">
-                      点赞
+                      {{$t('点赞')}}
                       <el-badge class="mark" :value="3" />
                   </el-dropdown-item>
                   <el-dropdown-item class="clearfix">
-                      评论
+                      {{$t('评论')}}
                       <el-badge class="mark" :value="3" />
                   </el-dropdown-item>
                   <el-dropdown-item class="clearfix">
-                      广播通知
+                      {{$t('广播通知')}}
                       <el-badge class="mark" :value="12" />
                   </el-dropdown-item>
                   <el-dropdown-item class="clearfix">
-                      组队邀请
+                      {{$t('组队邀请')}}
                       <el-badge class="mark" :value="1" />
                   </el-dropdown-item>
                   <el-dropdown-item class="clearfix">
-                      组队申请
+                      {{$t('组队申请')}}
 <!--                      <el-badge class="mark" :value="0" />-->
                   </el-dropdown-item>
               </el-dropdown-menu>
@@ -115,9 +122,9 @@
 <!--                >-->
 <!--                    <el-dropdown-item slot="trigger">上传头像</el-dropdown-item>-->
 <!--                </el-upload>-->
-              <el-dropdown-item @click.native="toUser">个人中心</el-dropdown-item>
-              <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
+                <el-dropdown-item @click.native="toUser">{{ $t('个人中心') }}</el-dropdown-item>
+                <el-dropdown-item @click.native="logout">{{ $t('退出登录') }}</el-dropdown-item>
+            </el-dropdown-menu>
       </el-dropdown>
 <!--      <el-dialog-->
 <!--          title=""-->

@@ -18,8 +18,8 @@ export default {
 <template>
     <div>
         <el-menu :default-active="this.currentRoute" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="/Home" style="font-family: arial, sans-serif">个人信息</el-menu-item>
-            <el-menu-item index="/MyPrefer" style="font-family: arial, sans-serif">我的收藏</el-menu-item>
+            <el-menu-item index="/Home" style="font-family: arial, sans-serif">{{$t('个人信息')}}</el-menu-item>
+            <el-menu-item index="/MyPrefer" style="font-family: arial, sans-serif">{{$t('我的收藏')}}</el-menu-item>
         </el-menu>
         <div style="margin-top: 20px"></div>
         <el-row>
@@ -30,8 +30,8 @@ export default {
                         <span>湖畔3栋-2楼-222</span>
                         <div class="bottom clearfix">
                             <el-row>
-                                <el-button type="text" class="button" style="margin-left: 7px;">查看详情</el-button>
-                                <el-button type="text" class="button">取消收藏</el-button>
+                                <el-button type="text" class="button" style="margin-left: 7px;">{{$t('查看详情')}}</el-button>
+                                <el-button type="text" class="button">{{$t('取消收藏')}}</el-button>
                             </el-row>
                         </div>
                     </div>
@@ -43,8 +43,8 @@ export default {
                     <div style="padding: 14px;">
                         <span>湖畔1栋-3楼-333</span>
                         <div class="bottom clearfix">
-                            <el-button type="text" class="button" style="margin-left: 7px;">查看详情</el-button>
-                            <el-button type="text" class="button">取消收藏</el-button>
+                            <el-button type="text" class="button" style="margin-left: 7px;">{{$t('查看详情')}}</el-button>
+                            <el-button type="text" class="button">{{$t('取消收藏')}}</el-button>
                         </div>
                     </div>
                 </el-card>

@@ -78,16 +78,16 @@
   <div>
 
       <el-menu :default-active="this.currentRoute" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="/Home" style="font-family: arial, sans-serif">个人信息</el-menu-item>
-          <el-menu-item index="/MyPrefer" style="font-family: arial, sans-serif">我的收藏</el-menu-item>
+          <el-menu-item index="/Home" style="font-family: arial, sans-serif">{{$t('个人信息')}}</el-menu-item>
+          <el-menu-item index="/MyPrefer" style="font-family: arial, sans-serif">{{$t('我的收藏')}}</el-menu-item>
       </el-menu>
       <div style="text-align: center;background-color: #f1f1f3;height: 100%;padding: 0px;margin-top: 30px;">
 
-      <el-descriptions class="el-descriptions" title="基本信息" :column="2" size="40"  border>
+      <el-descriptions class="el-descriptions" :title="$t('基本信息')"  :column="2" size="40"  border>
              <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-edit"></i>
-                  姓名
+                  {{ $t('姓名') }}
               </template>
               <span v-if="editingBase">
                   <el-input v-model="user.name"></el-input>
@@ -99,44 +99,44 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-s-custom"></i>
-                  学号
+                  {{ $t('学号') }}
               </template>
               <span v-if="editingBase">
-                  <el-input v-model="user.no"></el-input>
-              </span>
+          <el-input v-model="user.no"></el-input>
+        </span>
               <span v-else>
-                {{ user.id}}
-              </span>
+          {{ user.id }}
+        </span>
           </el-descriptions-item>
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-location-outline"></i>
-                  性别
+                  {{ $t('性别') }}
               </template>
               <span v-if="editingBase">
-                  <el-input v-model="user.sex"></el-input>
-              </span>
+          <el-input v-model="user.sex"></el-input>
+        </span>
               <span v-else>
-                {{ user.sex==1?"男":"女"}}
-              </span>
+          {{ user.sex == 1 ? $t('男') : $t('女') }}
+        </span>
           </el-descriptions-item>
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-tickets"></i>
-                  书院
+                  {{ $t('书院') }}
               </template>
               <span v-if="editingBase">
-                  <el-input v-model="user.college"></el-input>
-              </span>
+          <el-input v-model="user.college"></el-input>
+        </span>
               <span v-else>
-                {{ user.college}}
-              </span>
+          {{ user.college }}
+        </span>
           </el-descriptions-item>
       </el-descriptions>
 
       <el-alert
           v-if="isMissingMoreInfo"
-          title="为了更好地进行算法匹配，请完善您的匹配信息"
+          :title="$t('为了更好地进行算法匹配，请完善您的匹配信息')"
           type="error"
           show-icon
           center
@@ -144,11 +144,11 @@
           @close="isMissingMoreInfo = false"
           style="margin-top: 5px"
       />
-      <el-descriptions class="el-descriptions" title="匹配信息（生活习惯、爱好等）" :column="3" size="40" border>
+      <el-descriptions class="el-descriptions" :title="$t('匹配信息（生活习惯、爱好等）')" :column="3" size="40" border>
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-alarm-clock"></i>
-                  起床时间
+                  {{ $t('起床时间') }}
               </template>
               <span v-if="editingMore">
                   <el-select v-model="user.timetable1">
@@ -168,7 +168,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-moon-night"></i>
-                  入睡时间
+                  {{ $t('入睡时间') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.timetable2">
@@ -186,7 +186,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-table-lamp"></i>
-                  是否午睡
+                  {{ $t('是否午睡') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.nap">
@@ -202,7 +202,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-smoking"></i>
-                  是否抽烟
+                  {{ $t('是否抽烟') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.smoke">
@@ -218,7 +218,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-alarm-clock"></i>
-                  睡觉时是否有磨牙、打呼噜等习惯
+                  {{ $t('睡觉时是否有磨牙、打呼噜等习惯') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.sleepHabit">
@@ -234,7 +234,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-brush"></i>
-                  是否在意卫生清洁
+                  {{ $t('是否在意卫生清洁') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.clean">
@@ -251,7 +251,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-timer"></i>
-                  空调温度偏好
+                  {{ $t('空调温度偏好') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.temperature">
@@ -266,7 +266,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-magic-stick"></i>
-                  喜欢热闹还是喜欢安静
+                  {{ $t('喜欢热闹还是喜欢安静') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.isQuiet">
@@ -282,7 +282,7 @@
           <el-descriptions-item>
               <template slot="label">
                   <i class="el-icon-magic-stick"></i>
-                  性格倾向
+                  {{ $t('性格倾向') }}
               </template>
               <span v-if="editingMore">
                    <el-select v-model="user.characters">
@@ -322,21 +322,21 @@
       </el-descriptions>
       <div style="display: flex;align-items: center">
           <div style="margin: 5px auto 5px 65px;">
-              <el-button type="success"  @click="editUserMoreInfo" >编辑</el-button>
-              <el-button type="primary"  @click="submitUserMoreInfo" style="margin-left: 5px">提交</el-button>
+              <el-button type="success"  @click="editUserMoreInfo" >{{ $t('编辑') }}</el-button>
+              <el-button type="primary"  @click="submitUserMoreInfo" style="margin-left: 5px">{{ $t('提交') }}</el-button>
           </div>
       </div>
       <div style="display: flex;align-items: center">
           <div style="margin-top: 10px; margin-left: 65px; margin-bottom: 20px">
               <el-button type="info" round>
-                  点击查看你的专属算法推荐室友
+                  {{ $t('点击查看你的专属算法推荐室友') }}
               </el-button>
               <i class="el-icon-warning-outline" style="margin-left: 5px; cursor: pointer;color:#817f7f;" @click="showExplanation"></i>
           </div>
       </div>
 <!--      <DateUtils></DateUtils>-->
       <el-dialog
-          title="详情"
+          :title="$t('详情')"
           :visible="isExplanationVisible"
           @close="isExplanationVisible = false"
       >

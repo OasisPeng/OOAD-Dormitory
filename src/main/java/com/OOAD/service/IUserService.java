@@ -2,6 +2,7 @@ package com.OOAD.service;
 
 import com.OOAD.domain.Dorm;
 import com.OOAD.domain.User;
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

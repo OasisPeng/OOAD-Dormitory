@@ -63,13 +63,12 @@
         >
             <el-menu-item index="/Home">
                 <i class="el-icon-s-home"></i>
-                <span slot="title">个人中心</span>
+                <span slot="title">{{ $t('个人中心') }}</span>
             </el-menu-item>
-
 
             <el-menu-item :index="'/'+item.menuClick" v-for="(item,i) in menu" :key="i">
                 <i :class="item.menuIcon"></i>
-                <span slot="title">{{item.menuName}}</span>
+                <span slot="title">{{ $t(item.menuName) }}</span>
             </el-menu-item>
 
         </el-menu>

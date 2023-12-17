@@ -1,10 +1,6 @@
 <template>
     <div>
         <el-container>
-            <!-- 头部 -->
-            <el-header style="background-color: #3384d5; color: #fff; padding: 20px;margin-left: -10px; margin-top: -10px;">
-                <h2 style="text-align: center">评论通知</h2>
-            </el-header>
 
             <!-- 内容区域 -->
             <el-main style="padding: 20px;">
