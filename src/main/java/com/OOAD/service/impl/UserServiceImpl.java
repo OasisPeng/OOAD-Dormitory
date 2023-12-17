@@ -1,10 +1,14 @@
 package com.OOAD.service.impl;
 
+import com.OOAD.dao.SysUserDao;
 import com.OOAD.dao.UserDao;
 import com.OOAD.domain.Dorm;
+import com.OOAD.domain.SysUser;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +25,8 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
     @Autowired
     UserDao userDao;
+    @Autowired
+    SysUserDao sysUserDao;
     @Override
     public User login(int id, String password) {
         User user = userDao.selectById(id);
@@ -46,6 +52,14 @@ public class UserServiceImpl implements IUserService {
         if (originUser == null) {
             return false;
         } else {
+            if (user.getPassword() != null) {
+                user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+                LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+                lqw.eq(SysUser::getUsername, user.getId().toString());
+                SysUser sysUser = sysUserDao.selectOne(lqw);
+                sysUser.setPassword(user.getPassword());
+                sysUserDao.updateById(sysUser);
+            }
             int i = userDao.updateById(user);
             if (i == 1) {
                 return true;
@@ -98,9 +112,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public int insertByList(List<User> list) {
+
         int size = 0;
         for (User user: list) {
+            SysUser sysUser = new SysUser();
+            sysUser.setRole("user");
+            sysUser.setUsername(user.getId().toString());
+            sysUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userDao.insert(user);
+            sysUserDao.insert(sysUser);
             size++;
         }
         return size;

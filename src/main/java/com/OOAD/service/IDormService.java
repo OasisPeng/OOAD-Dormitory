@@ -27,4 +27,5 @@ public interface IDormService {
     public List<Dorm> selectByRoomNumber(int pageSize, int pageNumber, String building, String roomNumber);
     public List<Dorm> selectByFloor(int pageSize, int pageNumber, int floor);
     public int insertByList(List<Dorm> list);
+    public int qiang(int id);
 }

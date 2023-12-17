@@ -26,6 +26,12 @@ public class TeamServiceImpl implements ITeamService{
     TeamDao teamDao;
     @Autowired
     UserDao userDao;
+
+    @Override
+    public int Update(Team team) {
+        return teamDao.updateById(team);
+    }
+
     @Override
     public Team selectByID(int id) {
        return teamDao.selectById(id);

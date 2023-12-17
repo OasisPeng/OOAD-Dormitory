@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Transactional
 public interface ITeamService {
+    public int Update(Team team);
     public Team selectByID(int id);
     public List<Team> selectAll();
     public int addUser(int teamID, int userID);

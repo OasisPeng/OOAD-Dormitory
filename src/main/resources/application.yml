@@ -7,8 +7,12 @@ spring:
     url: jdbc:mysql://203.195.66.67:3306/OOAD
     username: hailong
     password: 337845818
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    banner: off
+  security:
+    jwt:
+      key: aukhcu
+      expire: 7
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  global-config:
+#    banner: off

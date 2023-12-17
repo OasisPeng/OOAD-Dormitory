@@ -1,6 +1,7 @@
 package com.OOAD.service.impl;
 
 import com.OOAD.dao.DormDao;
+import com.OOAD.dao.TeamDao;
 import com.OOAD.domain.Dorm;
 import com.OOAD.service.IDormService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -25,6 +27,8 @@ public class DormServiceImpl implements IDormService {
 
     @Autowired
     DormDao dormDao;
+    @Autowired
+    TeamDao teamDao;
     @Override
     public boolean insert(Dorm dorm) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
@@ -120,6 +124,17 @@ public class DormServiceImpl implements IDormService {
             size++;
         }
         return size;
+    }
+
+    @Override
+    public int qiang(int id) {
+        Dorm dorm = dormDao.selectById(id);
+        if (Objects.equals(dorm.getAvailable(), "否")) {
+            return -1;
+        } else {
+            dorm.setAvailable("否");
+            return dormDao.updateById(dorm);
+        }
     }
 
 

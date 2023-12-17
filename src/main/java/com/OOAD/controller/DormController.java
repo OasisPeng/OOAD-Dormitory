@@ -2,8 +2,11 @@ package com.OOAD.controller;
 
 
 import com.OOAD.domain.Dorm;
+import com.OOAD.domain.Team;
+import com.OOAD.service.ITeamService;
 import com.OOAD.service.impl.DormServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.List;
 public class DormController {
     @Autowired
     DormServiceImpl dormService;
+    @Autowired
+    ITeamService teamService;
     @PostMapping
     public Result insert(@RequestBody Dorm dorm) {
         System.out.println(dorm);
@@ -114,6 +119,29 @@ public class DormController {
         }
         return result;
     }
-
+    @PostMapping("/qiang/{teamId}/{dormId}")
+    public Result qiang(@PathVariable int teamId, @PathVariable int dormId) {
+        Result result = new Result();
+        Team team = teamService.selectByID(teamId);
+        int re = dormService.qiang(dormId);
+        if (re == 1) {
+            team.setDorm(dormId);
+            int x = teamService.Update(team);
+            if (x == 1) {
+                result.setCode(Code.INSERT_OK);
+                result.setMsg("抢宿舍成功");
+                result.setData("OK");
+            } else {
+                result.setCode(Code.INSERT_ERR);
+                result.setMsg("抢宿舍失败，请重试");
+                result.setData("Err");
+            }
+        } else {
+            result.setCode(Code.INSERT_ERR);
+            result.setMsg("抢宿舍失败，请重试");
+            result.setData("Err");
+        }
+        return result;
+    }
 }
 
