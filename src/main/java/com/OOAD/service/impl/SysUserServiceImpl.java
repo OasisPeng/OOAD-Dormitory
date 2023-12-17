@@ -36,7 +36,12 @@ public class SysUserServiceImpl implements ISysUserService {
     public SysUser findByName(String username) {
         LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
         lqw.eq(SysUser::getUsername, username);
+        List<SysUser> list = dao.selectList(lqw);
+        if (list.isEmpty()) {
+            return null;
+        } else {
         return dao.selectList(lqw).get(0);
+        }
     }
 
 

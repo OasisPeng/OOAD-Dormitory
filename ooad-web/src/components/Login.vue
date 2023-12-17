@@ -204,32 +204,31 @@ export default {
 
 
     login() {
-          //去后台验证用户密码
-          this.$axios.post(this.$httpUrl+'/user/login',{
-                  username: this.loginUsername,
-                  password: this.loginPassword,
-                },{
-            withCredentials: true // 允许跨域请求中的Cookie
-          }).then(res=>{
-            // console.log(this.loginUsername)
-            // console.log(this.loginPassword)
-            console.log(res)
+      //去后台验证用户密码
+      const formData = new FormData();
+      formData.append('username', this.loginUsername);
+      formData.append('password', this.loginPassword);
 
-                if (res.data.code===2000) {
-                        // 登录成功，可以执行相应操作，如跳转页
-                    this.$router.push({ name: 'index' });
-                    console.log(res.data.msg);
-                    console.log("1");
-                    sessionStorage.setItem("CurUser",JSON.stringify(res.data.data))
-                    localStorage.setItem("CurUser",JSON.stringify(res.data.data))
-                    console.log(JSON.parse(sessionStorage.getItem('CurUser')))
-                      } else {
-                        // 登录失败，可以显示错误消息
+      this.$axios.post(this.$httpUrl+'/auth/login', formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }).then(res => {
+        console.log(res);
 
-                        console.log(res.msg);
-                    this.$message.success(res.msg);
-                      }
-          })
+        if (res.data.code === 2000) {
+          this.$router.push({ name:'indexAdmin' });
+          console.log(res.data.msg);
+          console.log("1");
+          sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));
+          localStorage.setItem("CurUser", JSON.stringify(res.data.data));
+          console.log(JSON.parse(sessionStorage.getItem('CurUser')));
+        } else {
+          console.log(res.msg);
+          this.$message.success(res.msg);
+        }
+      });
     },
 
     check2() {

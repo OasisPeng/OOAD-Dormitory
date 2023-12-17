@@ -73,7 +73,10 @@ public class SecurityConfiguration {
                             @Override
                             public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
                                 Result result = new Result();
+                                response.setHeader("Access-Control-Allow-Credentials", "true");
                                 response.setContentType("application/json;charset=utf-8");
+                                response.setHeader("Access-Control-Allow-Credentials", "true");
+                                response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
                                 result.setCode(403);
                                 result.setMsg("没有权限");
                                 result.setData("Err");
@@ -88,7 +91,9 @@ public class SecurityConfiguration {
     }
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
-        User user = (User) authentication.getPrincipal();
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+            User user = (User) authentication.getPrincipal();
         SysUser sysUser = service.findByName(user.getUsername());
         String token = utils.createJwt(user, sysUser.getId(), sysUser.getUsername());
         AuthorizeVO vo = new AuthorizeVO();
@@ -101,12 +106,15 @@ public class SecurityConfiguration {
         result.setMsg("OK");
         result.setCode(Code.LOGIN_OK);
         result.setData(vo);
-         response.getWriter().write(JSON.toJSONString(result));
+        response.getWriter().write(JSON.toJSONString(result));
     }
 
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         Result result = new Result();
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=utf-8");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         result.setCode(401);
         result.setMsg("登录信息错误");
         result.setData("Err");
@@ -114,7 +122,10 @@ public class SecurityConfiguration {
     }
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Result result = new Result();
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=utf-8");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         PrintWriter out = response.getWriter();
         String auth = request.getHeader("Authorization");
         if (utils.invalidJwt(auth)) {

@@ -246,7 +246,10 @@ export default {
               openTime: this.benkesheng.benke_opentime,
               closeTime: this.benkesheng.benke_endtime,
             },{
-              withCredentials: true // 允许跨域请求中的Cookie
+              withCredentials: true,// 允许跨域请求中的Cookie
+              headers:{
+              "Authorization": sessionStorage.getItem('CurUser').token
+              }
             }).then(res=>{
               console.log(res.data)
             })
