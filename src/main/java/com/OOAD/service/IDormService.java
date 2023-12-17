@@ -22,7 +22,6 @@ public interface IDormService {
     public Dorm selectByID(int id);
     public boolean updateByID(Dorm dorm);
     public List<Dorm> getAll(int pageSize, int pageNumber);
-    public List<Dorm> getAll();
     public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis);
     public List<Dorm> selectByBuilding(int pageSize, int pageNumber, String building);
     public List<Dorm> selectByRoomNumber(int pageSize, int pageNumber, String building, String roomNumber);

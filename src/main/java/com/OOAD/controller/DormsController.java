@@ -34,19 +34,4 @@ public class DormsController {
         }
         return result;
     }
-    @GetMapping()
-    public Result getAll() {
-        List<Dorm> dorms = dormService.getAll();
-        Result result = new Result();
-        if (dorms == null || dorms.isEmpty()) {
-            result.setData("Err");
-            result.setCode(Code.GET_Err);
-            result.setMsg("查询失败或查询为空，请重试");
-        } else {
-            result.setData(dorms);
-            result.setCode(Code.GET_OK);
-            result.setMsg("查询成功");
-        }
-        return result;
-    }
 }
