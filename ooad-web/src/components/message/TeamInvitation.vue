@@ -2,7 +2,7 @@
     <div>
         <el-container>
             <!-- 头部 -->
-            <el-header style="background-color: #67C23A; color: #fff; padding: 20px;margin-left: -10px; margin-top: -10px;">
+            <el-header style="background-color:  #3384d5; color: #fff; padding: 20px;margin-left: -10px; margin-top: -10px;">
                 <h2 style="text-align: center">组队邀请处理</h2>
             </el-header>
 
@@ -39,14 +39,14 @@ export default {
         return {
             invitations: [
                 {
-                    username: 'John Doe',
+                    username: '张三',
                     avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', // 请替换为实际的用户头像路径
-                    teamName: 'Web 开发组',
+                    teamName: '230宿舍',
                 },
                 {
-                    username: 'Alice Smith',
+                    username: '赵五',
                     avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', // 请替换为实际的用户头像路径
-                    teamName: '移动应用组',
+                    teamName: '333小队',
                 },
                 // 添加更多邀请...
             ],
