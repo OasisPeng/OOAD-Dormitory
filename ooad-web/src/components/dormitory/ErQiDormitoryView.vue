@@ -282,6 +282,7 @@ export default {
       ],
       currentPage4: 1, // 当前页数
       pageSize: 10,   // 初始每页显示的条数
+
       comment: {
         grade: " ",
         content: " ",
@@ -312,9 +313,11 @@ export default {
       const data = res.data.data;
       console.log(res)
       console.log(data)
+
       // 检查 data 是否为数组
       if (Array.isArray(data)) {
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
+
         const flights = data
             .filter(evo => evo.distribution === "二期") // 过滤符合条件的数据
             .map(evo => {
@@ -335,7 +338,9 @@ export default {
         console.error("The response data is not an array.");
       }
     });
+
     this.updateTableHeight();
+
     this.$axios.get(this.$httpUrl+'/dorms').then(res => {
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
@@ -367,8 +372,6 @@ export default {
         console.error("The response data is not an array.");
       }
     });
-
-
 
   },
   methods: {

@@ -1,6 +1,10 @@
 <template>
     <div>
         <el-container>
+            <!-- 头部 -->
+            <el-header style="background-color:  #3384d5; color: #fff; padding: 20px;margin-left: -10px; margin-top: -10px;">
+                <h2 style="text-align: center">组队申请处理</h2>
+            </el-header>
 
             <!-- 内容区域 -->
             <el-main style="padding: 20px;">
@@ -14,7 +18,7 @@
 
                     <!-- 申请内容 -->
                     <div style="font-size: 16px">
-                        <span>申请加入您的组队：</span>
+                        <strong>申请加入您的组队：</strong>
                         {{ application.teamName }}
                     </div>
 

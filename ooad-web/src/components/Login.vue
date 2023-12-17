@@ -232,7 +232,7 @@ export default {
     },
 
     check2() {
-      this.$axios.post(this.$httpUrl+'/admin/login',{
+      this.$axios.post(this.$httpUrl+'/user/login',{
         username: this.loginAdminname,
         password: this.loginAdminPassword,
       },{
@@ -257,6 +257,8 @@ export default {
           this.$message.success(res.msg);
         }
       })
+
+
 
 
     },
