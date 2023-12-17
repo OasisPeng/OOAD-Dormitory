@@ -50,7 +50,7 @@
           },
           submitUserMoreInfo() {
               // 在这里执行提交到后台的逻辑，例如使用axios或者Vue Resource发送HTTP请求
-              this.$axios.put(this.$httpUrl+'/user',this.user).then(res=>{
+              this.$axios.put(this.$httpUrl+'/user/updateAUser',this.user).then(res=>{
                   if (res.data.code===2020) {
                       console.log( res.data.msg)
                       this.getUser()

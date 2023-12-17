@@ -126,21 +126,21 @@
                 <el-dropdown-item @click.native="logout">{{ $t('退出登录') }}</el-dropdown-item>
             </el-dropdown-menu>
       </el-dropdown>
-<!--      <el-dialog-->
-<!--          title=""-->
-<!--          :visible.sync="avatarDialogVisible"-->
-<!--          width="300px"-->
-<!--          style="text-align: center"-->
-<!--      >-->
-<!--          <img v-if="user.avatar" :src="user.avatar" alt="User Avatar" style="max-width: 100%;height: 100%">-->
-<!--          <el-upload-->
-<!--              action="https://jsonplaceholder.typicode.com/posts/"-->
-<!--              :show-file-list="false"-->
-<!--              :on-success="handleUploadSuccess"-->
-<!--          >-->
-<!--              <el-button size="small" type="primary" plain>上传头像</el-button>-->
-<!--          </el-upload>-->
-<!--      </el-dialog>-->
+      <el-dialog
+          title=""
+          :visible.sync="avatarDialogVisible"
+          width="300px"
+          style="text-align: center"
+      >
+          <img v-if="user.avatar" :src="user.avatar" alt="User Avatar" style="max-width: 100%;height: 100%">
+          <el-upload
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :show-file-list="false"
+              :on-success="handleUploadSuccess"
+          >
+              <el-button size="small" type="primary" plain>上传头像</el-button>
+          </el-upload>
+      </el-dialog>
   </div>
 </template>
 

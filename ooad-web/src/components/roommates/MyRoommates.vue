@@ -7,9 +7,9 @@
 <!--      <li v-for="term in terms" :key="term.id">{{ term.name }}</li>-->
 <!--    </ul>-->
 
-    <el-descriptions  title="组队信息" border = "True" column="1" size="large">
-      <el-descriptions-item label="组队编号">{{ this.user.id }}</el-descriptions-item>
-      <el-descriptions-item label="已选宿舍号">{{ team["team_id"] }}</el-descriptions-item>
+    <el-descriptions  title="组队信息" border = "True" column="1" size="large" >
+      <el-descriptions-item label="组队编号">{{ list.num }}</el-descriptions-item>
+      <el-descriptions-item label="已选宿舍号">{{ list.dorm }}</el-descriptions-item>
       <el-descriptions-item label="楼号">{{ list.building }}</el-descriptions-item>
       <el-descriptions-item label="状态">
         <el-tag size="small">{{ status }}</el-tag>
@@ -34,6 +34,19 @@
     </el-table>
 
     <el-button type="primary" style="margin-left:30px" @click="exitTeam">退出组队</el-button>
+    <el-button type="primary" style="margin-left:30px" @click="showDialog">邀请成员</el-button>
+
+    <el-dialog
+        title="邀请成员"
+        :visible.sync="dialogVisible"
+        width="30%">
+      <el-input v-model="input" placeholder="组队人数"></el-input>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 
 
@@ -50,15 +63,16 @@ export default {
       isLoading: false,
       error: '',
       userTeamId: null,
-
+      dialogVisible: false,
 
       teamData:[{
-        name: 'xxx',
+        name: 'x同学',
         SID : '12110876'
       }],
 
       list: {
-        num: 111,
+        num: 1,
+        dorm: 1101,
         state: 'full',
         building: '1',
         currentRoomSelection:'1107',
@@ -78,14 +92,25 @@ export default {
   },
 
   methods: {
+    showDialog() {
+      this.dialogVisible = true
+    },
+    async inviteMember(){
+
+    }
+    ,
+    // 查询当前用户所在组队的信息
     async getUserTeam() {
       try {
         const response = await axios.get(this.$httpUrl + '/user/team/'+ String(this.user.id),
             {user: this.user} );
         // 处理成功返回的数据
-        if (response.code === 2010) {
+        if (response.code == 2010) {
+
           console.log('查询成功，组队ID为：', response.data);
-          this.team = response.data;
+          this.team = response.data.data;
+          console.log(this.team)
+
         } else {
           console.error('查询失败：', response.msg);
         }
@@ -93,6 +118,7 @@ export default {
         console.error('请求失败：', error);
       }
     },
+
     async exitTeam(){
       try {
         const response = await axios.delete(this.$httpUrl +'/' + this.team['team_id']+ '/'+ String(this.user.id),

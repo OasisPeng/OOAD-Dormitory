@@ -3,22 +3,15 @@
     <el-button @click="clearFilter">清除所有过滤器</el-button>
 
     <el-table
-        ref="filterTable"
-        :data="teams"
+        :data="allTeams",
         style="width: 100%">
-<!--      <el-table-column-->
-<!--          prop="name"-->
-<!--          label="组队名"-->
-<!--          sortable-->
-<!--          width="180">-->
-<!--      </el-table-column>-->
       <el-table-column
-          prop="leaderName"
+          prop="id"
           label="队长名"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="current"
+          prop="name"
           label="当前人数"
           width="180">
       </el-table-column>
@@ -28,32 +21,31 @@
           width="180">
       </el-table-column>
       <el-table-column
-          prop="dorm"
-          label="当前宿舍选择"
+          prop="current"
+          label="当前人数"
           :formatter="formatter">
       </el-table-column>
-      <el-table-column
-          prop="region"
-          label="地区"
-          width="100"
+<!--      <el-table-column-->
+<!--          prop="region"-->
+<!--          label="地区"-->
+<!--          width="100"-->
 
-          :filters="[{ text: '湖畔', value: '湖畔' }, { text: '二期', value: '二期' }]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end">
+<!--          :filters="[{ text: '湖畔', value: '湖畔' }, { text: '二期', value: '二期' }]"-->
+<!--          :filter-method="filterTag"-->
+<!--          filter-placement="bottom-end">-->
 
-        <template slot-scope="scope">
-          <el-tag
-              :type="scope.row.region === '二期' ? 'primary' : 'success'"
-              disable-transitions>
-            {{ scope.row.region }}
-          </el-tag>
-        </template>
-
-
-      </el-table-column>
+<!--        <template slot-scope="scope">-->
+<!--          <el-tag-->
+<!--              :type="scope.row.region === '二期' ? 'primary' : 'success'"-->
+<!--              disable-transitions>-->
+<!--            {{ scope.row.region }}-->
+<!--          </el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column>
         <el-button type="primary" @click="apply">申请加入</el-button>
       </el-table-column>
+
 
     </el-table>
 
@@ -152,11 +144,12 @@ export default {
     async getAllTeams(){
       try {
         const resopnse = await axios.get(this.$httpUrl + '/teams');
-        // if (resopnse.code == 2010){
+        if (resopnse.code == 2010){
           this.allTeams = resopnse.data;
           console.log('查询全部组队成功')
-        // }
-        // else
+          console.log(this.allTeams)
+        }
+        else
           if (resopnse.code == 2011){
           console.error('查询全部组队失败，请重试')
         }
