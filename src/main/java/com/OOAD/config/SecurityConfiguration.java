@@ -77,6 +77,7 @@ public class SecurityConfiguration {
                                 response.setContentType("application/json;charset=utf-8");
                                 response.setHeader("Access-Control-Allow-Credentials", "true");
                                 response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+                                response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
                                 result.setCode(403);
                                 result.setMsg("没有权限");
                                 result.setData("Err");
@@ -93,6 +94,7 @@ public class SecurityConfiguration {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+            response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             User user = (User) authentication.getPrincipal();
         SysUser sysUser = service.findByName(user.getUsername());
         String token = utils.createJwt(user, sysUser.getId(), sysUser.getUsername());

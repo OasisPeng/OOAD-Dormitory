@@ -218,7 +218,7 @@ export default {
         console.log(res);
 
         if (res.data.code === 2000) {
-          this.$router.push({ name:'indexAdmin' });
+          this.$router.push({ name:'index' });
           console.log(res.data.msg);
           console.log("1");
           sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));

@@ -1,100 +1,13 @@
 <script>
 export default {
   created() {
-    this.$axios.get(this.$httpUrl+'/openTime/1').then(res=>{
-      // 假设 res.data 是您从后端获得的数据
-      const data = res.data.data;
-      console.log(res)
-      console.log(data)
-      // 检查 data 是否为数组
-      if (res.data.code===2010) {
-        // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-        this.benkesheng.benke_opentime=data.openTime
-        this.benkesheng.benke_endtime=data.closeTime
-        // 将转换后的数据添加到 Room 数组
-        console.log(this.benkesheng)
-        this.benke= 2
-        console.log(this.benke)
-        // 打印转换后的数据
 
-      } else {
-        this.benke= 1
-        console.log(this.benke)
-        console.error("The response data is not an array.");
-      }
-    });
-
-    this.$axios.get(this.$httpUrl+'/openTime/2').then(res=>{
-      // 假设 res.data 是您从后端获得的数据
-      const data = res.data.data;
-      console.log(res)
-      console.log(data)
-      // 检查 data 是否为数组
-      if (res.data.code===2010) {
-        // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-        this.yanjiusheng.yanjiu_opentime=data.openTime
-        this.yanjiusheng.yanjiu_endtime=data.closeTime
-        // 将转换后的数据添加到 Room 数组
-        console.log(this.yanjiusheng)
-        this.yanjiu= 2
-        console.log(this.yanjiu)
-        // 打印转换后的数据
-
-      } else {
-        this.yanjiu= 1
-        console.log(this.yanjiu)
-        console.error("The response data is not an array.");
-      }
-    });
-
-    this.$axios.get(this.$httpUrl+'/openTime/3').then(res=>{
-      // 假设 res.data 是您从后端获得的数据
-      const data = res.data.data;
-      console.log(res)
-      console.log(data)
-      // 检查 data 是否为数组
-      if (res.data.code===2010) {
-        // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-        this.boshisheng.boshi_opentime=data.openTime
-        this.boshisheng.boshi_endtime=data.closeTime
-        // 将转换后的数据添加到 Room 数组
-        console.log(this.boshisheng)
-        this.bo= 2
-        console.log(this.bo)
-        // 打印转换后的数据
-
-      } else {
-        this.bo= 1
-        console.log(this.bo)
-        console.error("The response data is not an array.");
-      }
-    });
-
-    this.$axios.get(this.$httpUrl+'/openTime/4').then(res=>{
-      // 假设 res.data 是您从后端获得的数据
-      const data = res.data.data;
-      console.log(res)
-      console.log(data)
-      // 检查 data 是否为数组
-      if (res.data.code===2010) {
-        // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-        this.houbusheng.houbu_opentime=data.openTime
-        this.houbusheng.houbu_endtime=data.closeTime
-        // 将转换后的数据添加到 Room 数组
-        console.log(this.houbusheng)
-        this.houbu= 2
-        console.log(this.houbu)
-        // 打印转换后的数据
-
-      } else {
-        this.houbu= 1
-        console.log(this.houbu)
-        console.error("The response data is not an array.");
-      }
-    });
-
-
+    this.setStudentTime(1, this.benkesheng);
+    this.setStudentTime(2, this.yanjiusheng);
+    this.setStudentTime(3, this.boshisheng);
+    this.setStudentTime(4, this.houbusheng);
   },
+
   filters: {
     formatDate(date) {
       if (!date) {
@@ -175,6 +88,54 @@ export default {
   },
 
   methods:{
+    setStudentTime(id, target) {
+      this.$axios.get(this.$httpUrl + `/openTime/${id}`).then(res => {
+        const data = res.data.data;
+        console.log(res);
+        console.log(data);
+
+        if (res.data.code === 2010) {
+          target.opentime = data.openTime;
+          target.endtime = data.closeTime;
+          console.log(target);
+          target.edit = false;
+          console.log(target.status);
+        } else {
+          target.status = 1;
+          target.opentime = null;
+          target.endtime = null;
+          console.log(target.status);
+          console.error("The response data is not an array.");
+        }
+      });
+      this.$message.success('Cancel operation');
+    },
+
+    updateOrAddTime(id, data, status) {
+      this.$refs['Room-name'].validate(valid => {
+        if (valid) {
+          this.setStudentTime(id, data);
+          this.$nextTick(() => this.updateOrAddTimeHelper(id, data, status));
+        } else {
+          this.$message.error('Form validation failed. Please check input.');
+        }
+      });
+    },
+
+    updateOrAddTimeHelper(id, data, status) {
+      if (status === 2) {
+        this.$axios.put(this.$httpUrl + '/openTime', { id, openTime: data.opentime, closeTime: data.endtime }, { withCredentials: true })
+            .then(res => console.log(res.data));
+      } else if (status === 1) {
+        this.$axios.post(this.$httpUrl + '/openTime', { id, openTime: data.opentime, closeTime: data.endtime }, { withCredentials: true })
+            .then(res => {
+              console.log(res.data);
+              this.$message.success('Time set successfully');
+            });
+      } else {
+        console.log("wrong");
+      }
+    },
     validateOpenTime(rule, value, callback) {
       const currentTime = new Date();
       if (value <= currentTime) {
@@ -228,38 +189,10 @@ export default {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
           this.benke_edit = false;
-          console.log(this.benke)
-          if (this.benke===2){
-            this.$axios.put(this.$httpUrl+'/openTime',{
-              id: 1 ,
-              openTime: this.benkesheng.benke_opentime,
-              closeTime: this.benkesheng.benke_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-          }
-          else  if (this.benke===1){
-            this.$axios.post(this.$httpUrl+'/openTime',{
-              id: 1 ,
-              openTime: this.benkesheng.benke_opentime,
-              closeTime: this.benkesheng.benke_endtime,
-            },{
-              withCredentials: true,// 允许跨域请求中的Cookie
-              headers:{
-              "Authorization": sessionStorage.getItem('CurUser').token
-              }
-            }).then(res=>{
-              console.log(res.data)
-            })
-            this.$message.success( 'Time set successfully');
-          }else {
-            console.log("wrong")
-          }
-
+          const id = 1;
+          const data = this.benkesheng;
+          this.updateOrAddTime(id, data,this.benke);
         } else {
-          // 表单验证不通过，不执行提交操作，显示错误提示
           this.$message.error('表单验证不通过，请检查输入');
         }
       });
@@ -267,36 +200,11 @@ export default {
     AddRoom2(FormName) {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
-          this.yanjiu_edit = false;
-          console.log(this.yanjiu)
-          if (this.yanjiu===2){
-            this.$axios.put(this.$httpUrl+'/openTime',{
-              id: 2 ,
-              openTime: this.yanjiusheng.yanjiu_opentime,
-              closeTime: this.yanjiusheng.yanjiu_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-          }
-          else  if (this.yanjiu===1){
-            this.$axios.post(this.$httpUrl+'/openTime',{
-              id: 2 ,
-              openTime: this.yanjiusheng.yanjiu_opentime,
-              closeTime: this.yanjiusheng.yanjiu_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-            this.$message.success( 'Time set successfully');
-          }else {
-            console.log("wrong")
-          }
-
+          this.benke_edit = false;
+          const id = 1;
+          const data = this.benkesheng;
+          this.updateOrAddTime(id, data,this.yanjiu);
         } else {
-          // 表单验证不通过，不执行提交操作，显示错误提示
           this.$message.error('表单验证不通过，请检查输入');
         }
       });
@@ -304,36 +212,11 @@ export default {
     AddRoom3(FormName) {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
-          this.boshi_edit = false;
-          console.log(this.bo)
-          if (this.bo===2){
-            this.$axios.put(this.$httpUrl+'/openTime',{
-              id: 3 ,
-              openTime: this.boshisheng.boshi_opentime,
-              closeTime: this.boshisheng.boshi_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-          }
-          else  if (this.bo===1){
-            this.$axios.post(this.$httpUrl+'/openTime',{
-              id: 3 ,
-              openTime: this.boshisheng.boshi_opentime,
-              closeTime: this.boshisheng.boshi_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-            this.$message.success( 'Time set successfully');
-          }else {
-            console.log("wrong")
-          }
-
+          this.benke_edit = false;
+          const id = 1;
+          const data = this.benkesheng;
+          this.updateOrAddTime(id, data,this.bo);
         } else {
-          // 表单验证不通过，不执行提交操作，显示错误提示
           this.$message.error('表单验证不通过，请检查输入');
         }
       });
@@ -341,163 +224,50 @@ export default {
     AddRoom4(FormName) {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
-          this.houbu_edit = false;
-          console.log(this.houbu)
-          if (this.houbu===2){
-            this.$axios.put(this.$httpUrl+'/openTime',{
-              id: 4 ,
-              openTime: this.houbusheng.houbu_opentime,
-              closeTime: this.houbusheng.houbu_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-          }
-          else  if (this.houbu===1){
-            this.$axios.post(this.$httpUrl+'/openTime',{
-              id: 4 ,
-              openTime: this.houbusheng.houbu_opentime,
-              closeTime: this.houbusheng.houbu_endtime,
-            },{
-              withCredentials: true // 允许跨域请求中的Cookie
-            }).then(res=>{
-              console.log(res.data)
-            })
-            this.$message.success( 'Time set successfully');
-          }else {
-            console.log("wrong")
-          }
-
+          this.benke_edit = false;
+          const id = 1;
+          const data = this.benkesheng;
+          this.updateOrAddTime(id, data,this.houbu);
         } else {
-          // 表单验证不通过，不执行提交操作，显示错误提示
           this.$message.error('表单验证不通过，请检查输入');
         }
       });
     },
-    cancel(){
-      this.benke_edit = false;
-      this.$axios.get(this.$httpUrl+'/openTime/1').then(res=>{
-        // 假设 res.data 是您从后端获得的数据
-        const data = res.data.data;
-        console.log(res)
-        console.log(data)
-        // 检查 data 是否为数组
-        if (res.data.code===2010) {
-          // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-          this.benkesheng.benke_opentime=data.openTime
-          this.benkesheng.benke_endtime=data.closeTime
-          // 将转换后的数据添加到 Room 数组
-          console.log(this.benkesheng)
-          this.benke= 2
-          console.log(this.benke)
-          // 打印转换后的数据
-
+    cancelRoom(type, id, data, form, statusKey) {
+      this[type + '_edit'] = false;
+      this.$axios.get(`${this.$httpUrl}/openTime/${id}`).then(res => {
+        const responseData = res.data.data;
+        if (res.data.code === 2010) {
+          this[data][`${type}_opentime`] = responseData.openTime;
+          this[data][`${type}_endtime`] = responseData.closeTime;
+          this[statusKey] = 2;
         } else {
-          this.benke= 1
-          this.benkesheng.benke_opentime=null
-          this.benkesheng.benke_endtime=null
-          console.log(this.benke)
+          this[statusKey] = 1;
+          this[data][`${type}_opentime`] = null;
+          this[data][`${type}_endtime`] = null;
           console.error("The response data is not an array.");
         }
       });
-      this.$message.success('Cancel  operation');
+      this.$message.success(`Cancel ${type} operation`);
       // 清空表单
-    },
-    cancel2(){
-      this.yanjiu_edit = false;
-      this.$axios.get(this.$httpUrl+'/openTime/2').then(res=>{
-        // 假设 res.data 是您从后端获得的数据
-        const data = res.data.data;
-        console.log(res)
-        console.log(data)
-        // 检查 data 是否为数组
-        if (res.data.code===2010) {
-          // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-          this.yanjiusheng.yanjiu_opentime=data.openTime
-          this.yanjiusheng.yanjiu_endtime=data.closeTime
-          // 将转换后的数据添加到 Room 数组
-          console.log(this.yanjiusheng)
-          this.yanjiu= 2
-          console.log(this.yanjiu)
-          // 打印转换后的数据
-
-        } else {
-          this.yanjiu= 1
-          this.yanjiusheng.yanjiu_opentime=null
-          this.yanjiusheng.yanjiu_endtime=null
-          console.log(this.yanjiu)
-          console.error("The response data is not an array.");
-        }
-      });
-      this.$message.success('Cancel  operation');
-
-      // 清空表单
-
-    },
-    cancel3(){
-      this.boshi_edit = false;
-      this.$axios.get(this.$httpUrl+'/openTime/3').then(res=>{
-        // 假设 res.data 是您从后端获得的数据
-        const data = res.data.data;
-        console.log(res)
-        console.log(data)
-        // 检查 data 是否为数组
-        if (res.data.code===2010) {
-          // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-          this.boshisheng.boshi_opentime=data.openTime
-          this.boshisheng.boshi_endtime=data.closeTime
-          // 将转换后的数据添加到 Room 数组
-          console.log(this.bo)
-          this.bo= 2
-          console.log(this.bo)
-          // 打印转换后的数据
-
-        } else {
-          this.bo= 1
-          this.boshisheng.boshi_opentime=null
-          this.boshisheng.boshi_endtime=null
-          console.log(this.bo)
-          console.error("The response data is not an array.");
-        }
-      });
-      this.$message.success('Cancel  operation');
-
-      // 清空表单
-
+      this.$refs[form].resetFields();
     },
 
-    cancel4(){
-      this.houbu_edit = false;
-      this.$axios.get(this.$httpUrl+'/openTime/4').then(res=>{
-        // 假设 res.data 是您从后端获得的数据
-        const data = res.data.data;
-        console.log(res)
-        console.log(data)
-        // 检查 data 是否为数组
-        if (res.data.code===2010) {
-          // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
-          this.houbusheng.houbu_opentime=data.openTime
-          this.houbusheng.houbu_endtime=data.closeTime
-          // 将转换后的数据添加到 Room 数组
-          console.log(this.houbu)
-          this.houbu= 2
-          console.log(this.houbu)
-          // 打印转换后的数据
+    cancel1() {
+      this.cancelRoom('benke', 1, 'benkesheng', 'Room-name', 'benke');
+    },
 
-        } else {
-          this.houbu= 1
-          this.houbusheng.houbu_opentime=null
-          this.houbusheng.houbu_endtime=null
-          console.log(this.houbu)
-          console.error("The response data is not an array.");
-        }
-      });
-      this.$message.success('Cancel  operation');
+    cancel2() {
+      this.cancelRoom('yanjiu', 2, 'yanjiusheng', 'Room-name-2', 'yanjiu');
+    },
 
-      // 清空表单
+    cancel3() {
+      this.cancelRoom('boshi', 3, 'boshisheng', 'Room-name-3', 'bo');
+    },
 
-    }
+    cancel4() {
+      this.cancelRoom('houbu', 4, 'houbusheng', 'Room-name-4', 'houbu');
+    },
   }
 
 

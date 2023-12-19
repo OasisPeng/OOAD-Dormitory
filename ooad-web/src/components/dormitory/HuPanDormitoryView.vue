@@ -327,8 +327,16 @@ export default {
     }
   },
   created() {
+     console.log("token","Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token)
     // 在组件创建时计算初始平均值并设置给 value
-    this.$axios.get(this.$httpUrl+'/distributionGrade/湖畔').then(res=>{
+    this.$axios.get(this.$httpUrl+'/distributionGrade/湖畔',{
+      withCredentials: true,
+      headers:{
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+      },
+
+
+    }).then(res=>{
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
       console.log(res)
@@ -356,8 +364,17 @@ export default {
         console.error("The response data is not an array.");
       }
     });
+
+
+    console.log("token",sessionStorage.getItem('CurUser'))
     this.updateTableHeight();
-    this.$axios.get(this.$httpUrl+'/dorms').then(res => {
+    this.$axios.get(this.$httpUrl+'/dorms',
+    //     {
+    //   headers:{
+    //     'Authorization':JSON.parse(sessionStorage.getItem('CurUser')).token
+    //   }
+    // }
+    ).then(res => {
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
       console.log(res)
@@ -499,10 +516,7 @@ export default {
     AddRoom(FormName) {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
-          // this.flights.push({
-          //   "grade": this.comment.grade,
-          //   "content": this.comment.content,
-          // });
+
           this.$axios.post(this.$httpUrl+'/distributionGrade',{
             distribution:"湖畔",
             grade: this.comment.grade,
@@ -594,6 +608,7 @@ export default {
 
     displayedFlights1() {
       // 根据查询条件筛选数据
+
       const filteredFlights = this.Room.filter((flight) => {
         if (
             (!this.searchParams.distribution || flight.distribution.toLowerCase().includes(this.searchParams.distribution.toLowerCase())) &&

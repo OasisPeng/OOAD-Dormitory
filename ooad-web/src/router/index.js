@@ -4,7 +4,7 @@ const routes =[
     {
         path:'/',
         name:'login',
-        redirect:'/StudentManage',
+        // redirect:'/StudentManage',
         component:()=>import('../components/Login')
     },
     {
