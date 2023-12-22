@@ -21,6 +21,7 @@ public interface IDormService {
     public boolean deleteByID(int id);
     public Dorm selectByID(int id);
     public boolean updateByID(Dorm dorm);
+    public List<Dorm> getAll();
     public List<Dorm> getAll(int pageSize, int pageNumber);
     public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis);
     public List<Dorm> selectByBuilding(int pageSize, int pageNumber, String building);
