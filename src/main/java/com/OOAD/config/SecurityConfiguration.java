@@ -79,6 +79,7 @@ public class SecurityConfiguration {
                                 response.setHeader("Access-Control-Allow-Credentials", "true");
                                 response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
                                 response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+                                response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
                                 result.setCode(403);
                                 result.setMsg("没有权限");
                                 result.setData("Err");
@@ -96,6 +97,7 @@ public class SecurityConfiguration {
         response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
             response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+            response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
             User user = (User) authentication.getPrincipal();
         SysUser sysUser = service.findByName(user.getUsername());
         String token = utils.createJwt(user, sysUser.getId(), sysUser.getUsername());
@@ -118,6 +120,7 @@ public class SecurityConfiguration {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
         result.setCode(401);
         result.setMsg("登录信息错误");
         result.setData("Err");
@@ -129,6 +132,7 @@ public class SecurityConfiguration {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
         PrintWriter out = response.getWriter();
         String auth = request.getHeader("Authorization");
         if (utils.invalidJwt(auth)) {
