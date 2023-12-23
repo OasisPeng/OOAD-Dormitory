@@ -9,6 +9,21 @@ import router  from "./router";
 import store from './store'
 import VueI18n from 'vue-i18n';
 
+
+
+axios.interceptors.request.use(
+    config => {
+      if (localStorage.getItem("CurUser")) { //判断token是否存在
+        config.headers.Authorization = "Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token;  //将token设置成请求头
+      }
+      return config;
+    },
+    err => {
+      return Promise.reject(err);
+    }
+);
+
+
 Vue.prototype.$axios=axios;
 Vue.prototype.$httpUrl='http://localhost:8090'
 Vue.config.productionTip = false
