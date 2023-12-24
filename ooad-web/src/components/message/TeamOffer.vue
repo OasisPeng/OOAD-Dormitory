@@ -14,7 +14,7 @@
 
                     <!-- 申请内容 -->
                     <div style="font-size: 16px">
-                        <strong>申请加入您的组队：</strong>
+                        <span>申请加入您的组队：</span>
                         {{ application.teamName }}
                     </div>
 

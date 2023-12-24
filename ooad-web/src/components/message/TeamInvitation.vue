@@ -14,7 +14,7 @@
 
                     <!-- 邀请内容 -->
                     <div style="font-size: 16px">
-                        <strong>邀请您加入他们的组队：</strong>
+                        <span>邀请您加入他们的组队：</span>
                         {{ invitation.teamName }}
                     </div>
 

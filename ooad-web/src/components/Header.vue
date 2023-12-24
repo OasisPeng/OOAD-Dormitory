@@ -4,7 +4,7 @@
       data(){
           return{
               //user:JSON.parse(sessionStorage.getItem('CurUser'))
-              user: JSON.parse(sessionStorage.getItem('CurUser')),
+              user: JSON.parse(sessionStorage.getItem('UserData')),
               avatarDialogVisible: false // 控制头像查看对话框的显示/隐藏
           }
       },
@@ -73,10 +73,10 @@
           //     this.avatar = URL.createObjectURL(file.raw); // 更新头像URL
           //     console.log(this.avatar)
           // },
-          showAvatarDialog() {
-              // 点击头像时显示头像查看对话框
-              this.avatarDialogVisible = true;
-          },
+          // showAvatarDialog() {
+          //     // 点击头像时显示头像查看对话框
+          //     this.avatarDialogVisible = true;
+          // },
           jumpToMessage(){
               this.$router.push("/Message")
           },
@@ -139,7 +139,7 @@
               </el-dropdown-menu>
           </el-dropdown>
       </div>
-      <el-avatar v-if="user.avatar" :src="user.avatar" :size="32" style="margin-left: 10px;margin-top: 10px;margin-right: 3px" @click.native="showAvatarDialog"></el-avatar>
+      <el-avatar v-if="user.avatar" :src="user.avatar" :size="32" style="margin-left: 10px;margin-top: 10px;margin-right: 3px" ></el-avatar>
       <el-dropdown>
           <span>
               {{ user.name }}
@@ -157,13 +157,13 @@
                 <el-dropdown-item @click.native="logout">{{ $t('退出登录') }}</el-dropdown-item>
             </el-dropdown-menu>
       </el-dropdown>
-      <el-dialog
-          title=""
-          :visible.sync="avatarDialogVisible"
-          width="300px"
-          style="text-align: center"
-      >
-          <img v-if="user.avatar" :src="user.avatar" alt="User Avatar" style="max-width: 100%;height: 100%">
+<!--      <el-dialog-->
+<!--          title=""-->
+<!--          :visible.sync="avatarDialogVisible"-->
+<!--          width="300px"-->
+<!--          style="text-align: center"-->
+<!--      >-->
+<!--          <img v-if="user.avatar" :src="user.avatar" alt="User Avatar" style="max-width: 100%;height: 100%">-->
 <!--          <el-upload-->
 <!--              action="https://jsonplaceholder.typicode.com/posts/"-->
 <!--              :show-file-list="false"-->
@@ -171,7 +171,7 @@
 <!--          >-->
 <!--              <el-button size="small" type="primary" plain>上传头像</el-button>-->
 <!--          </el-upload>-->
-      </el-dialog>
+<!--      </el-dialog>-->
   </div>
 </template>
 

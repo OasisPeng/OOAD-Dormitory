@@ -81,7 +81,7 @@ export default {
         currentMembers: 3,
       },
 
-
+      input:''
     };
   },
 
@@ -102,8 +102,8 @@ export default {
     // 查询当前用户所在组队的信息
     async getUserTeam() {
       try {
-        const response = await axios.get(this.$httpUrl + '/user/team/'+ String(this.user.id),
-            {user: this.user} );
+        const response = await axios.get(this.$httpUrl + '/user/team/'+ String(this.user.id));
+            // {user: this.user} );
         // 处理成功返回的数据
         if (response.code == 2010) {
 
@@ -121,8 +121,8 @@ export default {
 
     async exitTeam(){
       try {
-        const response = await axios.delete(this.$httpUrl +'/' + this.team['team_id']+ '/'+ String(this.user.id),
-            {user: this.user} );
+        const response = await axios.delete(this.$httpUrl +'/' + this.team['team_id']+ '/'+ String(this.user.id));
+            // {user: this.user} );
         // 处理成功返回的数据
         if (response.code === 2030) {
           console.log('删除成功');
@@ -132,7 +132,10 @@ export default {
       } catch (error) {
         console.error('请求失败：', error);
       }
-    }
+    },
+      handleConfirm(){
+
+      }
   },
 
   // computed内容回自动计算并动态变化

@@ -28,7 +28,7 @@
                      menuIcon:'el-icon-s-release'
                  },
                  {
-                     menuClick:'Post',
+                     menuClick:'JoinPost',
                      menuName:'帖子广场',
                      menuIcon:'el-icon-s-promotion'
                  }
