@@ -3,7 +3,9 @@ package com.OOAD.controller;
 
 import com.OOAD.domain.Dorm;
 import com.OOAD.domain.Team;
+import com.OOAD.domain.User;
 import com.OOAD.service.ITeamService;
+import com.OOAD.service.IUserService;
 import com.OOAD.service.impl.DormServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
@@ -26,6 +28,8 @@ public class DormController {
     DormServiceImpl dormService;
     @Autowired
     ITeamService teamService;
+    @Autowired
+    IUserService userService;
     @PostMapping
     public Result insert(@RequestBody Dorm dorm) {
         System.out.println(dorm);
@@ -126,8 +130,16 @@ public class DormController {
         int re = dormService.qiang(dormId);
         if (re == 1) {
             team.setDorm(dormId);
+            List<User> teamUser = userService.getByTeamId(teamId);
+            int cntUser = 0;
+            for (User user : teamUser) {
+                user.setDormId(dormId);
+                if (userService.updateById(user)) {
+                    cntUser++;
+                }
+            }
             int x = teamService.Update(team);
-            if (x == 1) {
+            if (x == 1 && cntUser == teamUser.size()) {
                 result.setCode(Code.INSERT_OK);
                 result.setMsg("抢宿舍成功");
                 result.setData("OK");

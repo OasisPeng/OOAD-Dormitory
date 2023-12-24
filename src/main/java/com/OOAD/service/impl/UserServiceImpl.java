@@ -133,6 +133,13 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     }
 
     @Override
+    public List<User> getByTeamId(int teamId) {
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper();
+        lqw.eq(User::getTeamId, teamId);
+        return userDao.selectList(lqw);
+    }
+
+    @Override
     public List<Map.Entry<Integer, Double>> calculateMatchingUsers(User currentUser) {
         List<User> allUsers = getAll();
 

@@ -31,6 +31,6 @@ public interface IUserService {
     public boolean insert(User user);
     public int selectTeamID(int id);
     public int insertByList(List<User> list);
-
+    public List<User> getByTeamId(int teamId);
     List<Map.Entry<Integer, Double>> calculateMatchingUsers(User currentUser);
 }
