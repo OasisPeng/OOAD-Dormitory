@@ -56,7 +56,6 @@ export default {
             this.$router.push("/Home");
         },
         setDefaultRoute() {
-            this.$router.push("/MyMessage");
         },
         setDynamicBackground() {
             // 你可以根据需要设置不同的背景样式

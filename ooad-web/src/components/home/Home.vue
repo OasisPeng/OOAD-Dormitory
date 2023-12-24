@@ -4,6 +4,7 @@
       data(){
           return{
               user: {},
+              matchedUser: {},
               userSID:'',
               isMissingBaseInfo: false, // 控制提示框显示
               isMissingMoreInfo: false,
@@ -11,6 +12,11 @@
               editingMore: false,
               isExplanationVisible: false,
               currentRoute: '/Home', // 设置默认选中的路由
+
+              dialogVisible: false,
+              matchedUsers: [],
+              showDetailsIndex: -1,
+              loading: true, // 添加 loading 状态
           }
       },
       computed:{
@@ -21,9 +27,15 @@
               this.$router.push(this.currentRoute)
           },
           getUser(){
-              this.$axios.get(this.$httpUrl+'/user/'+this.userSID).then(res=>{
+              this.$axios.get(this.$httpUrl+'/user/'+this.userSID, {
+                  withCredentials: true,
+                  headers:{
+                      'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                  }}
+              ).then(res=>{
                   if (res.data.code===2010) {
                       this.user = res.data.data
+                      sessionStorage.setItem("UserData", JSON.stringify(res.data.data)); //初始时存一下用户信息；修改信息后也重新存一下
                       this.UserMoreInfo()
                       console.log(this.user)
                   } else {
@@ -50,7 +62,11 @@
           },
           submitUserMoreInfo() {
               // 在这里执行提交到后台的逻辑，例如使用axios或者Vue Resource发送HTTP请求
-              this.$axios.put(this.$httpUrl+'/user/updateAUser',this.user).then(res=>{
+              this.$axios.put(this.$httpUrl+'/user/updateAUser',this.user, {
+                  withCredentials: true,
+                  headers:{
+                      'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                  }}).then(res=>{
                   if (res.data.code===2020) {
                       console.log( res.data.msg)
                       this.getUser()
@@ -66,7 +82,52 @@
           },
           showExplanation() {
               this.isExplanationVisible = true; // 显示说明弹窗
-          }
+          },
+          showMatchingUsers() {
+              // 计算匹配度，并排序
+              this.$axios.post(this.$httpUrl+'/users/getMatchingUsers',this.user, {
+                  withCredentials: true,
+                  headers:{
+                      'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                  }}).then(res=>{
+                  if (res.data.code===2020) {
+                      console.log( res.data.data)
+                      // 将 Map.Entry 转换为对象数组以便在 Vue 模板中使用
+                      this.matchedUsers = res.data.data
+                      this.dialogVisible = true;
+                  } else {
+                      console.log( res.data.msg)
+                      // 登录失败，可以显示错误消息
+                  }
+              })
+          },
+          async showDetails(index, sid) {
+              // 点击"查看详情"按钮时，切换显示详细信息的状态
+              this.$axios.get(this.$httpUrl+'/user/'+sid, {
+                  withCredentials: true,
+                  headers:{
+                      'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                  }}).then(res=>{
+                  if (res.data.code===2010) {
+                      this.matchedUser = res.data.data;
+                      this.loading = this.showDetailsIndex === index;
+                      console.log(this.matchedUser)
+                      console.log(this.loading)
+                      this.showDetailsIndex = this.showDetailsIndex === index ? -1 : index;
+                  } else {
+                      console.log( res.data.msg)
+                      // 登录失败，可以显示错误消息
+                  }
+              })
+          },
+          startChat(sid) {
+              // 在这里处理创建新的聊天项逻辑，获取对方的学号等信息
+              // 然后进行页面跳转
+              this.showDetails(this.showDetailsIndex, sid)
+              // 在调用 this.$router.push 时，通过 query 传递参数
+              this.$router.push({ path: '/MyMessage', query: { userId: this.matchedUser.id, userName: this.matchedUser.name } });
+
+          },
       },
       created() {
           this.init()
@@ -328,9 +389,37 @@
       </div>
       <div style="display: flex;align-items: center">
           <div style="margin-top: 10px; margin-left: 65px; margin-bottom: 20px">
-              <el-button type="info" round>
+              <el-button type="info" round @click="showMatchingUsers">
                   {{ $t('点击查看你的专属算法推荐室友') }}
               </el-button>
+
+              <!-- 弹窗组件 -->
+              <el-dialog :visible.sync="dialogVisible" title="推荐室友" width="60%">
+                      <li v-for="(matchuser, index) in matchedUsers" :key="index">
+                          {{ Object.keys(matchuser)[0] }} - 匹配度: {{ Object.values(matchuser)[0].toFixed(2) }}%
+                          <el-button type="text" @click="showDetails(index, Object.keys(matchuser)[0])">查看详情</el-button>
+                          <el-button type="text" @click="startChat(Object.keys(matchuser)[0])">发起聊天</el-button>
+                          <el-collapse-transition>
+                              <div v-if="showDetailsIndex === index">
+                                  <!-- 在这里显示用户的全部信息 -->
+                                  <template v-if="loading">
+                                      加载中...
+                                  </template>
+                                  <template v-else>
+                                      <div v-if="matchedUser">
+                                          姓名：{{ matchedUser.name }}<br>  书院：{{ matchedUser.college}}<br>
+                                          起床时间：{{matchedUser.timetable1}}<br> 入睡时间：{{matchedUser.timetable2}}<br>  是否午睡：{{matchedUser.nap}}<br>
+                                          是否抽烟：{{matchedUser.smoke}}<br>  睡觉是否有打呼噜等习惯：{{matchedUser.sleepHabit}}<br>  卫生清洁：{{matchedUser.clean}}<br>
+                                          空调温度：{{matchedUser.temperature}}<br>  热闹还是安静：{{matchedUser.isQuiet}}<br>  性格倾向：{{matchedUser.characters}}<br>
+                                      </div>
+                                      <div v-else>
+                                          用户信息未加载
+                                      </div>
+                                  </template>
+                              </div>
+                          </el-collapse-transition>
+                      </li>
+              </el-dialog>
               <i class="el-icon-warning-outline" style="margin-left: 5px; cursor: pointer;color:#817f7f;" @click="showExplanation"></i>
           </div>
       </div>
@@ -342,7 +431,7 @@
       >
       <!-- 在这里添加弹窗的说明内容 -->
       <!-- 例如： -->
-      <p>这是一个基于K-means和决策树实现的室友分配算法。请先完善您的匹配信息，我们会尽可能地为您选出生活习惯、兴趣爱好等相似度高的室友人选，
+      <p>请先完善您的匹配信息，我们会尽可能地为您选出生活习惯、兴趣爱好等相似度高的室友人选，
           你可以与他们进行进一步的联系和沟通。
           另外请注意，算法推荐仅作为参考，为了未来更舒适的宿舍生活，还需彼此间多一份体谅与友善。</p>
       </el-dialog>
