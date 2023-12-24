@@ -1,12 +1,14 @@
 package com.OOAD.service;
 
 import com.OOAD.domain.PersonPost;
+import com.OOAD.domain.TeamPost;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
 public interface PersonPostService {
+    public List<PersonPost> getByTitle(String title);
     public int add(PersonPost p);
     public int deleteById(int id);
     public int update(PersonPost p);

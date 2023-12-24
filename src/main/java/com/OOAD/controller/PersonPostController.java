@@ -14,6 +14,21 @@ import java.util.List;
 public class PersonPostController {
     @Autowired
     PersonPostServiceImpl service;
+    @GetMapping("/title")
+    public Result getByTitle(@RequestParam String title) {
+        List<PersonPost> list = service.getByTitle(title);
+        Result result = new Result();
+        if (list == null || list.isEmpty()) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败或查询为空，请重试");
+        } else {
+            result.setData(list);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
     @PostMapping
     public Result insert(@RequestBody PersonPost t) {
         int i = service.add(t);
