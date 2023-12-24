@@ -25,7 +25,11 @@ export default {
                     pageNum: this.pageNum,
                     pageSize: this.pageSize,
                     name: this.name
-                }
+                },
+
+            withCredentials: true, headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            },
             }).then(res => res.data).then(res => {
                 console.log(res);
                 if (res.code === 2020) {
@@ -106,7 +110,10 @@ export default {
       this.$refs.form.resetFields();//表单内容回到前一个状态
     },
     doSave() {
-            this.$axios.post(this.$httpUrl+'/user', this.form).then(res=>res.data).then(res=>{
+            this.$axios.post(this.$httpUrl+'/user', this.form,
+                {withCredentials: true, headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                },}).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2040){
                     this.$message({
@@ -124,7 +131,11 @@ export default {
             })
     },
     doMod() {
-            this.$axios.put(this.$httpUrl+'/user', this.form).then(res=>res.data).then(res=>{
+            this.$axios.put(this.$httpUrl+'/user', this.form,{
+                withCredentials: true, headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                },
+            }).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2020){
                     this.$message({
@@ -153,8 +164,7 @@ export default {
 
 
       dormSelction:[],
-      tableData: [{id: 1, name: '李云思', studentId: '12011555', academy: '致诚', studentType: '本科生', grade: '20'},
-        {id: 2, name: '林乐清', studentId: '12112344', academy: '树仁', studentType: '本科生', grade: '21'},],
+      tableData: [],
       textarea: '',
       pageSize: 10,
       pageNum: 1,
@@ -341,7 +351,7 @@ export default {
     <input  type="file" id="files" ref="refFile" v-on:change="importCsv">
     <el-button type="primary" @click ="exportStudentCsv">导出学生</el-button>
     <el-button type="primary" @click ="exportDormCsv">导出宿舍选择情况</el-button>
-<!--    <el-button type="primary" @click ="exchangeDorm">交换宿舍</el-button>-->
+    <el-button type="primary" @click ="exchangeDorm">交换宿舍</el-button>
 
   </div>
 </template>

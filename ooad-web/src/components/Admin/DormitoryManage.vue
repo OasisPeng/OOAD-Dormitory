@@ -3,8 +3,12 @@ export default {
     name:"DomritoryManage",
     methods:{
         loadPost(){
-            this.$axios.get(this.$httpUrl+'/dorms?pageSize='+this.pageSize+'&pageNum='+this.pageNum
-            ).then(res=>res.data).then(res=>{
+            this.$axios.get(this.$httpUrl+'/dorms/loadPage?pageSize='+this.pageSize+'&pageNum='+this.pageNum,
+            {
+                withCredentials: true, headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }
+            }).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2010){
                     this.tableData=res.data.records
@@ -15,7 +19,12 @@ export default {
             })
         },
         loadByDis(){
-            this.$axios.get(this.$httpUrl+'/dorm2/'+this.distribution+'?pageSize='+this.pageSize+'&pageNum='+this.pageNum
+            this.$axios.get(this.$httpUrl+'/dorm2/'+this.distribution+'?pageSize='+this.pageSize+'&pageNum='+this.pageNum,
+                {
+                    withCredentials: true, headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }
+                }
             ).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2010){
@@ -58,7 +67,11 @@ export default {
             })
         },
         del(id){
-            this.$axios.delete(this.$httpUrl+'/dorm/'+id).then(res=>res.data).then(res=>{
+            this.$axios.delete(this.$httpUrl+'/dorm/'+id,{
+                withCredentials: true, headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }
+            }).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2030){
                     this.$message({
@@ -98,7 +111,11 @@ export default {
             this.$refs.form.resetFields();//表单内容回到前一个状态
         },
         doSave(){
-            this.$axios.post(this.$httpUrl+'/dorm',this.form).then(res=>res.data).then(res=>{
+            this.$axios.post(this.$httpUrl+'/dorm',this.form,{
+                withCredentials: true, headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }
+            }).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2040){
                     this.$message({
@@ -116,7 +133,11 @@ export default {
             })
         },
         doMod(){
-            this.$axios.put(this.$httpUrl+'/dorm', this.form).then(res=>res.data).then(res=>{
+            this.$axios.put(this.$httpUrl+'/dorm', this.form, {
+                withCredentials: true, headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }
+            }).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2020){
                     this.$message({
