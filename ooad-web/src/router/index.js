@@ -8,6 +8,14 @@ const routes =[
         component:()=>import('../components/Login')
     },
     {
+        path: '/detail',
+        name: 'detail',
+        meta: {
+            title: '详情'
+        },
+        component: () => import('../components/post/detail.vue')
+    },
+    {
         path: '/Index',
         name: 'index',
         component:()=>import('../components/Index'),
@@ -175,6 +183,7 @@ const routes =[
             title: '消息中心'
         },
         component: () => import('../components/message/Message.vue'),
+        props: true,
         children:[
             {
                 path: '/MyMessage',
@@ -182,7 +191,9 @@ const routes =[
                 meta: {
                     title: '我的消息'
                 },
-                component: () => import('../components/message/MyMessage.vue')
+                component: () => import('../components/message/MyMessage.vue'),
+                props: true,
+
             },
             {
                 path: '/Like',
@@ -191,14 +202,6 @@ const routes =[
                     title: '点赞'
                 },
                 component: () => import('../components/message/Like.vue')
-            },
-            {
-                path: '/Comment',
-                name: 'comment',
-                meta: {
-                    title: '评论'
-                },
-                component: () => import('../components/message/Comment.vue')
             },
             {
                 path: '/Comment',

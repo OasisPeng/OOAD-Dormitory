@@ -10,7 +10,11 @@ export default {
     },
     methods:{
         load(){
-            this.$axios.get(this.$httpUrl+'/chat/listSingle?fromUser='+this.fromuser+'&toUser='+this.touser).then(res=>{
+            this.$axios.get(this.$httpUrl+'/chat/listSingle?fromUser='+this.fromuser+'&toUser='+this.touser, {
+                withCredentials: true,
+                headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }}).then(res=>{
                 if (res.data.code===2010) {
                     this.messages = res.data.data
                 } else {
@@ -31,7 +35,11 @@ export default {
             // })
         },
         loadUserList(){  //开启过聊天的人
-            this.$axios.get(this.$httpUrl+'/chat/getUserList?fromUser='+this.fromuser).then(res=>{
+            this.$axios.get(this.$httpUrl+'/chat/getUserList?fromUser='+this.fromuser, {
+                withCredentials: true,
+                headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }}).then(res=>{
                 if (res.data.code===2010) {
                     this.users = res.data.data
                     console.log(2233)
@@ -89,13 +97,21 @@ export default {
             })
         },
         setSingleReaded() {
-            this.$axios.get(this.$httpUrl+'/chat/setSingleReaded?fromUser='+this.fromuser+'&toUser='+this.touser).then(res=>{
+            this.$axios.get(this.$httpUrl+'/chat/setSingleReaded?fromUser='+this.fromuser+'&toUser='+this.touser, {
+                withCredentials: true,
+                headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }}).then(res=>{
                 this.loadUnReadNums()
             })
         },
         loadUnReadNums() {
            // 未读消息数量
-            this.$axios.get(this.$httpUrl+'/chat/unReadNums?toUser='+this.fromuser).then(res=>{
+            this.$axios.get(this.$httpUrl+'/chat/unReadNums?toUser='+this.fromuser, {
+                withCredentials: true,
+                headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }}).then(res=>{
                 if (res.data.code===2010) {
                     this.unRead = res.data.data
                     console.log(res.data.data);
@@ -144,7 +160,7 @@ export default {
             touser:'', //群组名或者聊天对象
             touserName: '',//私聊对象名称
             fromuserName:'',
-            toAvatar:'',
+            toAvatar:'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
             emojis:[],
             unRead:{},
             messages:[],
@@ -153,6 +169,32 @@ export default {
         }
     },
     mounted() {
+        console.log(this.$route)
+        // 获取参数
+        const userId = this.$route.query.userId;
+        const userName = this.$route.query.userName;
+        console.log(123456)
+        console.log((userId))
+        if (userId && userName) {
+            // 执行有参数时的逻辑
+            // 判断是否存在对应的聊天项
+            console.log(userId)
+            const existingChatItem = this.users.find(item => item.id === userId);
+            if (!existingChatItem) {
+                // 不存在，则添加新的聊天项
+                const newChatItem = {
+                    id: userId,
+                    name: userName,
+                    // 其他聊天项相关信息...
+                };
+                this.users.push(newChatItem);
+
+                // 打开对应的窗口
+                this.selectToUser(newChatItem);
+            }
+            // this.loadGroupList()
+            this.load()
+        }
         this.user = JSON.parse(localStorage.getItem('CurUser'))
         this.fromuser = this.user.id
         this.fromuserName = this.user.name

@@ -89,6 +89,13 @@ public class DormServiceImpl implements IDormService {
         return dormDao.selectPage(page,null).getRecords();
     }
 
+    @Override
+    public List<Dorm> selectByDis(String dis) {
+        LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Dorm::getDistribution, dis);
+        return dormDao.selectList(lqw);
+    }
+
 
     @Override
     public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis) {
@@ -141,6 +148,15 @@ public class DormServiceImpl implements IDormService {
             dorm.setAvailable("否");
             return dormDao.updateById(dorm);
         }
+    }
+
+    @Override
+    public List<Dorm> SelectAvailableRo(String dis, String building) {
+        LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Dorm::getAvailable, '是');
+        lqw.eq(Dorm::getDistribution, dis);
+        lqw.eq(Dorm::getBuilding, building);
+        return dormDao.selectList(lqw);
     }
 
 

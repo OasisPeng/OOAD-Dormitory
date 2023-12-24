@@ -2,7 +2,6 @@ package com.OOAD.service.impl;
 
 import com.OOAD.dao.SysUserDao;
 import com.OOAD.dao.UserDao;
-import com.OOAD.domain.Dorm;
 import com.OOAD.domain.SysUser;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
@@ -12,7 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -126,6 +130,52 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             size++;
         }
         return size;
+    }
+
+    @Override
+    public List<Map.Entry<Integer, Double>> calculateMatchingUsers(User currentUser) {
+        List<User> allUsers = getAll();
+
+        // 考虑的属性数组
+        String[] consideredProperties = {
+                "timetable1",
+                "timetable2",
+                "smoke",
+                "sleepHabit",
+                "clean",
+                "nap",
+                "temperature",
+                "isQuiet",
+                "characters"
+        };
+
+        List<Map.Entry<Integer, Double>> sortedMatchingUsers = allUsers.stream()
+                .filter(user -> !user.equals(currentUser)) // 排除当前用户
+                .collect(Collectors.toMap(
+                        User::getId,
+                        user -> {
+                            long matchingAttributes = Arrays.stream(consideredProperties)
+                                    .filter(propertyName -> {
+                                        try {
+                                            Field field = User.class.getDeclaredField(propertyName);
+                                            field.setAccessible(true);
+                                            Object currentValue = field.get(currentUser);
+                                            Object otherValue = field.get(user);
+                                            return currentValue != null && currentValue.equals(otherValue);
+                                        } catch (NoSuchFieldException | IllegalAccessException e) {
+                                            return false;
+                                        }
+                                    })
+                                    .count();
+                            return (double) matchingAttributes / consideredProperties.length * 100;
+                        }
+                ))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+
+        return sortedMatchingUsers;
     }
 
 }

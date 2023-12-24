@@ -4,11 +4,42 @@
       data(){
           return{
               //user:JSON.parse(sessionStorage.getItem('CurUser'))
-              user: JSON.parse(sessionStorage.getItem('CurUser')),
+              user: JSON.parse(sessionStorage.getItem('UserData')),
               avatarDialogVisible: false // 控制头像查看对话框的显示/隐藏
           }
       },
       methods:{
+          handleCommand(command) {
+              switch (command) {
+                  case 'myMessage':
+                      this.$router.push('/Message');
+                      break;
+
+                  case 'like':
+                      this.$router.push('/Like');
+                      break;
+
+                  case 'comment':
+                      this.$router.push('/Comment');
+                      break;
+
+                  case 'broadcast':
+                      this.$router.push('/BroadcastMessages');
+                      break;
+
+                  case 'invite':
+                      this.$router.push('/TeamInvitation');
+                      break;
+
+                  case 'offer':
+                      this.$router.push('/TeamOffer');
+                      break;
+
+                  default:
+                      // 如果没有匹配的命令，执行默认操作或者抛出错误
+                      console.warn('Unknown command:', command);
+              }
+          },
           toUser(){
               console.log('to_user')
               this.$router.push('/Home')
@@ -42,10 +73,10 @@
           //     this.avatar = URL.createObjectURL(file.raw); // 更新头像URL
           //     console.log(this.avatar)
           // },
-          showAvatarDialog() {
-              // 点击头像时显示头像查看对话框
-              this.avatarDialogVisible = true;
-          },
+          // showAvatarDialog() {
+          //     // 点击头像时显示头像查看对话框
+          //     this.avatarDialogVisible = true;
+          // },
           jumpToMessage(){
               this.$router.push("/Message")
           },
@@ -75,40 +106,40 @@
           <span>{{ $t('宿舍选择系统') }}</span>
       </div>
       <div >
-          <el-dropdown trigger="hover">
+          <el-dropdown trigger="hover" @command="handleCommand">
               <el-badge is-dot class="item" style="line-height: 45px;">
                   <i class="el-icon-chat-dot-round" style="font-size: 25px; line-height: 30px; margin-right: 10px;" @click= "jumpToMessage"></i>
               </el-badge>
 
-              <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item class="clearfix">
+              <el-dropdown-menu slot="dropdown" >
+                  <el-dropdown-item class="clearfix" command="myMessage">
                      {{$t('我的消息')}}
                       <el-badge class="mark" :value="10" />
                   </el-dropdown-item>
-                  <el-dropdown-item class="clearfix">
+                  <el-dropdown-item class="clearfix" command="like">
                       {{$t('点赞')}}
                       <el-badge class="mark" :value="3" />
                   </el-dropdown-item>
-                  <el-dropdown-item class="clearfix">
+                  <el-dropdown-item class="clearfix" command="comment">
                       {{$t('评论')}}
                       <el-badge class="mark" :value="3" />
                   </el-dropdown-item>
-                  <el-dropdown-item class="clearfix">
+                  <el-dropdown-item class="clearfix" command="broadcast">
                       {{$t('广播通知')}}
                       <el-badge class="mark" :value="12" />
                   </el-dropdown-item>
-                  <el-dropdown-item class="clearfix">
+                  <el-dropdown-item class="clearfix" command="invite">
                       {{$t('组队邀请')}}
                       <el-badge class="mark" :value="1" />
                   </el-dropdown-item>
-                  <el-dropdown-item class="clearfix">
+                  <el-dropdown-item class="clearfix" command="offer">
                       {{$t('组队申请')}}
 <!--                      <el-badge class="mark" :value="0" />-->
                   </el-dropdown-item>
               </el-dropdown-menu>
           </el-dropdown>
       </div>
-      <el-avatar v-if="user.avatar" :src="user.avatar" :size="32" style="margin-left: 10px;margin-top: 10px;margin-right: 3px" @click.native="showAvatarDialog"></el-avatar>
+      <el-avatar v-if="user.avatar" :src="user.avatar" :size="32" style="margin-left: 10px;margin-top: 10px;margin-right: 3px" ></el-avatar>
       <el-dropdown>
           <span>
               {{ user.name }}
@@ -126,21 +157,21 @@
                 <el-dropdown-item @click.native="logout">{{ $t('退出登录') }}</el-dropdown-item>
             </el-dropdown-menu>
       </el-dropdown>
-      <el-dialog
-          title=""
-          :visible.sync="avatarDialogVisible"
-          width="300px"
-          style="text-align: center"
-      >
-          <img v-if="user.avatar" :src="user.avatar" alt="User Avatar" style="max-width: 100%;height: 100%">
-          <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleUploadSuccess"
-          >
-              <el-button size="small" type="primary" plain>上传头像</el-button>
-          </el-upload>
-      </el-dialog>
+<!--      <el-dialog-->
+<!--          title=""-->
+<!--          :visible.sync="avatarDialogVisible"-->
+<!--          width="300px"-->
+<!--          style="text-align: center"-->
+<!--      >-->
+<!--          <img v-if="user.avatar" :src="user.avatar" alt="User Avatar" style="max-width: 100%;height: 100%">-->
+<!--          <el-upload-->
+<!--              action="https://jsonplaceholder.typicode.com/posts/"-->
+<!--              :show-file-list="false"-->
+<!--              :on-success="handleUploadSuccess"-->
+<!--          >-->
+<!--              <el-button size="small" type="primary" plain>上传头像</el-button>-->
+<!--          </el-upload>-->
+<!--      </el-dialog>-->
   </div>
 </template>
 

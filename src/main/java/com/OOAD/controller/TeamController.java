@@ -98,6 +98,22 @@ public class TeamController {
         }
         return result;
     }
-
+    @GetMapping("/submit")
+    public Result submitDormById(@RequestParam int teamId, @RequestParam String dormName) {
+        Team team = teamService.selectByID(teamId);
+        team.setSubmittedDorm(dormName);
+        int i = teamService.Update(team);
+        Result res = new Result();
+        if (i == -1) {
+            res.setCode(Code.UPDATE_ERR);
+            res.setData("Err");
+            res.setMsg("查询失败");
+        } else {
+            res.setMsg("查询成功");
+            res.setData(team);
+            res.setCode(Code.UPDATE_OK);
+        }
+        return res;
+    }
 }
 
