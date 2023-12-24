@@ -8,6 +8,14 @@ const routes =[
         component:()=>import('../components/Login')
     },
     {
+        path: '/detail',
+        name: 'detail',
+        meta: {
+            title: '详情'
+        },
+        component: () => import('../components/post/detail.vue')
+    },
+    {
         path: '/Index',
         name: 'index',
         component:()=>import('../components/Index'),
