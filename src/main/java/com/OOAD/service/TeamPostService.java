@@ -14,4 +14,5 @@ public interface TeamPostService {
     public List<TeamPost> getAll();
     public TeamPost getById(int id);
     public List<TeamPost> getByTeamId(int teamId);
+    public List<TeamPost> getByTitle(String title);
 }
