@@ -183,6 +183,26 @@
                   clearable
               ></el-input>
               <!-- 添加其他查询输入框 -->
+              <el-input
+                  v-model="searchParams['floor']"
+                  placeholder="floor"
+                  clearable
+              ></el-input>
+              <el-input
+                  v-model="searchParams['floorSex']"
+                  placeholder="floorSex"
+                  clearable
+              ></el-input>
+              <el-input
+                  v-model="searchParams['availiable']"
+                  placeholder="availiable"
+                  clearable
+              ></el-input>
+              <el-input
+                  v-model="searchParams['detail']"
+                  placeholder="detail"
+                  clearable
+              ></el-input>
             </div>
 
 
@@ -336,7 +356,14 @@ export default {
       }
     });
     this.updateTableHeight();
-    this.$axios.get(this.$httpUrl+'/dorms').then(res => {
+    this.$axios.get(this.$httpUrl+'/dorms',{
+      withCredentials: true,
+          headers:{
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+      },
+
+
+    }).then(res => {
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
       console.log(res)

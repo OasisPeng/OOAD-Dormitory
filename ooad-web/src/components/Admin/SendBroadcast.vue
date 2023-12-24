@@ -1,144 +1,132 @@
-
 <template>
 
-      <div>
+  <div>
 
-        <template>
-          <div>
-            <div class="search-header">
-              <el-button
-                  type="primary"
-                  style="width: 100%;;margin: 0 auto;"
-                  @click="toggleSearch">
-                {{ isSearchExpanded ? '收起查询' : '展开查询' }}</el-button>
-            </div>
-            <div class="search-row" v-show="isSearchExpanded" >
-
-              <el-date-picker
-                  type="datetime"
-                  v-model="searchParams.startDate"
-                  placeholder="Start Date"
-                  style="width: 100%"
-
-              ></el-date-picker>
-
-              <el-date-picker
-                  type="datetime"
-                  v-model="searchParams.endDate"
-                  placeholder="End Date"
-                  style="width: 100%"
-
-              ></el-date-picker>
-              <el-input
-                  v-model="searchParams['content']"
-                  placeholder="content"
-                  clearable
-              ></el-input>
-              <!-- 添加其他查询输入框 -->
-            </div>
-          </div>
-        </template>
-        <div class="content-above" ref="tableContainer" :style="{ 'max-height': isSearchExpanded ? 'calc(100vh - 400px)' : 'calc(100vh - 200px)' }">
-          <el-table :header-cell-style="{ background:'#f2f5fc', color: '#555555',fontSize: '20px', fontWeight: 'bold', height: '30px', lineHeight: '10px'}"
-                    :data="displayedFlights1"
-
-                    stripe
-                    border
-                    style="width: 100%;;margin: 0 auto;">
-            
-            <el-table-column prop="datetime" label="datetime" :min-width="100" />
-            <!-- 其他列 -->
-            <el-table-column prop="content" label="content"/>
-
-            <el-table-column label="Operations">
-              <template #default="scope">
-                <div class="button-group">
-                  <el-button type="primary" @click="editRoom(scope.row)">Edit</el-button>
-
-                  <el-button type="danger" @click="deleteRoom(scope.$index)">Delete</el-button>
-
-                </div>
-              </template>
-            </el-table-column>
-
-          </el-table>
-        </div>
-        <div class="pagination-and-button">
-          <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage4"
-              :page-sizes="[10,20, 30, 40]"
-              :page-size="pageSize"
-              :total="Room.length"
-              layout="total, sizes, prev, pager, next, jumper"
-          >
-          </el-pagination>
-          <div class="add-room-button">
-            <el-button type="primary" plain @click="createbroadcast">Add Broadcast</el-button>
-          </div>
-        </div>
-        <el-dialog
-            :visible.sync="dialogVisible"
-            title="Add Broadcast"
-            width="600px"
-            center
-        >
-          <!-- 在 el-form 内部的元素添加样式 -->
-          <!-- 增加一个隐藏字段用于存储选定行的索引 -->
-          <el-form-item label="Edit Index" prop="EditIndex" style="display: none;">
-            <el-input v-model="broadcast.EditIndex" :readonly="true" />
-          </el-form-item>
-
-          <el-form-item>
-            <div class="button-group2">
-              <el-button type="primary" @click="AddRoom('Room-name')">{{ editMode ? 'Update' : 'Submit' }}</el-button>
-              <el-button @click="cancel('Room-name')">Cancel</el-button>
-            </div>
-          </el-form-item>
-
-
-          <el-form
-              ref="Room-name"
-              :model="broadcast"
-              :rules="rules"
-              label-width="auto"
-              label-position="right"
-              size="default"
-              style="font-size: 20px;"
-          >
-            <el-form-item label="DateTime" prop="datetime">
-              <el-date-picker
-                  type="datetime"
-                  v-model="broadcast.datetime"
-                  label="Pick a time"
-                  placeholder="Pick a time"
-                  style="width: 100%"
-              />
-            </el-form-item>
-
-            <el-form-item label="Content" prop="content">
-              <el-input v-model="broadcast.content"/>
-            </el-form-item>
-            <el-form-item>
-              <div class="button-group2">
-                <el-button type="primary" @click="AddRoom('Room-name')" class="submit-button">{{ editMode ? 'Update' : 'Submit' }}</el-button>
-                <el-button @click="cancel('Room-name')" class="cancel-button">Cancel</el-button>
-              </div>
-            </el-form-item>
-
-
-          </el-form>
-        </el-dialog>
-
-
-
-        <div>
-
-          <div class="bottom-bar">
-          </div>
-        </div>
+    <div>
+      <div class="search-header">
+        <el-button
+            type="primary"
+            style="width: 100%;;margin: 0 auto;"
+            @click="toggleSearch">
+          {{ isSearchExpanded ? '收起查询' : '展开查询' }}</el-button>
       </div>
+      <div class="search-row" v-show="isSearchExpanded" >
+
+        <el-input
+            v-model="searchParams['content']"
+            placeholder="content"
+            style="width: 100%"
+
+        ></el-input>
+
+        <el-input
+            type="datetime"
+            v-model="searchParams['adminId']"
+            placeholder=" adminId"
+            style="width: 100%"
+
+        ></el-input>
+        <!-- 添加其他查询输入框 -->
+      </div>
+    </div>
+
+    <div class="content-above" ref="tableContainer" :style="{ 'max-height': isSearchExpanded ? 'calc(100vh - 400px)' : 'calc(100vh - 200px)' }">
+      <el-table :header-cell-style="{ background:'#f2f5fc', color: '#555555',fontSize: '20px', fontWeight: 'bold', height: '30px', lineHeight: '10px'}"
+                :data="displayedFlights1"
+
+                stripe
+                border
+                style="width: 100%;;margin: 0 auto;">
+
+        <el-table-column prop="adminId" label="adminId" :min-width="100" />
+        <!-- 其他列 -->
+        <el-table-column prop="content" label="content"/>
+
+        <el-table-column label="Operations">
+          <template #default="scope">
+            <div class="button-group">
+              <el-button type="primary" @click="editRoom(scope.row.id)">Edit</el-button>
+
+              <el-button type="danger" @click="deleteRoom(scope.row.id)">Delete</el-button>
+
+            </div>
+          </template>
+        </el-table-column>
+
+      </el-table>
+    </div>
+    <div class="pagination-and-button">
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[10,20, 30, 40]"
+          :page-size="pageSize"
+          :total="filteredFlights.length"
+          layout="total, sizes, prev, pager, next, jumper"
+      >
+      </el-pagination>
+      <div class="add-room-button">
+        <el-button type="primary" plain @click="createbroadcast">Add Broadcast</el-button>
+      </div>
+    </div>
+
+    <el-dialog
+        :visible.sync="dialogVisible"
+        title="Add Broadcast"
+        width="600px"
+        center
+    >
+      <!-- 在 el-form 内部的元素添加样式 -->
+      <!-- 增加一个隐藏字段用于存储选定行的索引 -->
+      <el-form-item label="Edit Index" prop="EditIndex" style="display: none;">
+        <el-input v-model="broadcast.EditIndex" :readonly="true" />
+      </el-form-item>
+
+      <el-form-item>
+        <div class="button-group2">
+          <el-button type="primary" @click="AddRoom('Room-name')">{{ editMode ? 'Update' : 'Submit' }}</el-button>
+          <el-button @click="cancel('Room-name')">Cancel</el-button>
+        </div>
+      </el-form-item>
+
+
+      <el-form
+          ref="Room-name"
+          :model="broadcast"
+          :rules="rules"
+          label-width="auto"
+          label-position="right"
+          size="default"
+          style="font-size: 20px;"
+      >
+
+        <el-form-item label="adminId" prop="adminId">
+          <el-input v-model="broadcast.adminId"/>
+        </el-form-item>
+
+        <el-form-item label="Content" prop="content">
+          <el-input v-model="broadcast.content"/>
+        </el-form-item>
+        <el-form-item>
+          <div class="button-group2">
+            <el-button type="primary" @click="AddRoom('Room-name')" class="submit-button">{{ editMode ? 'Update' : 'Submit' }}</el-button>
+            <el-button @click="cancel('Room-name')" class="cancel-button">Cancel</el-button>
+          </div>
+        </el-form-item>
+
+
+      </el-form>
+    </el-dialog>
+
+
+
+    <div>
+
+      <div class="bottom-bar">
+      </div>
+    </div>
+  </div>
 
 </template>
 
@@ -159,18 +147,17 @@ export default {
       currentIndex: 0,
       currentPage4: 1, // 当前页数
       pageSize: 10,   // 初始每页显示的条数
+      filteredFlights:[],
+      rowid:" ",
       Room: [
-        {
-          "datetime": "2023-10-04 17:07:26",
-          "content": "湖畔牛逼"
-        },
+
 
 
       ],
       broadcast: {
-        datetime: new Date(),
-        content: "",
-
+        content:"",
+        adminId:"",
+        id:""
       },
       value: 0
     }
@@ -178,15 +165,65 @@ export default {
   created() {
     // 在组件创建时计算初始平均值并设置给 value
     this.updateTableHeight();
+    this.$axios.get(this.$httpUrl+'/broadCasts', {
+      withCredentials: true,
+      headers: {
+        'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('CurUser')).token
+      },
+
+    }).then(res => {
+      // 假设 res.data 是您从后端获得的数据
+      const data = res.data.data;
+      console.log(res)
+      console.log(data)
+      // 检查 data 是否为数组
+      if (Array.isArray(data)) {
+        // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
+        const flights = data
+            .map(roomData => {
+              return {
+                content:  String(roomData.content || ""),
+                adminId:  String(roomData.adminId || ""),
+                id:  String(roomData.id || ""),
+              };
+            });
+
+        // 将转换后的数据添加到 Room 数组
+        this.Room = flights;
+
+        // 打印转换后的数据
+        console.log(this.Room);
+      } else {
+        console.error("The response data is not an array.");
+      }
+    });
+
+
+
   },
+
   methods: {
+    handleFilterChange(filteredData) {
+      // 当筛选条件发生变化时，更新筛选后的全部数据
+      this.filteredFlights = filteredData;
+      console.log(this.filteredFlights)
+      // 更新每页显示的条数
+      this.pageSize = 10; // 重置 pageSize 为默认值
+      // 更新当前页数
+      this.currentPage4 = 1; // 重置 currentPage4 为第一页
+
+      // 计算当前页的起始索引
+      const startIndex = (this.currentPage4 - 1) * this.pageSize;
+      // 使用数组的 slice 方法获取当前页的数据
+      this.displayedFlights = this.filteredFlights.slice(startIndex, startIndex + this.pageSize);
+    },
     handleCurrentChange(val) {
       // 更新当前页数
       this.currentPage4 = val;
       // 计算当前页的起始索引
       const startIndex = (this.currentPage4 - 1) * this.pageSize;
       // 使用数组的 slice 方法获取当前页的数据
-      this.displayedFlights1 = this.Room.slice(startIndex, startIndex + this.pageSize);
+      this.displayedFlights = this.filteredFlights.slice(startIndex, startIndex + this.pageSize);
     },
     updateTableHeight() {
       this.$nextTick(() => {
@@ -215,7 +252,7 @@ export default {
       // 计算当前页的起始索引
       const startIndex = (this.currentPage4 - 1) * this.pageSize;
       // 使用数组的 slice 方法获取当前页的数据
-      this.displayedFlights1 = this.Room.slice(startIndex, startIndex + this.pageSize);
+      this.displayedFlights = this.filteredFlights.slice(startIndex, startIndex + this.pageSize);
     },
 
     createbroadcast() {
@@ -223,77 +260,142 @@ export default {
       this.editMode = false; // 进入添加模式
     },
     editRoom(row) {
-      this.editMode = true; // 进入编辑模式
+      this.rowid=row;
+      this.editMode = true; // 进入添加模式
       this.dialogVisible = true;
-      console.log('1')
-      this.broadcast.EditIndex = this.Room.indexOf(row); // 存储选定行的索引
-      console.log('2')
-      // 填充选定行的信息到表单中
 
-      this.broadcast = {
-        datetime: row['datetime'],
-        content: row['content'],
-        EditIndex: this.broadcast.EditIndex,
-      };
     },
-    
+
     AddRoom(FormName) {
-      this.$refs[FormName].validate((valid) => {
-        if (valid) {
-          if (this.editMode) {
-            console.log('3')
-            const editIndex = this.broadcast.EditIndex;
-             console.log(this.broadcast.content)
-            this.$set(this.Room, editIndex, {
-              datetime: this.broadcast.datetime,
+      console.log("1",this.editMode)
+      if (this.editMode === true){
+        this.$refs[FormName].validate((valid) => {
+          if (valid) {
+            this.$axios.put(this.$httpUrl+'/broadCast',{
+            content: this.broadcast.content,
+              adminId: this.broadcast.adminId,
+              id:this.rowid
+
+            },{
+              withCredentials: true,
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+              },
+
+
+            }).then(res=>{
+              console.log(res.data)
+
+
+            })
+
+            this.dialogVisible = false;
+            this.$message.success( 'comment added successfully');
+            // 清空表单
+            this.broadcast = {
+              adminId: ' ',
+              content: '',
+              id: ''
+            };
+            this.$forceUpdate();
+
+          } else {
+            this.$message.error('Add comment Failed');
+          }
+        });
+      }else {
+        this.$refs[FormName].validate((valid) => {
+          if (valid) {
+
+
+            this.$axios.post(this.$httpUrl+'/broadCast',{
+
               content: this.broadcast.content,
-            });
+              adminId: this.broadcast.adminId,
 
-          }else {
-            this.Room.push({
-              "datetime": this.broadcast.datetime,
-              "content": this.broadcast.content,
-            });
-          }
+            },{
+              withCredentials: true,
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+              },
 
-          this.dialogVisible = false;
-          this.$message.success( this.editMode ? 'broadcast updated successfully' : 'broadcast added successfully');
-          // 清空表单
-          this.broadcast = {
-            datetime: "",
-            content: " ",
-            EditIndex: -1, // 重置 EditIndex
+
+            }).then(res=>{
+              console.log(res.data)
+
+
+            })
+
+
+
+
+
+
+            this.dialogVisible = false;
+            this.editMode = false;
+            this.$message.success( 'comment added successfully');
+            // 清空表单
+            this.broadcast = {
+              adminId: ' ',
+              content: '',
+              id: ''
+            };
+
+
+          } else {
+            this.$message.error('Add comment Failed');
           }
-        } else {
-          this.$message.error('Add broadcast Failed');
-        }
-      });
+        });
+      }
+
     },
+
     deleteRoom(index) {
       this.$confirm('Are you sure you want to delete this broadcast?', 'Tips', {
         confirmButtonText: 'Submit',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
-        // User clicked the OK button, execute delete operation
-        if (index !== -1) {
-          this.Room.splice(index, 1); // Remove the item from the array
-          console.log('Flights after deletion:', this.Room);
-          this.$message.success('Deleted successfully');
-        }
+
+
+            this.$axios.delete(this.$httpUrl+`/broadCast/${index}`,{
+              withCredentials: true,
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+              },
+            }).then(res=>{
+              console.log(res.data)
+              this.dialogVisible = false;
+              this.$message.success( 'comment delete successfully');
+              // 清空表单
+              this.comment = {
+                adminId: "",
+                content: " ",
+                id:" ",
+                EditIndex: -1, // 重置 EditIndex
+              }
+            })
+
+
       }).catch(() => {
-        // User clicked the Cancel button, cancel the delete operation
         this.$message.info('Deletion canceled');
       });
     },
+
+
+
+
+
+
     cancel(){
       this.dialogVisible = false;
       this.$message.success('Cancel  operation');
 
       // 清空表单
       this.broadcast = {
-        datetime: "",
+        adminId: "",
         content: " ",
+        id: " "
 
       }
     }
@@ -302,17 +404,14 @@ export default {
 
 
     displayedFlights1() {
-      const startDate = this.searchParams.startDate ? new Date(this.searchParams.startDate) : null;
-      const endDate = this.searchParams.endDate ? new Date(this.searchParams.endDate) : null;
-      // 根据查询条件筛选数据
-      const content = this.searchParams['content'];
-      const filteredFlights = this.Room.filter((flight) => {
+      this.filteredFlights = this.Room.filter((flight) => {
         if (
-            (!startDate || new Date(flight['datetime']) >= startDate) &&
-            (!endDate || new Date(flight['datetime']) <= endDate)
+            (!this.searchParams.content || (flight.content && flight.content.toLowerCase().includes(this.searchParams.content.toLowerCase()))) &&
+            (!this.searchParams.adminId || (flight.adminId && flight.adminId.toLowerCase().includes(this.searchParams.adminId.toLowerCase())))
+
         ) {
-          // If content is not provided or the flight's content includes the provided content
-          return !content || flight.content.includes(content);
+
+          return true;
         }
 
         return false;
@@ -322,8 +421,8 @@ export default {
       // 根据当前页数和每页显示的条数进行分页
       const startIndex = (this.currentPage4 - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
-
-      return filteredFlights.slice(startIndex, endIndex);
+      this.handleFilterChange(this.filteredFlights)
+      return this.filteredFlights.slice(startIndex, endIndex);
     }
   }
 

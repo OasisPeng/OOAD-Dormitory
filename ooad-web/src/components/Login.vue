@@ -260,23 +260,7 @@ export default {
 
 
     },
-    // async check() {
-    //   try {
-    //     const response = await axios.post('/api/check', {
-    //       username: this.loginUsername,
-    //       password: this.loginPassword,
-    //     });
-    //     if (response.data.valid) {
-    //       // 用户名和密码匹配
-    //       console.log('用户名和密码匹配');
-    //     } else {
-    //       // 用户名和密码不匹配
-    //       console.log('用户名和密码不匹配');
-    //     }
-    //   } catch (error) {
-    //     console.error('验证出错', error);
-    //   }
-    // },
+
 
 
 
