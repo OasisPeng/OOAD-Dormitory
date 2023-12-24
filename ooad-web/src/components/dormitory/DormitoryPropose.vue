@@ -151,11 +151,15 @@ export default {
         },
         grab(){
             // 抢、
-            this.$axios.get(this.$httpUrl + '/', {}, {
-                withCredentials: true, // 允许跨域请求中的Cookie
-                "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-            }).then(res=>{
-                if(res && res.code == '2040'){
+            // 抢到了就更新team的dorm,user的dorm_id和
+            this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,
+                {
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}
+            ).then(res=>{
+                if(res && res.data.code === 2040 ){
                     this.$message({
                         type: 'success',
                         message: '已抢到该宿舍'
@@ -163,7 +167,7 @@ export default {
                 }else {
                     this.$message({
                         type: 'info',
-                        message: res.msg
+                        message: '抢宿舍失败，请重试或更换其他宿舍'
                     })
                 }
             })
@@ -222,6 +226,8 @@ export default {
                     }else {
                         this.submittedTeam = team;
                         this.submittedDormitory = team.submittedDorm;
+                        this.getTeamHeadName();
+                        this.getTeamMembers()
                     }
                 } else {
                     console.log(res.data.msg)
@@ -231,6 +237,72 @@ export default {
         },
         getFavouriteNum() {
 
+        },
+        getTeamHeadName() {  //通过队长id(submittedTeam.headId)获取队长name
+            this.$axios.get(this.$httpUrl+'/user/'+this.submittedTeam.headId,
+                {
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}
+            ).then(res=>{
+                if (res.data.code===2010) {
+                    this.teamHeadName = res.data.data.name
+                } else {
+                    console.log(res.data.msg)
+                }
+
+            })
+        },
+        getTeamMembers() {  //通过队伍id获得成员信息
+            this.$axios.get(this.$httpUrl+'/users/'+this.submittedTeam.id,
+                {
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}
+            ).then(res=>{
+                if (res.data.code===2010) {
+                    // 过滤掉队长
+                    this.teamMembers = res.data.data.filter(member => member.id !== this.submittedTeam.headId);
+                } else {
+                    console.log(res.data.msg)
+                }
+
+            })
+        },
+        resubmit() {
+            if (
+                this.selectedArea === "" ||
+                this.selectedBuilding === "" ||
+                this.selectedRoom === ""
+            ) {
+                this.$message({
+                    type: "warning",
+                    message: "请完善寝室信息",
+                });
+                return; // 中断操作，不继续执行下面的逻辑
+            }
+            this.submittedDormitory = this.selectedArea+'-'+this.selectedBuilding+'-'+this.selectedRoom;
+            this.$axios.get(this.$httpUrl+'/team/submit?teamId='+this.submittedTeam.id+'&dormName='+this.submittedDormitory,
+                {
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}
+            ).then(res=>{
+                if (res.data.code===2020) {
+                    this.$message({
+                        type:'success',
+                        message:'提交成功'
+                    })
+                } else {
+                    console.log(res.data.msg)
+                    // 登录失败，可以显示错误消息
+                }
+
+            })
+            this.dialogVisible = false;
         }
     },
     created() {
@@ -251,6 +323,10 @@ export default {
         return {
             submittedTeam:"",
             submittedDormitory:"",
+            submittedDormId:'',
+            //第二个页面：已提交信息
+            teamMembers: [], // 队伍成员列表
+            teamHeadName: '', //队长名字
 
             user: JSON.parse(sessionStorage.getItem('UserData')),
             teamId: JSON.parse(sessionStorage.getItem('UserData')).teamId,
@@ -272,7 +348,9 @@ export default {
             selectedRoom: '',
             areaOptions: [],
             buildingOptions: [],
-            roomOptions: []
+            roomOptions: [],
+
+            dialogVisible: false,
         }
     },
     watch: {
@@ -282,6 +360,36 @@ export default {
                 this.selectedArea = newVal.area;
                 this.selectedBuilding = newVal.building;
                 this.selectedRoom = newVal.room;
+            }
+
+        },
+        submittedDormitory(newVal) {
+            if(newVal) {
+                // 假设 submittedDormitory 的值为 '湖畔-3栋-2楼-222'
+                const parts = newVal.split('-');
+
+                // 获取分割后的值
+                this.selectedArea = parts[0]; // '湖畔'
+                this.selectedBuilding = parts[1]; // '3栋'
+                this.selectedRoom = parts[2]; // '2楼-222'
+
+                // 更新所选房间id
+                this.$axios.get(this.$httpUrl + '/dorm/getDormId?dis=' + this.selectedArea + '&building=' + this.selectedBuilding + '&room=' + this.selectedRoom,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('CurUser')).token
+                        }
+                    }
+                ).then(res => {
+                    if (res.data.code === 2010) {
+                        this.submittedDormId = res.data.data
+                        console.log(res.data)
+                    } else {
+                        console.log(res.data.msg)
+                    }
+
+                })
             }
         }
     },
@@ -303,7 +411,7 @@ export default {
         <div style="margin: 10px 30px 10px 150px; font-family: arial, sans-serif">
             <el-steps :active="active" finish-status="success" >
                 <el-step :title="submitTitle" description="由队长提交心仪的宿舍，可以从收藏中选择，组队信息在抢宿舍阶段不可变更"></el-step>
-                <el-step :title="grabTitle" description="手速拼起来~`"></el-step>
+                <el-step :title="grabTitle" description="手速拼起来~"></el-step>
             </el-steps>
         </div>
         <el-divider></el-divider>
@@ -393,26 +501,61 @@ export default {
                                 <div style="margin-top: 10px;">
                                     <el-collapse v-model="activeName" accordion>
                                         <el-collapse-item name="1">
-                                            <el-template slot="title">
-                                                <div style="color: #817f7f">队名：123</div>
-                                            </el-template>
-                                            <div style="color: #817f7f">队长：12111110 杨四</div>
-                                            <div style="color: #817f7f">成员：12111111 李一，12111112 王二， 12111113 张三</div>
+                                            <template slot="title">
+                                                <div style="color: #817f7f">队名：{{ submittedTeam.name }}</div>
+                                            </template>
+                                            <div style="color: #817f7f">队长：{{ submittedTeam.headId }} {{ teamHeadName }}</div>
+                                            <div style="color: #817f7f">成员：
+                                                {{ teamMembers.map(member => `${member.id} ${member.name}`).join(', ') }}
+                                            </div>
+
                                         </el-collapse-item>
                                     </el-collapse>
                                 </div>
                             </el-row>
                         </div>
-                        <div style="margin-top: 10px;display: flex;align-items: flex-start">
+                        <div style="margin-top: 10px;display: flex;align-items: flex-start;">
                             <span style="margin-right: 10px;">您的所选寝室：</span>
                             <div>
                                 <el-card :body-style="{ padding: '0px' }" style="height: 200px; width: 180px">
                                     <img src="../../assets/img1.jpg" class="image" style="height: 160px;">
                                     <div style="padding: 8px;">
-                                        <span>湖畔3栋-2楼-222</span>>
+                                        <span>{{ submittedDormitory }}</span>>
                                     </div>
                                 </el-card>
-                                <el-button type="text" class="button" style="margin-left: 7px" @click="">更换其他可选寝室</el-button>
+                                <div>
+                                    <!-- 点击按钮触发对话框显示 -->
+                                    <el-button type="text" class="button" style="margin-left: 7px" @click="dialogVisible = true">更换其他可选寝室</el-button>
+
+                                    <!-- 对话框组件 -->
+                                    <el-dialog :visible.sync="dialogVisible" title="更换寝室" width="32%" @close="dialogVisible = false">
+                                        <!-- 对话框内容 -->
+                                        <!-- 这里可以放入更换寝室的相关内容 -->
+                                        <!-- 区域选择 -->
+                                        <el-select v-model="selectedArea" placeholder="请选择区域" @change="handleAreaChange" style="width: 120px">
+                                            <el-option v-for="area in areaOptions" :key="area.value" :label="area.label" :value="area.value"></el-option>
+                                        </el-select>
+                                        -
+                                        <!-- 楼栋选择 -->
+                                        <el-select v-model="selectedBuilding" placeholder="请选择楼栋" @change="handleBuildingChange" :disabled="!selectedArea" style="width: 120px">
+                                            <el-option v-for="building in buildingOptions" :key="building.value" :label="building.label" :value="building.value"></el-option>
+                                        </el-select>
+                                        -
+                                        <!-- 房间号选择 -->
+                                        <el-select v-model="selectedRoom" placeholder="请选择房间号" :disabled="!selectedBuilding" style="width: 125px">
+                                            <el-option v-for="room in roomOptions" :key="room.value" :label="room.label" :value="room.value"></el-option>
+                                        </el-select>
+                                        <!-- 对话框底部按钮 -->
+                                        <div style="margin-top: 20px">
+                                            <span class="dialog-footer">
+                                                <el-button @click="dialogVisible = false">取消</el-button>
+                                                <el-button type="primary" @click="resubmit">确定</el-button>
+                                            </span>
+                                        </div>
+                                    </el-dialog>
+<!--                                    <el-button type="text" class="button" style="margin-left: 7px" @click="">选择候补寝室</el-button>-->
+                                </div>
+
                             </div>
                         </div>
                         <div style="margin-top: 20px; margin-left: 270px">

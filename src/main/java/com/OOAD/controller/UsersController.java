@@ -81,4 +81,19 @@ public class UsersController {
         return result;
     }
 
+    @GetMapping("/{teamId}")
+    public Result getTeamMembers(@PathVariable int teamId) {
+        List<User> list = studentService.getByTeamId(teamId);
+        Result result = new Result();
+        if (list == null) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败，请重试");
+        } else {
+            result.setData(list);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
 }

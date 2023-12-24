@@ -2,6 +2,7 @@ package com.OOAD.service.impl;
 
 import com.OOAD.dao.SysUserDao;
 import com.OOAD.dao.UserDao;
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.SysUser;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
@@ -50,6 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     public List<User> getAll() {
         return userDao.selectList(null);
     }
+
 
     @Override
     public boolean updateById(User user) {

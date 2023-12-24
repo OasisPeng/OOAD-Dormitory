@@ -83,7 +83,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage4"
-            :page-sizes="[10,20, 30, 40]"
+            :page-sizes="[10, 20, 30, 40]"
             :page-size="pageSize"
             :total="flights.length"
             layout="total, sizes, prev, pager, next, jumper"

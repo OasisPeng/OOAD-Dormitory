@@ -33,4 +33,6 @@ public interface IDormService {
     public int qiang(int id);
 
     public List<Dorm> SelectAvailableRo(String dis, String building);
+
+    List<Dorm> getDormId(String dis, String building, String room);
 }
