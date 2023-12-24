@@ -3,21 +3,29 @@ export default {
     name:"DomritoryManage",
     methods:{
         loadPost(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/listPage',{
-            //     pageSize:this.pageSize,
-            //     pageNum:this.pageNum,
-            //     param:{
-            //         name:this.name
-            //     }
-            // }).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.tableData=res.data
-            //         this.total=res.total
-            //     }else {
-            //         alert('获取数据失败')
-            //     }
-            // })
+            this.$axios.get(this.$httpUrl+'/dorms?pageSize='+this.pageSize+'&pageNum='+this.pageNum
+            ).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2010){
+                    this.tableData=res.data.records
+                    this.total=res.data.total
+                }else {
+                    alert('获取数据失败')
+                }
+            })
+        },
+        loadByDis(){
+            this.$axios.get(this.$httpUrl+'/dorm2/'+this.distribution+'?pageSize='+this.pageSize+'&pageNum='+this.pageNum
+            ).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2010){
+                    this.tableData=res.data.records
+                    console.log(this.tableData)
+                    this.total=res.data.total
+                }else {
+                    alert('获取数据失败')
+                }
+            })
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -31,7 +39,7 @@ export default {
             this.loadPost()
         },
         resetParam(){
-            this.name='';
+            this.distribution='';
             this.loadPost()
         },
         mod(row){//参数是拿到的一整行的数据
@@ -39,26 +47,32 @@ export default {
             this.$nextTick(()=>{//异步处理
                 //赋值到表单,form是表单内容
                 this.form.id=row.id;
-                this.form.name=row.name;
-                this.form.remark=row.remark;
+                this.form.distribution = row.distribution;
+                this.form.building = row.building;
+                this.form.floor = row.floor;
+                this.form.floorSex = row.floorSex;
+                this.form.room = row.room;
+                this.form.available = row.available;
+                this.form.size = row.size;
+                this.form.detail = row.detail;
             })
         },
         del(id){
-            // this.$axios.get(this.$httpUrl+'/goodstype/del?id='+id).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
+            this.$axios.delete(this.$httpUrl+'/dorm/'+id).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2030){
+                    this.$message({
+                        message: '操作成功~',
+                        type: 'success'
+                    });
+                    this.loadPost()
+                }else {
+                    this.$message({
+                        message: '操作失败！',
+                        type: 'error'
+                    });
+                }
+            })
         },
         add(){
             this.centerDialogVisible=true;
@@ -84,40 +98,40 @@ export default {
             this.$refs.form.resetFields();//表单内容回到前一个状态
         },
         doSave(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/save',this.form).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.centerDialogVisible=false
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
+            this.$axios.post(this.$httpUrl+'/dorm',this.form).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2040){
+                    this.$message({
+                        message: '操作成功~',
+                        type: 'success'
+                    });
+                    this.centerDialogVisible=false
+                    this.loadPost()
+                }else {
+                    this.$message({
+                        message: '操作失败！',
+                        type: 'error'
+                    });
+                }
+            })
         },
         doMod(){
-            // this.$axios.post(this.$httpUrl+'/goodstype/update',this.form).then(res=>res.data).then(res=>{
-            //     console.log(res)
-            //     if(res.code==200){
-            //         this.$message({
-            //             message: '操作成功~',
-            //             type: 'success'
-            //         });
-            //         this.centerDialogVisible=false
-            //         this.loadPost()
-            //     }else {
-            //         this.$message({
-            //             message: '操作失败！',
-            //             type: 'error'
-            //         });
-            //     }
-            // })
+            this.$axios.put(this.$httpUrl+'/dorm', this.form).then(res=>res.data).then(res=>{
+                console.log(res)
+                if(res.code==2020){
+                    this.$message({
+                        message: '操作成功~',
+                        type: 'success'
+                    });
+                    this.centerDialogVisible=false
+                    this.loadPost()
+                }else {
+                    this.$message({
+                        message: '操作失败！',
+                        type: 'error'
+                    });
+                }
+            })
         }
     },
     beforeMount() {
@@ -126,21 +140,47 @@ export default {
     data() {
 
         return {
-            tableData: [{id:1,location:'11栋',floor:'17楼',floorSex:'女寝',room_number:'1716',available:'是',size:'4'},
-                {id:2,location:'湖畔3栋',floor:'4楼',floorSex:'男寝',room_number:'414',available:'否',size:'4'},],
+            tableData: [],
             pageSize:10,
             pageNum:1,
             total:0,
-            name:'',
+            distribution:'',
             centerDialogVisible:false,
             form:{
                 id:'',
-                name:'',
-                remark:''
+                distribution:'',
+                building:'',
+                floor:'',
+                floorSex:'',
+                room:'',
+                available:'',
+                size:'',
+                detail:''
             },
             rules: {
-                name: [
-                    {required: true, message: '请输入名称', trigger: 'blur'}
+                distribution: [
+                    { required: true, message: '请输入区域', trigger: 'blur' }
+                ],
+                building: [
+                    { required: true, message: '请输入楼栋', trigger: 'blur' }
+                ],
+                floor: [
+                    { required: true, message: '请输入楼层', trigger: 'blur' }
+                ],
+                floorSex: [
+                    { required: true, message: '请选择寝室类别', trigger: 'change' }
+                ],
+                room: [
+                    { required: true, message: '请输入房间号', trigger: 'blur' }
+                ],
+                available: [
+                    { required: true, message: '请选择是否空闲', trigger: 'change' }
+                ],
+                size: [
+                    { required: true, message: '请选择大小', trigger: 'change' }
+                ],
+                detail: [
+                    { required: true, message: '请输入备注', trigger: 'blur' }
                 ]
             }
         }
@@ -151,10 +191,10 @@ export default {
 <template>
     <div>
         <div style="margin-bottom: 5px">
-            <el-input v-model="name" placeholder="请输入名称" suffix-icon="el-icon-search" style="width: 200px"
-                      @keyup.enter.native="loadPost"></el-input>
+            <el-input v-model="distribution" placeholder="请输入区域信息，例：湖畔" suffix-icon="el-icon-search" style="width: 250px"
+                      @keyup.enter.native="loadByDis"></el-input>
 
-            <el-button type="primary" style="margin-left: 5px" @click="loadPost">查询</el-button>
+            <el-button type="primary" style="margin-left: 5px" @click="loadByDis">查询</el-button>
             <el-button type="success" @click="resetParam">重置</el-button>
             <el-button type="primary" style="margin-left: 5px" @click="add">新增</el-button>
         </div>
@@ -164,17 +204,21 @@ export default {
         >
             <el-table-column prop="id" label="ID" width="60">
             </el-table-column>
-            <el-table-column prop="location" label="区域" width="120">
+            <el-table-column prop="distribution" label="区域" width="80">
             </el-table-column>
-            <el-table-column prop="floor" label="楼层" width="100">
+            <el-table-column prop="building" label="几栋" width="80">
             </el-table-column>
-            <el-table-column prop="floorSex" label="男寝还是女寝" width="180">
+            <el-table-column prop="floor" label="楼层" width="80">
             </el-table-column>
-            <el-table-column prop="room_number" label="房间号" width="180">
+            <el-table-column prop="floorSex" label="男寝还是女寝" width="80">
             </el-table-column>
-            <el-table-column prop="available" label="是否空闲" width="180">
+            <el-table-column prop="room" label="房间号" width="80">
             </el-table-column>
-            <el-table-column prop="size" label="几人间" width="180">
+            <el-table-column prop="available" label="是否空闲" width="80">
+            </el-table-column>
+            <el-table-column prop="size" label="几人间" width="80">
+            </el-table-column>
+            <el-table-column prop="detail" label="备注" width="250">
             </el-table-column>
             <el-table-column prop="operate" label="操作">
                 <template slot-scope="scope">
@@ -203,16 +247,60 @@ export default {
                 :visible.sync="centerDialogVisible"
                 width="30%"
                 center>
-            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
-                <el-form-item label="分类名" prop="name">
+            <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+                <el-form-item label="区域" prop="distribution">
                     <el-col :span="20">
-                        <el-input v-model="form.name"></el-input>
+                        <el-select v-model="form.distribution">
+                            <el-option label="湖畔" value="湖畔"></el-option>
+                            <el-option label="二期" value="二期"></el-option>
+                            <el-option label="荔园" value="荔园"></el-option>
+                            <el-option label="欣园" value="欣园"></el-option>
+                        </el-select>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="备注" prop="remark">
+                <el-form-item label="几栋" prop="building">
                     <el-col :span="20">
-                        <el-input type="textarea" v-model="form.remark"></el-input>
+                        <el-input v-model="form.building"  placeholder="例：11栋"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="楼层" prop="floor">
+                    <el-col :span="20">
+                        <el-input v-model="form.floor" placeholder="请输入数字"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="男寝还是女寝" prop="floorSex">
+                    <el-col :span="20">
+                        <el-radio-group v-model="form.floorSex">
+                            <el-radio label="男"></el-radio>
+                            <el-radio label="女"></el-radio>
+                        </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="房间号" prop="room">
+                    <el-col :span="20">
+                        <el-input v-model="form.room" placeholder="请输入房间号"></el-input>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="是否空闲" prop="available">
+                    <el-col :span="20">
+                        <el-radio-group v-model="form.available">
+                            <el-radio label="是"></el-radio>
+                            <el-radio label="否"></el-radio>
+                        </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="几人间" prop="size">
+                    <el-col :span="20">
+                        <el-radio-group v-model="form.size">
+                            <el-radio label="2"></el-radio>
+                            <el-radio label="3"></el-radio>
+                            <el-radio label="4"></el-radio>
+                        </el-radio-group>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="备注" prop="detail">
+                    <el-col :span="20">
+                        <el-input type="textarea" v-model="form.detail"></el-input>
                     </el-col>
                 </el-form-item>
             </el-form>
