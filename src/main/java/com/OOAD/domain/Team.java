@@ -34,4 +34,6 @@ public class Team implements Serializable {
     private Integer dorm;
     //当前人数
     private Integer current;
+    //已提交寝室
+    private String submittedDorm;
 }

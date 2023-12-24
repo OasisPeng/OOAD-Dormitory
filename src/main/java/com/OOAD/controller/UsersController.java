@@ -7,10 +7,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -58,6 +62,22 @@ public class UsersController {
         result.setCode(Code.UPDATE_OK);
         result.setMsg("查询成功");
 
+        return result;
+    }
+
+    @PostMapping("/getMatchingUsers")
+    public Result getMatchingUsers(@RequestBody User currentUser) {
+        List<Map.Entry<Integer, Double>> matchingUsers = studentService.calculateMatchingUsers(currentUser);
+        Result result = new Result();
+        if (matchingUsers == null) {
+            result.setData("Err");
+            result.setCode(Code.UPDATE_ERR);
+            result.setMsg("查询失败，请重试");
+        } else {
+            result.setData(matchingUsers);
+            result.setCode(Code.UPDATE_OK);
+            result.setMsg("查询成功");
+        }
         return result;
     }
 

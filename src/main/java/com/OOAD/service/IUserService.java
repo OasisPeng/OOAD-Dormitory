@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -31,4 +32,5 @@ public interface IUserService {
     public int selectTeamID(int id);
     public int insertByList(List<User> list);
 
+    List<Map.Entry<Integer, Double>> calculateMatchingUsers(User currentUser);
 }

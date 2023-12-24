@@ -74,53 +74,39 @@ export default {
     methods: {
         // /获取帖子评论列表
         getreply() {
-            if (this.$router.history.current.query.type == 1) {
+            if (this.type == 1) {
                 this.$axios.get(this.$httpUrl + `/commentPersonPost/post/${this.$router.history.current.query.id}`, {}, {
                     withCredentials: true // 允许跨域请求中的Cookie
                 }).then(res => {
                     console.log(res.data)
                     this.list = res.data.data
                 })
-
+               
             } else {
                 this.$axios.get(this.$httpUrl + `/commentTeamPost/post/${this.$router.history.current.query.id}`, {}, {
                     withCredentials: true // 允许跨域请求中的Cookie
                 }).then(res => {
                     console.log(res.data,"团队")
-                  this.list = res.data.data
                 })
             }
         },
         // 添加帖子评论
         addReply() {
             console.log("cesi");
-          if (this.$router.history.current.query.type == 1) {
-            this.$axios.post(this.$httpUrl + `/commentPersonPost`, { personID: 1, postId: this.$router.history.current.query.id, content: this.context }, {
+            this.$axios.post(this.$httpUrl + `/commentPersonPost`, { personID: 1, postId: 1, content: this.content }, {
               withCredentials: true, // 允许跨域请求中的Cookie
               "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
             }).then(res => {
-              console.log(res)
-              this.context = ''
-              this.getreply()
+                console.log(res)
+                this.getreply()
             })
-          }else{
-            this.$axios.post(this.$httpUrl + `/commentTeamPost`, { postId: this.$router.history.current.query.id, content: this.context }, {
-              withCredentials: true, // 允许跨域请求中的Cookie
-              "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-            }).then(res => {
-              console.log(res)
-              this.context = ''
-              this.getreply()
-            })
-          }
-
         },
 
         getpost(data) {
             // 
             console.log(this.$router.history.current.query);
-          if (this.$router.history.current.query.type == 1) {
-                this.$axios.get(this.$httpUrl + `/personPost/${this.$router.history.current.query.id}`, {},{
+            if (this.type == 1) {
+                this.$axios.get(this.$httpUrl + `/personPost/user/${this.$router.history.current.query.id}`, {},{
                   withCredentials: true, // 允许跨域请求中的Cookie
                   "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
                 }).then(res => {
@@ -131,19 +117,19 @@ export default {
                         return
                     }
                     // console.log(this.data.data[0]);
-                    this.title = res.data.datatitle;
-                    this.content = res.data.data.content;
-                    this.time = res.data.data.time;
+                    this.title = res.data.data[0].title;
+                    this.content = res.data.data[0].content;
+                    this.time = res.data.data[0].time;
 
 
                 })
             } else {
-                this.$axios.get(this.$httpUrl + `/teamPost/${this.$router.history.current.query.id}`, {}, {
+                this.$axios.get(this.$httpUrl + `/teamPost/user/${this.$router.history.current.query.id}`, {}, {
                   withCredentials: true, // 允许跨域请求中的Cookie
                   "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
                 }).then(res => {
                     console.log(res.data, "帖子1");
-                    this.title = res.data.data.title;
+                    this.title = res.data.data[0].title;
                     this.content = res.data.data.content;
                     this.time = res.data.data.time;
 

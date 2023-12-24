@@ -7,15 +7,15 @@
         <el-form label-position="right" label-width="80px" :inline="false">
           <el-col :span="6">
             <el-form-item label="标题">
-              <el-input placeholder="标题"v-model="title"></el-input>
+              <el-input placeholder="标题"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="6">
-            <el-form-item label="帖子类型">
-              <el-select v-model="type" placeholder="请选择活动区域">
-                <el-option label="个人" value="1"></el-option>
-                <el-option label="团队" value="2"></el-option>
+            <el-form-item label="活动区域">
+              <el-select v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -23,7 +23,7 @@
       </el-row>
       <div class="btn">
         <el-button type="primary" plain @click="dialogVisible = true">申请</el-button>
-        <el-button type="primary" @click="search()">搜索</el-button>
+        <el-button type="primary">搜索</el-button>
       </div>
     </el-card>
 
@@ -47,9 +47,9 @@
         <el-table-column prop="teamId" label="teamId">
 
         </el-table-column>
-<!--        <el-table-column prop="version" label="version">-->
+        <el-table-column prop="version" label="version">
 
-<!--        </el-table-column>-->
+        </el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="topage(scope.row)">详情</el-button>
@@ -75,7 +75,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="团队信息" v-if="form.region == 2">
+        <el-form-item label="团队信息">
           <el-select v-model="form.userId" filterable placeholder="请选择">
             <el-option v-for="item in timelsit" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
@@ -137,7 +137,6 @@ export default {
       },
       options: [],
       list: [],
-      title:"",
       loading: false,
       states: ["Alabama", "Alaska", "Arizona",
         "Arkansas", "California", "Colorado",
@@ -156,7 +155,7 @@ export default {
         "Utah", "Vermont", "Virginia",
         "Washington", "West Virginia", "Wisconsin",
         "Wyoming"],
-      type:"2",
+
       dialogVisible: false,
       form: {
         title: '',
@@ -176,29 +175,17 @@ export default {
   },
   created() {
     this.gettimes()
-
-    this.search()
+    this.getPosts()
   },
   methods: {
     topage(data) {
       console.log(data);
-      router.push({ path: '/detail',query: { id: data.id,type:this.type
+      router.push({ path: '/detail',query: { id: data.id
         }})
-    },
-    search(){
-      if(this.type == 1){
-  this.getPerson()
-      }else{
-        this.getPosts()
-      }
     },
     // 获取所有队伍
     gettimes() {
-
-
-      this.$axios.get(this.$httpUrl + '/teams', {
-        title:this.title
-      }, {
+      this.$axios.get(this.$httpUrl + '/teams', {}, {
         withCredentials: true, // 允许跨域请求中的Cookie
         "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
       }).then(res => {
@@ -210,13 +197,11 @@ export default {
     // 删除
     deleteRow(e){
       console.log(e)
-      this.$axios.delete(this.$httpUrl + '/teamPost/'+e.id, {
+      this.$axios.get(this.$httpUrl + '/teamPost/team/'+e.id, {
         withCredentials: true, // 允许跨域请求中的Cookie
         "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
       }).then(res => {
         // console.log(res)
-        this.search()
-        this.$message("删除成功")
 
       })
     },
@@ -229,79 +214,34 @@ export default {
         teamId: "1",
         // id:2
       }
-      if (this.form.region == 1) {
+      this.$axios.post(this.$httpUrl + '/teamPost', data, {
+        withCredentials: true, // 允许跨域请求中的Cookie
+        "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+      }).then(res => {
+        // console.log(res)
 
-        if(!!this.title){
-          this.$axios.get(this.$httpUrl + '/personPost/title?title='+this.title, {
-            title:this.title
-          }, {
-            withCredentials: true, // 允许跨域请求中的Cookie
-            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-          }).then(res => {
-            console.log(res.data, "帖子");
-            this.tableData = res.data.data
-          })
-        }else {
-          // 个人
-          this.$axios.post(this.$httpUrl + '/personPost', data, {
-            withCredentials: true // 允许跨域请求中的Cookie
-          }).then(res => {
-            // console.log(res)
-            this.search()
-            this.$message("添加成功")
-            this.dialogVisible = false
-          })
+      })
+      // if (this.form.region == '1') {
+      //     // 个人
+      //     this.$axios.post(this.$httpUrl + '/personPost', data, {
+      //         withCredentials: true // 允许跨域请求中的Cookie
+      //     }).then(res => {
+      //         // console.log(res)
 
-        }
+      //     })
 
 
-      } else {
-          // 团队
-        this.$axios.post(this.$httpUrl + '/teamPost', data, {
-          withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-        }).then(res => {
-          // console.log(res)
-          this.search()
-          this.$message("添加成功")
-          this.dialogVisible = false
+      // } else {
+      //     // 团队
 
-        })
-      }
+      // }
 
 
     },
     // 获取帖子 personPosts
     getPosts() {
-      console.log("=========")
-      if(!!this.title){
-        this.$axios.get(this.$httpUrl + '/teamPost/title?title='+this.title, {
-          title:this.title
-        }, {
-          withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-        }).then(res => {
-          console.log(res.data, "帖子");
-          this.tableData = res.data.data
-        })
-      }else {
-        this.$axios.get(this.$httpUrl + '/teamPosts', {
-          title:this.title
-        }, {
-          withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-        }).then(res => {
-          console.log(res.data, "帖子");
-          this.tableData = res.data.data
-        })
-      }
 
-    },
-    getPerson() {
-
-      this.$axios.get(this.$httpUrl + '/personPosts', {
-        title:this.title
-      }, {
+      this.$axios.get(this.$httpUrl + '/teamPosts', {}, {
         withCredentials: true, // 允许跨域请求中的Cookie
         "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
       }).then(res => {
@@ -309,7 +249,6 @@ export default {
         this.tableData = res.data.data
       })
     },
-
 
     // 内容改变事件
     onEditorChange({ quill, html, text }) {
