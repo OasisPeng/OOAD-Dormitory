@@ -662,15 +662,19 @@ Get方法获取所有帖子
 
 /application
 
-post方法，提供application类进行申请
+post方法，提供application类进行申请（这里尤其需要注意**type**，type=0表示某人申请加入某个组队，type=1表示某个组队邀请某人）
 
 delete方法，提供application类进行删除
 
 /application/team/{id}
 
-根据teamid查询申请，返回申请列表
+这里是由队长查询的，有多少人申请加入他的组队
+
+根据teamid查询申请，返回申请列表（Application类）
 
 /application/user/{id}
+
+这里是个人查询的有多少组队邀请了我。
 
 根据userid查询申请，返回申请项
 

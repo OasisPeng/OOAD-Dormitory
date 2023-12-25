@@ -10,4 +10,5 @@ import lombok.EqualsAndHashCode;
 public class Application {
     Integer teamId;
     Integer userId;
+    Integer type;
 }

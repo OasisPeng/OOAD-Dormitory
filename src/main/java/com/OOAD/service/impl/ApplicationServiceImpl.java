@@ -45,14 +45,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public List<Application> getByTeamId(int id) {
         LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Application::getTeamId, id);
+        lqw.eq(Application::getTeamId, id).eq(Application::getType, 0);
         return dao.selectList(lqw);
     }
 
     @Override
     public List<Application> getByPersonId(int id) {
         LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Application::getUserId, id);
+        lqw.eq(Application::getUserId, id).eq(Application::getType, 1);
         return dao.selectList(lqw);
     }
 }
