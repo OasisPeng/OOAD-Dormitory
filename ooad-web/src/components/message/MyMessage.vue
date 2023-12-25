@@ -1,6 +1,6 @@
 <script>
 import emojis from "@/assets/emoji";
-// import '@fortawesome/fontawesome-free/css/all.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 let client
 export default {
@@ -34,7 +34,7 @@ export default {
             //     this.scrollToBottom()
             // })
         },
-        loadUserList(){  //开启过聊天的人
+        loadUserList(newChatItem){  //开启过聊天的人
             this.$axios.get(this.$httpUrl+'/chat/getUserList?fromUser='+this.fromuser, {
                 withCredentials: true,
                 headers:{
@@ -48,6 +48,10 @@ export default {
 
                 } else {
                     // 登录失败，可以显示错误消息
+                }
+                if(newChatItem != null){
+                    this.users.push(newChatItem)
+                    console.log(this.users)
                 }
             })
         },
@@ -169,12 +173,15 @@ export default {
         }
     },
     mounted() {
+        this.user = JSON.parse(localStorage.getItem('CurUser'))
+        this.fromuser = this.user.id
+        this.fromuserName = this.user.name
+        this.emojis = emojis.split(' ')
+        this.loadUserList(null)
         console.log(this.$route)
         // 获取参数
         const userId = this.$route.query.userId;
         const userName = this.$route.query.userName;
-        console.log(123456)
-        console.log((userId))
         if (userId && userName) {
             // 执行有参数时的逻辑
             // 判断是否存在对应的聊天项
@@ -185,31 +192,34 @@ export default {
                 const newChatItem = {
                     id: userId,
                     name: userName,
+                    avatar: this.toAvatar
                     // 其他聊天项相关信息...
                 };
-                this.users.push(newChatItem);
-
+                this.touser = userId;
+                this.touserName = userName;
+                this.loadUserList(newChatItem)
                 // 打开对应的窗口
                 this.selectToUser(newChatItem);
             }
             // this.loadGroupList()
             this.load()
         }
-        this.user = JSON.parse(localStorage.getItem('CurUser'))
-        this.fromuser = this.user.id
-        this.fromuserName = this.user.name
-        this.emojis = emojis.split(' ')
-        this.loadUserList()
+
         // this.loadGroupList()
         this.load()
 
-        client = new WebSocket('ws://localhost:8090/chatSever')
+        client = new WebSocket('ws://localhost:8090/chatServer')
         client.onopen = () => {
             console.log('websocket open')
         }
-        client.onclose = () => { //页面刷新和后台服务器关闭的时候
-            console.log('websocket close')
+        client.onclose = function (e) {
+            console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
+            console.log(e)
         }
+
+        client.onerror = (error) => {
+            console.error(`WebSocket error: ${error}`);
+        };
         client.onmessage = (msg) => {
             if(msg.data) {
                 let json = JSON.parse(msg.data)

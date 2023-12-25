@@ -159,5 +159,14 @@ public class DormServiceImpl implements IDormService {
         return dormDao.selectList(lqw);
     }
 
+    @Override
+    public List<Dorm> getDormId(String dis, String building, String room) {
+        LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Dorm::getDistribution, dis);
+        lqw.eq(Dorm::getBuilding, building);
+        lqw.eq(Dorm::getRoom, room);
+        return dormDao.selectList(lqw);
+    }
+
 
 }

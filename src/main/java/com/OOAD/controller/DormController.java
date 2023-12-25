@@ -92,6 +92,23 @@ public class DormController {
         return result;
 
     }
+
+    @GetMapping("/getDormId")
+    public Result getId(@RequestParam String dis, @RequestParam String building, @RequestParam String room ) {
+        List<Dorm> dorms = dormService.getDormId(dis,building,room);
+        Result result = new Result();
+        if (dorms.size() != 0) {
+            result.setCode(Code.GET_OK);
+            result.setData(dorms.get(0).getId());
+            result.setMsg("查询成功");
+        } else {
+            result.setCode(Code.GET_Err);
+            result.setData("Err");
+            result.setMsg("查询失败");
+        }
+        return result;
+
+    }
     @PutMapping
     public Result update(@RequestBody Dorm dorm) {
         boolean flag = dormService.updateByID(dorm);

@@ -3,7 +3,7 @@
       name: "Home",
       data(){
           return{
-              user: {},
+              user: JSON.parse(sessionStorage.getItem('UserData')),
               matchedUser: {},
               userSID:'',
               isMissingBaseInfo: false, // 控制提示框显示
@@ -46,9 +46,6 @@
           },
           init(){
               this.userSID=JSON.parse(sessionStorage.getItem('CurUser')).id
-              console.log(this.userSID)
-              this.getUser()
-              console.log(this.user)
           },
           UserMoreInfo() {
               // 判断用户信息是否完整，如果不完整则显示提示框
@@ -398,7 +395,6 @@
                       <li v-for="(matchuser, index) in matchedUsers" :key="index">
                           {{ Object.keys(matchuser)[0] }} - 匹配度: {{ Object.values(matchuser)[0].toFixed(2) }}%
                           <el-button type="text" @click="showDetails(index, Object.keys(matchuser)[0])">查看详情</el-button>
-                          <el-button type="text" @click="startChat(Object.keys(matchuser)[0])">发起聊天</el-button>
                           <el-collapse-transition>
                               <div v-if="showDetailsIndex === index">
                                   <!-- 在这里显示用户的全部信息 -->
@@ -411,6 +407,7 @@
                                           起床时间：{{matchedUser.timetable1}}<br> 入睡时间：{{matchedUser.timetable2}}<br>  是否午睡：{{matchedUser.nap}}<br>
                                           是否抽烟：{{matchedUser.smoke}}<br>  睡觉是否有打呼噜等习惯：{{matchedUser.sleepHabit}}<br>  卫生清洁：{{matchedUser.clean}}<br>
                                           空调温度：{{matchedUser.temperature}}<br>  热闹还是安静：{{matchedUser.isQuiet}}<br>  性格倾向：{{matchedUser.characters}}<br>
+                                          <el-button type="text" @click="startChat(Object.keys(matchuser)[0])">发起聊天</el-button>
                                       </div>
                                       <div v-else>
                                           用户信息未加载
