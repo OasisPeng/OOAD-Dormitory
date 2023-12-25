@@ -5,6 +5,7 @@ import com.OOAD.dao.UserDao;
 import com.OOAD.domain.Team;
 import com.OOAD.domain.User;
 import com.OOAD.service.ITeamService;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,9 +87,12 @@ public class TeamServiceImpl implements ITeamService{
             Team nt = new Team();
             nt.setId(teamID);
             nt.setCurrent(team.getCurrent() - 1);
-            user.setTeamId(teamID);
+            user.setTeamId(null);
+            LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+            updateWrapper.eq(User::getId,userID);
+            updateWrapper.set(User::getTeamId,null);
+            int j = userDao.update(user, updateWrapper);
             int i = teamDao.updateById(nt);
-            int j = userDao.updateById(user);
             if (nt.getCurrent() == 0) {
                 int k = teamDao.deleteById(teamID);
                 if (k != 1) {

@@ -5,10 +5,152 @@ export default {
   name: "StudentManage",
   props: {},
   methods: {
+    async exportStudentCsv(){
+      try {
+        const resopnse = await axios.get(this.$httpUrl + '/users',{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        console.log(resopnse)
+        this.tableData = resopnse.data.data;
+        if (resopnse.data.code == 2010){
 
+          console.log('查询全部组队成功')
+          console.log(this.allTeams)
+        }
+        else
+        if (resopnse.code == 2011){
+          console.error('查询全部组队失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
+
+
+      let csv = Papa.unparse(this.tableData);
+      //定义文件内容，类型必须为Blob 否则createObjectURL会报错
+      console.log(csv);
+      let content = new Blob([csv]);
+      //生成url对象
+      let  urlObject = window.URL || window.webkitURL || window;
+      let url = urlObject.createObjectURL(content)
+      //生成<a></a>DOM元素
+      let el = document.createElement('a')
+      //链接赋值
+      el.href = url
+      el.download = "students.csv"
+      //必须点击否则不会下载
+      el.click()
+      //移除链接释放资源
+      urlObject.revokeObjectURL(url)
+    },
+
+    async exportDormCsv(){
+      try {
+        const resopnse = await axios.get(this.$httpUrl + '/teams',{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        console.log(resopnse)
+        this.allTeams = resopnse.data.data;
+        if (resopnse.data.code == 2010){
+
+          console.log('查询全部组队成功')
+          console.log(this.allTeams)
+        }
+        else
+        if (resopnse.code == 2011){
+          console.error('查询全部组队失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
+
+
+      let csv = Papa.unparse(this.allTeams);
+      //定义文件内容，类型必须为Blob 否则createObjectURL会报错
+      console.log(csv);
+      let content = new Blob([csv]);
+      //生成url对象
+      let  urlObject = window.URL || window.webkitURL || window;
+      let url = urlObject.createObjectURL(content)
+      //生成<a></a>DOM元素
+      let el = document.createElement('a')
+      //链接赋值
+      el.href = url
+      el.download = "dormitory.csv"
+      //必须点击否则不会下载
+      el.click()
+      //移除链接释放资源
+      urlObject.revokeObjectURL(url)
+    },
+
+    async importCsv(){
+      let selectedFile = null
+      selectedFile = this.$refs.refFile.files[0];
+      if (selectedFile === undefined){
+        return
+      }
+      var reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onload = evt => {
+        // 检查编码
+        // let encoding = this.checkEncoding(evt.target.result);
+        // 将csv转换成二维数组
+        Papa.parse(selectedFile, {
+          encoding:"ANSI",
+          complete: async res => {
+            // UTF8 \r\n与\n混用时有可能会出问题
+            let data = res.data;
+            if (data[data.length - 1] == "") {
+              //去除最后的空行
+              data.pop();
+            }
+            console.log(data);  // data就是文件里面的数据
+
+            let jsonArray = []; // 用于存储转换后的JSON对象
+            for (let i = 0; i < data.length; i++) {
+              let jsonObj = {}; // 创建一个新的JSON对象
+              // 假设CSV文件的第一行是标题行
+              for (let j = 0; j < data[0].length; j++) {
+                jsonObj[data[0][j]] = data[i][j]; // 使用标题行作为属性，当前行的值作为对应属性的值
+              }
+              if(i != 0)
+               jsonArray.push(jsonObj); // 将创建的JSON对象添加到数组中
+            }
+            console.log(jsonArray); // 输出包装成数组的JSON对象
+
+            try {
+              const resopnse = await axios.post(this.$httpUrl + '/user/upload',{
+                withCredentials: true,
+                headers:{
+                  'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }
+              });
+              if (resopnse.code == 2040) {
+                console.log('上传用户成功')
+              }
+              else
+                console.log('上传用户失败')
+            } catch (error) {
+              console.error('验证出错', error);
+            }
+          }
+        });
+      };
+    },
     async upLoadStudent(data){
       try {
-        const resopnse = await axios.post(this.$httpUrl + '/user/upload',{List: data});
+        const resopnse = await axios.post(this.$httpUrl + '/user/upload',{List: data},{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
         if (resopnse.code == 2020){
         console.log('学生上传成功')
         }
@@ -351,7 +493,7 @@ export default {
     <input  type="file" id="files" ref="refFile" v-on:change="importCsv">
     <el-button type="primary" @click ="exportStudentCsv">导出学生</el-button>
     <el-button type="primary" @click ="exportDormCsv">导出宿舍选择情况</el-button>
-    <el-button type="primary" @click ="exchangeDorm">交换宿舍</el-button>
+<!--    <el-button type="primary" @click ="exchangeDorm">交换宿舍</el-button>-->
 
   </div>
 </template>
