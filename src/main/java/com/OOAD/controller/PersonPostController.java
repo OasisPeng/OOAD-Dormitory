@@ -14,6 +14,21 @@ import java.util.List;
 public class PersonPostController {
     @Autowired
     PersonPostServiceImpl service;
+    @GetMapping("/writer/{id}")
+    public Result deleteByWriterID(@PathVariable int id) {
+        List<PersonPost> personPost = service.getByWriterId(id);
+        Result result = new Result();
+        if (personPost != null) {
+            result.setMsg("查询成功");
+            result.setData(personPost);
+            result.setCode(Code.GET_OK);
+        } else {
+            result.setMsg("查询失败，帖子不存在");
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+        }
+        return result;
+    }
     @GetMapping("/title")
     public Result getByTitle(@RequestParam String title) {
         List<PersonPost> list = service.getByTitle(title);

@@ -15,6 +15,6 @@ public interface PersonPostService {
     public List<PersonPost> getAll();
     public PersonPost getById(int id);
     public List<PersonPost> getByPersonId(int personId);
-
+    public List<PersonPost> getByWriterId(int id);
 
 }

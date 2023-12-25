@@ -54,4 +54,11 @@ public class PersonPostServiceImpl implements PersonPostService {
         lqw.eq(PersonPost::getPersonId, personId);
         return dao.selectList(lqw);
     }
+
+    @Override
+    public List<PersonPost> getByWriterId(int id) {
+        LambdaQueryWrapper<PersonPost> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(PersonPost::getWriterId, id);
+        return dao.selectList(lqw);
+    }
 }

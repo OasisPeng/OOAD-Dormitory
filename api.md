@@ -590,6 +590,10 @@ message：删除失败，请重试
 
 ## 对于Teampost
 
+根据作者id查询帖子列表
+
+/teamPost/writer/{id}
+
 最基础的/teamPost
 
 有post请求新增，需要提供一个完整的teampost（除了version字段和id字段）
@@ -609,6 +613,10 @@ Get方法表示获取teamid == id的所有帖子
 Get方法获取所有帖子
 
 ## 对于Personpost
+
+根据作者id查询帖子列表
+
+/teamPost/writer/{id}
 
 最基础的/personPost
 

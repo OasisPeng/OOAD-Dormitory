@@ -1,5 +1,6 @@
 package com.OOAD.controller;
 
+import com.OOAD.domain.PersonPost;
 import com.OOAD.domain.TeamPost;
 import com.OOAD.service.TeamPostService;
 import com.OOAD.service.impl.TeamPostServiceImpl;
@@ -13,6 +14,21 @@ import java.util.List;
 public class TeamPostController {
     @Autowired
     TeamPostServiceImpl service;
+    @GetMapping("/writer/{id}")
+    public Result deleteByWriterID(@PathVariable int id) {
+        List<TeamPost> teamPost = service.getByWriterId(id);
+        Result result = new Result();
+        if (teamPost != null) {
+            result.setMsg("查询成功");
+            result.setData(teamPost);
+            result.setCode(Code.GET_OK);
+        } else {
+            result.setMsg("查询失败，帖子不存在");
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+        }
+        return result;
+    }
     @GetMapping("/title")
     public Result getByTitle(@RequestParam String title) {
         List<TeamPost> list = service.getByTitle(title);

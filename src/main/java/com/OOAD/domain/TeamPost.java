@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
@@ -15,10 +16,11 @@ import java.util.Date;
 public class TeamPost {
     @Version
     Integer version;
+    Integer writerId;
     @TableId(value = "id", type = IdType.AUTO)
     Integer id;
     String content;
     String title;
-    Date time;
+    Timestamp time;
     Integer teamId;
 }

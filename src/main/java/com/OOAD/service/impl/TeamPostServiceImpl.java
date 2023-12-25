@@ -53,4 +53,11 @@ public class TeamPostServiceImpl implements TeamPostService {
         lqw.like(TeamPost::getTitle, title);
         return dao.selectList(lqw);
     }
+
+    @Override
+    public List<TeamPost> getByWriterId(int id) {
+        LambdaQueryWrapper<TeamPost> lqw = new LambdaQueryWrapper<>();
+        lqw.like(TeamPost::getWriterId, id);
+        return dao.selectList(lqw);
+    }
 }
