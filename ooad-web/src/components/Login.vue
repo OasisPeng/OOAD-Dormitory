@@ -218,15 +218,30 @@ export default {
         console.log(res);
 
         if (res.data.code === 2000) {
-          this.$router.push({ name:'index' });
           console.log(res.data.msg);
           console.log("1");
           sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));
           localStorage.setItem("CurUser", JSON.stringify(res.data.data));
           console.log(JSON.parse(sessionStorage.getItem('CurUser')));
+
+          //获取用户的完整信息，存入sessionStorage
+            this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+                withCredentials: true,
+                headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }}
+            ).then(res=>{
+                if (res.data.code===2010) {
+                    sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+                    console.log(JSON.parse(sessionStorage.getItem('UserData')));
+                    this.$router.push({ name:'index' });
+                } else {
+                    console.log(res.data.msg)
+                    // 登录失败，可以显示错误消息
+                }
+            })
         } else {
-          console.log(res.msg);
-          this.$message.success(res.msg);
+          console.log(res.data.msg);
         }
       });
     },
@@ -260,12 +275,6 @@ export default {
 
 
     },
-
-
-
-
-
-
     out() {
       this.loginDialogVisible = false;
       this.registerDialogVisible= false;

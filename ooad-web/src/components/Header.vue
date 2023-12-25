@@ -12,7 +12,7 @@
           handleCommand(command) {
               switch (command) {
                   case 'myMessage':
-                      this.$router.push('/Message');
+                      this.$router.push('/MyMessage');
                       break;
 
                   case 'like':
@@ -78,7 +78,7 @@
           //     this.avatarDialogVisible = true;
           // },
           jumpToMessage(){
-              this.$router.push("/Message")
+              this.$router.push("/MyMessage")
           },
           switchLanguage(lang) {
               this.$i18n.locale = lang;

@@ -11,6 +11,7 @@ import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +20,11 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint(value = "/chatSever")
+@ServerEndpoint(value = "/chatServer")
 @Component
 public class WebSocketChatServer implements InitializingBean {
     //记录在线连接数
     public static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
-
     @Resource
     IChatService chatService;
     static IChatService staticChatService;
