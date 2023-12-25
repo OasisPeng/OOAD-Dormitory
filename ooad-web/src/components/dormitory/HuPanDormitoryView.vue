@@ -35,7 +35,7 @@
     </div>
 
 
-      <div v-show="quanju">
+      <div v-show="quanju&& !tupian">
         <div class="credit"></div>
         <!-- 全景容器 -->
         <div v-show="activeIndex === '1'" ref="panoramaContainer" style="width: 100%; height: 85vh;"></div>
@@ -47,7 +47,7 @@
 
 
 
-    <div v-if="activeIndex === '2'">
+    <div v-if="activeIndex === '2'&& !tupian">
 
         <div class="title-container">
           <h2  class="conference-title" >总分</h2>
@@ -153,7 +153,7 @@
 
 
 
-    <div v-if="activeIndex === '3'">
+    <div v-if="activeIndex === '3'&& !tupian">
       <div>
 
           <div>
@@ -194,8 +194,8 @@
                   clearable
               ></el-input>
               <el-input
-                  v-model="searchParams['availiable']"
-                  placeholder="availiable"
+                  v-model="searchParams['available']"
+                  placeholder="available"
                   clearable
               ></el-input>
               <el-input
@@ -203,9 +203,12 @@
                   placeholder="detail"
                   clearable
               ></el-input>
+              <el-input
+                  v-model="searchParams['size']"
+                  placeholder="size"
+                  clearable
+              ></el-input>
             </div>
-
-
           </div>
 
         <div class="content-above" ref="tableContainer" :style="{ 'max-height': isSearchExpanded ? 'calc(100vh - 400px)' : 'calc(100vh - 200px)' }">
@@ -222,7 +225,8 @@
             <el-table-column prop="room" label="room"/>
             <el-table-column prop="floor" label="floor"/>
             <el-table-column prop="floorSex" label="floorSex"/>
-            <el-table-column prop="availiable" label="availiable"/>
+            <el-table-column prop="available" label="available"/>
+            <el-table-column prop="size" label="size"/>
             <el-table-column prop="detail" label="detail"/>
             <el-table-column label="Operations">
               <template #default="scope">
@@ -266,7 +270,7 @@
       </div>
 
     </div>
-    <div v-if="activeIndex === '4'">
+    <div v-if="activeIndex === '4'&& !tupian">
       <el-row>
         <el-col :span="8">
           <div class="room-container">
@@ -322,6 +326,8 @@ export default {
   },
   data() {
     return {
+      usersex:" ",
+      tupian:false,
       quanju:true,
       showFangXing:true,
       panoramaContainer: null,
@@ -375,7 +381,8 @@ export default {
         version:"",
         floor: " ",
         floorSex:" ",
-        availiable:" "
+        available:" ",
+        size:""
 
       },
       value: 0
@@ -383,6 +390,33 @@ export default {
   },
 
   created() {
+    this.$nextTick(() => {
+    this.$axios.get(this.$httpUrl+`/user/${JSON.parse(sessionStorage.getItem('CurUser')).id}`,{
+      withCredentials: true,
+      headers:{
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+      },
+
+
+    }).then(res=>{
+      // 假设 res.data 是您从后端获得的数据
+      const data = res.data.data;
+      console.log(res)
+      console.log(data)
+      // 检查 data 是否为数组
+
+
+
+        // 将转换后的数据添加到 Room 数组
+        this.usersex = data.sex
+        // 打印转换后的数据
+        console.log( "fuck",this.usersex);
+
+    });
+    });
+
+
+
      console.log("token","Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token)
     // 在组件创建时计算初始平均值并设置给 value
     this.$axios.get(this.$httpUrl+'/distributionGrade/湖畔',{
@@ -433,13 +467,15 @@ export default {
     }).then(res => {
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
-      console.log(res)
+      console.log("1111",this.usersex)
       console.log(data)
       // 检查 data 是否为数组
       if (Array.isArray(data)) {
+
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
         const flights = data
             .filter(roomData => roomData.distribution === "湖畔") // 过滤符合条件的数据
+            .filter(roomData => roomData.floorSex=== this.usersex)
             .map(roomData => {
               return {
                 distribution:  String(roomData.distribution || ""),
@@ -451,7 +487,8 @@ export default {
                 version: String(roomData.version || ""),
                 floor: String(roomData.floor || ""),
                 floorSex: String(roomData.floorSex || ""),
-                availiable: String(roomData.availiable|| ""),
+                available: String(roomData.available|| ""),
+                size: String(roomData.size|| ""),
               };
             });
 
@@ -486,6 +523,7 @@ export default {
       infospot5.addEventListener('click', () => {
         // 点击湖畔4栋时切换到图片模式
         this.showHupan4Image = true;
+        this.tupian = true;
         this.quanju=false;
 
       });
@@ -496,6 +534,7 @@ export default {
       infospot6.addEventListener('click', () => {
         // 点击湖畔4栋时切换到图片模式
         this.showHupan5Image = true;
+        this.tupian = true;
         this.quanju=false;
 
       });
@@ -505,6 +544,7 @@ export default {
       infospot7.addEventListener('click', () => {
         // 点击湖畔4栋时切换到图片模式
         this.showHupan6Image = true;
+        this.tupian = true;
         this.quanju=false;
 
       });
@@ -527,14 +567,14 @@ export default {
       this.showHupan4Image = false;
       this.showHupan5Image = false;
       this.showHupan6Image = false;
-
+      this.tupian = false;
       // 重新初始化全景容器
-      this.viewer.remove(this.panorama);
-      const img = new Image();
-      img.src = '/lakeside.jpg';
-      img.onload = () => {
-        this.initPanorama(img.width, img.height);
-    }
+      // this.viewer.remove(this.panorama);
+    //   const img = new Image();
+    //   img.src = '/lakeside.jpg';
+    //   img.onload = () => {
+    //     this.initPanorama(img.width, img.height);
+    // }
     },
 
     updateTableHeight() {
@@ -787,8 +827,9 @@ export default {
             (!this.searchParams.room || (flight.room && flight.room.toLowerCase().includes(this.searchParams.room.toLowerCase()))) &&
             (!this.searchParams.floor || (flight.floor && flight.floor.toLowerCase().includes(this.searchParams.floor.toLowerCase()))) &&
             (!this.searchParams.floorSex || (flight.floorSex && flight.floorSex.toLowerCase().includes(this.searchParams.floorSex.toLowerCase()))) &&
-            (!this.searchParams.availiable || (flight.availiable && flight.availiable.toLowerCase().includes(this.searchParams.availiable.toLowerCase()))) &&
-            (!this.searchParams.detail || (flight.detail && flight.detail.toLowerCase().includes(this.searchParams.detail.toLowerCase())))
+            (!this.searchParams.available || (flight.available && flight.available.toLowerCase().includes(this.searchParams.available.toLowerCase()))) &&
+            (!this.searchParams.detail || (flight.detail && flight.detail.toLowerCase().includes(this.searchParams.detail.toLowerCase())))&&
+            (!this.searchParams.size || (flight.size && flight.size.toLowerCase().includes(this.searchParams.size.toLowerCase())))
         ) {
 
           return true;
