@@ -13,10 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         if (originUser == null) {
             return false;
         } else {
-            if (user.getPassword() != null) {
+            if (!Objects.equals(user.getPassword(), originUser.getPassword())) {
                 user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
                 LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
                 lqw.eq(SysUser::getUsername, user.getId().toString());
