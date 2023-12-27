@@ -1,10 +1,13 @@
 package com.OOAD.controller;
 
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.FavouriteDorm;
+import com.OOAD.service.IDormService;
 import com.OOAD.service.IFavouriteDormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -12,6 +15,8 @@ import java.util.List;
 public class FavouriteDormController {
     @Autowired
     IFavouriteDormService service;
+    @Autowired
+    IDormService dormService;
     @GetMapping("/user/{id}")
     public Result GetByPersonId(@PathVariable int id){
         Result result = new Result();
@@ -23,6 +28,26 @@ public class FavouriteDormController {
         } else {
             result.setCode(Code.GET_OK);
             result.setData(favouriteDorms);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
+    @GetMapping("/user")
+    public Result GetDormsByPersonId(@RequestParam int id){
+        Result result = new Result();
+        List<FavouriteDorm> favouriteDorms = service.getByPerson(id);
+        if (favouriteDorms == null) {
+            result.setCode(Code.GET_Err);
+            result.setData("Err");
+            result.setMsg("查询失败，结果可能为空");
+        } else {
+            List<Dorm> dorms = new ArrayList<>();
+            for(FavouriteDorm favouriteDorm:favouriteDorms){
+                int dormId = favouriteDorm.getDormId();
+                dorms.add(dormService.selectByID(dormId));
+            }
+            result.setCode(Code.GET_OK);
+            result.setData(dorms);
             result.setMsg("查询成功");
         }
         return result;
@@ -74,6 +99,8 @@ public class FavouriteDormController {
             result.setData("OK");
             result.setMsg("收藏成功");
         } else {
+            Dorm dorm = dormService.selectByID(favouriteDorm.getDormId());
+            dorm.setFavourite(dorm.getFavourite()+1);
             result.setCode(Code.INSERT_ERR);
             result.setData("Err");
             result.setMsg("收藏失败，系统错误");
@@ -85,6 +112,8 @@ public class FavouriteDormController {
         Result result = new Result();
         int re = service.delete(favouriteDorm);
         if (re == 1) {
+            Dorm dorm = dormService.selectByID(favouriteDorm.getDormId());
+            dorm.setFavourite(dorm.getFavourite()-1);
             result.setCode(Code.DELETE_OK);
             result.setData("OK");
             result.setMsg("取消收藏成功");

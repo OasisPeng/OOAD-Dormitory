@@ -175,7 +175,7 @@
           <el-input v-model="user.sex"></el-input>
         </span>
               <span v-else>
-          {{ user.sex == 1 ? $t('男') : $t('女') }}
+                  {{ user.sex}}
         </span>
           </el-descriptions-item>
           <el-descriptions-item>

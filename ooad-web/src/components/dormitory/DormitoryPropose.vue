@@ -26,10 +26,12 @@ export default {
                         // 根据日期比较来设置active的值
                         if (currentDate >= this.submitStartDate && currentDate <= this.submitEndDate) {
                             this.active = 0; // 在提交宿舍日期范围内
-                        } else if (currentDate >= this.grabStartDate && currentDate <= this.grabEndDate) {
+                        } else if (currentDate >= this.grabStartDate && currentDate <= this.grabEndDate && this.successDorm === '') {
                             this.active = 1; // 在抢宿舍日期范围内
                         } else {
                             this.active = 2; // 其他情况
+                            console.log(1234)
+                            console.log((this.successDorm))
                         }
                     }else {
                         // alert('获取数据失败')
@@ -51,6 +53,7 @@ export default {
                     if(res.data.data.headId === this.user.id){
                         team.push(res.data.data)
                         this.optionsTeam = team.map(item => ({ value: item, label: item.name }));
+                        console.log('team')
                         console.log(this.optionsTeam)
                     }
                 } else {
@@ -164,6 +167,8 @@ export default {
                         type: 'success',
                         message: '已抢到该宿舍'
                     })
+                    this.successDorm = this.submittedDormitory
+                    this.active = 2
                 }else {
                     this.$message({
                         type: 'info',
@@ -226,6 +231,10 @@ export default {
                     }else {
                         this.submittedTeam = team;
                         this.submittedDormitory = team.submittedDorm;
+                        this.successDorm = JSON.parse(sessionStorage.getItem('UserData')).dormId === null? '':this.submittedDormitory
+                        if (this.successDorm !== ''){
+                            this.active = 2  // 如果已经有抢到的宿舍，直接跳转到第三个页面
+                        }
                         this.getTeamHeadName();
                         this.getTeamMembers()
                     }
@@ -237,6 +246,23 @@ export default {
         },
         getFavouriteNum() {
 
+        },
+        getAllFavoriteDorms(){
+            this.$axios.get(this.$httpUrl+'/favouriteDorm/user?id='+this.user.id,
+                {
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}
+            ).then(res=>{
+                if (res.data.code===2010) {
+                    this.favoriteDorms = res.data.data
+                    console.log(this.favoriteDorms)
+                } else {
+                    console.log(res.data.msg)
+                }
+
+            })
         },
         getTeamHeadName() {  //通过队长id(submittedTeam.headId)获取队长name
             this.$axios.get(this.$httpUrl+'/user/'+this.submittedTeam.headId,
@@ -303,21 +329,33 @@ export default {
 
             })
             this.dialogVisible = false;
+        },
+        getDescription() {
+            if (this.successDorm === this.submittedDormitory && this.successDorm !== '') {
+                return `你已经成功抢到${this.successDorm}宿舍，欢迎尽快和室友提包入住`;
+            } else {
+                // 根据其他条件返回不同的描述
+                // 如果申请没有结束，可以返回其他描述
+                return "寝室申请已经结束";
+            }
         }
     },
     created() {
         // 判断用户的学生类型并设置对应的值
-        if (this.user.studentType === '本科生') {
+        if (this.user.studentType === '研究生' && this.user.sex === '男') {
             this.studentType = 1;
-        } else if (this.user.studentType === '研究生') {
+        } else if (this.user.studentType === '研究生' && this.user.sex === '女') {
             this.studentType = 2;
-        } else if (this.user.studentType === '博士生') {
+        } else if (this.user.studentType === '博士生' && this.user.sex === '男') {
             this.studentType = 3;
+        } else if(this.user.studentType === '博士生' && this.user.sex === '女') {
+            this.studentType = 4
         }
         this.loadDateData(); // 加载日期数据
         this.loadSubmittedData()
         this.fetchAreaOptions();
         this.getTeam();
+        this.getAllFavoriteDorms()
     },
     data() {
         return {
@@ -349,15 +387,18 @@ export default {
             areaOptions: [],
             buildingOptions: [],
             roomOptions: [],
-
+            successDorm: '',
             dialogVisible: false,
+            //收藏的寝室
+            favoriteDorms: [] ,
+            // favoriteNums: '', //多少人收藏
         }
     },
     watch: {
         selectedDormitory(newVal) {
             // 监听 selectedDormitory 变化，拆分成三个变量
             if (newVal) {
-                this.selectedArea = newVal.area;
+                this.selectedArea = newVal.distribution;
                 this.selectedBuilding = newVal.building;
                 this.selectedRoom = newVal.room;
             }
@@ -421,17 +462,15 @@ export default {
                     <el-card class="box-card">
                         <div style="font-size: 7px; color: crimson">
                             <span>
-                                您已提交 {{ submittedDormitory }} 寝室，组队名称为 {{ submittedTeam.name }}，
-                                该寝室当前已被 {{}} 人选择，时间截止前可随时更改组队和寝室信息
+                                您已提交 {{ submittedDormitory }} 寝室，组队名称为 {{ submittedTeam.name }}，时间截止前可随时更改组队和寝室信息
                             </span>
                         </div>
                         <div style="margin-top: 30px">
                             您是：
                             <el-radio-group v-model="studentType">
                                 <!-- 如果 studentType 的初始值为 0，则选择 "本科生" 并禁用 "研究生" -->
-                                <el-radio :label="1"  :disabled="studentType === 2||studentType === 3">本科生</el-radio>
                                 <!-- 如果 studentType 的初始值为 1，则选择 "研究生" 并禁用 "本科生" -->
-                                <el-radio :label="2"  :disabled="studentType === 3||studentType === 1">研究生</el-radio>
+                                <el-radio :label="1"  :disabled="studentType === 3||studentType === 4">研究生</el-radio>
                                 <el-radio :label="3"  :disabled="studentType === 1||studentType === 2">博士生</el-radio>
                             </el-radio-group>
                         </div>
@@ -475,13 +514,14 @@ export default {
                                     center
                                     style="margin-left: 210px">
                                 <el-radio-group v-model="selectedDormitory">
-                                    <div>
-                                        <el-radio :label="{'area': '湖畔', 'building': '3栋', 'room': '2楼-222'}">湖畔3栋-2楼-222</el-radio>
-                                    </div>
-                                    <div style="margin-top: 5px">
-                                        <el-radio :label="{'area': '湖畔', 'building': '1栋', 'room': '3楼-333'}">湖畔1栋-3楼-333</el-radio>
+                                    <div v-for="dorm in favoriteDorms" :key="dorm.id">
+                                        <!-- 使用插值语法动态设置label -->
+                                        <el-radio :label="dorm">
+                                            {{ dorm.distribution + '-' + dorm.building + '-' + dorm.room }}
+                                        </el-radio>
                                     </div>
                                 </el-radio-group>
+
                                 <span slot="footer" class="dialog-footer">
                                     <el-button @click="centerDialogVisible = false">取 消</el-button>
                                     <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
@@ -518,7 +558,7 @@ export default {
                             <span style="margin-right: 10px;">您的所选寝室：</span>
                             <div>
                                 <el-card :body-style="{ padding: '0px' }" style="height: 200px; width: 180px">
-                                    <img src="../../assets/img1.jpg" class="image" style="height: 160px;">
+                                    <img src="../../assets/img.jpg" class="image" style="height: 160px;">
                                     <div style="padding: 8px;">
                                         <span>{{ submittedDormitory }}</span>>
                                     </div>
@@ -568,7 +608,7 @@ export default {
 
             <div v-if="active=== 2">
                 <!--                <span>寝室申请已经结束</span>-->
-                <el-empty description="寝室申请已经结束"></el-empty>
+                <el-empty :description="getDescription()"></el-empty>
             </div>
         </div>
     </div>
