@@ -49,9 +49,9 @@
             <div> {{scope.row.time | timefilter }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="teamId" label="teamId">
+<!--        <el-table-column prop="teamId" label="teamId">-->
 
-        </el-table-column>
+<!--        </el-table-column>-->
         <el-table-column prop="writerId" label="作者id">
 
         </el-table-column>
