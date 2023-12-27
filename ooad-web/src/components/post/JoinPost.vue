@@ -2,20 +2,22 @@
 
 <template>
   <div>
+
+
     <el-card class="box-card">
       <el-row :gutter="6">
         <el-form label-position="right" label-width="80px" :inline="false">
           <el-col :span="6">
             <el-form-item label="标题">
-              <el-input placeholder="标题"v-model="title"></el-input>
+              <el-input placeholder="标题" v-model="title"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="6">
             <el-form-item label="帖子类型">
               <el-select v-model="type" placeholder="请选择活动区域">
-                <el-option label="个人" value="1"></el-option>
-                <el-option label="团队" value="2"></el-option>
+                <el-option label="寝室" value="1"></el-option>
+                <el-option label="个人" value="2"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -34,22 +36,28 @@
         </el-table-column>
         <el-table-column prop="title" label="标题">
         </el-table-column>
-<!--        <el-table-column label="图片" width="180">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-image style="width: 100px; height: 100px"-->
-<!--                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"-->
-<!--                      fit="fill"></el-image>-->
+        <!--        <el-table-column label="图片" width="180">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-image style="width: 100px; height: 100px"-->
+        <!--                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"-->
+        <!--                      fit="fill"></el-image>-->
 
-<!--          </template>-->
-<!--        </el-table-column>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
         <el-table-column prop="time" label="创建时间">
+          <template slot-scope="scope">
+            <div> {{scope.row.time | timefilter }}</div>
+          </template>
         </el-table-column>
         <el-table-column prop="teamId" label="teamId">
 
         </el-table-column>
-<!--        <el-table-column prop="version" label="version">-->
+        <el-table-column prop="writerId" label="作者id">
 
-<!--        </el-table-column>-->
+        </el-table-column>
+        <!--        <el-table-column prop="version" label="version">-->
+
+        <!--        </el-table-column>-->
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="topage(scope.row)">详情</el-button>
@@ -65,22 +73,22 @@
 
     <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
       <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="活动名称">
+        <el-form-item label="帖子名称">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="帖子类型">
           <el-select v-model="form.region" placeholder="请选择帖子类型">
-            <el-option label="个人帖子" value="1"></el-option>
-            <el-option label="团队帖子" value="2"></el-option>
+            <el-option label="寝室" value="1"></el-option>
+            <el-option label="个人" value="2"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="团队信息" v-if="form.region == 2">
-          <el-select v-model="form.userId" filterable placeholder="请选择">
-            <el-option v-for="item in timelsit" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="团队名称" v-if="form.region == 2">-->
+<!--          <el-select v-model="form.userId" filterable placeholder="请选择">-->
+<!--            <el-option v-for="item in timelsit" :key="item.id" :label="item.name" :value="item.id">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 
         <el-form-item label="内容">
           <div class="content">
@@ -182,12 +190,12 @@ export default {
   methods: {
     topage(data) {
       console.log(data);
-      router.push({ path: '/detail',query: { id: data.id,type:this.type
-        }})
+
+      router.push({ path: '/detail',query: { id: data.id,type:this.type}})
     },
     search(){
       if(this.type == 1){
-  this.getPerson()
+        this.getPerson()
       }else{
         this.getPosts()
       }
@@ -210,15 +218,28 @@ export default {
     // 删除
     deleteRow(e){
       console.log(e)
-      this.$axios.delete(this.$httpUrl + '/teamPost/'+e.id, {
-        withCredentials: true, // 允许跨域请求中的Cookie
-        "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-      }).then(res => {
-        // console.log(res)
-        this.search()
-        this.$message("删除成功")
+      if(this.type == 1){
+        this.$axios.delete(this.$httpUrl + '/personPost/'+e.id, {
+          withCredentials: true, // 允许跨域请求中的Cookie
+          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+        }).then(res => {
+          // console.log(res)
+          this.search()
+          this.$message("删除成功")
 
-      })
+        })
+      }else {
+        this.$axios.delete(this.$httpUrl + '/teamPost/'+e.id, {
+          withCredentials: true, // 允许跨域请求中的Cookie
+          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+        }).then(res => {
+          // console.log(res)
+          this.search()
+          this.$message("删除成功")
+
+        })
+      }
+
     },
     // 添加
     sub() {
@@ -227,6 +248,7 @@ export default {
         content: this.form.content,
         time: new Date(),
         teamId: "1",
+        writerId:JSON.parse(localStorage.getItem("CurUser")).id
         // id:2
       }
       if (this.form.region == 1) {
@@ -242,7 +264,7 @@ export default {
 
 
       } else {
-          // 团队
+        // 团队
         this.$axios.post(this.$httpUrl + '/teamPost', data, {
           withCredentials: true, // 允许跨域请求中的Cookie
           "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
@@ -359,4 +381,6 @@ export default {
 .ql-container {
   min-height: 230px;
 }
+
+
 </style>

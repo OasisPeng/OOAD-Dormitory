@@ -9,7 +9,14 @@ import router  from "./router";
 import store from './store'
 import VueI18n from 'vue-i18n';
 
+Vue.filter('timefilter',function(originVal){
 
+    var  aa=new Date(originVal)
+
+    let bb=aa.toLocaleString()
+
+    return bb
+})
 
 axios.interceptors.request.use(
     config => {
