@@ -1,17 +1,29 @@
 package com.OOAD.controller;
 
 import com.OOAD.domain.Application;
+import com.OOAD.domain.Team;
+import com.OOAD.domain.User;
 import com.OOAD.service.impl.ApplicationServiceImpl;
+import com.OOAD.service.impl.TeamServiceImpl;
+import com.OOAD.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/application")
 public class ApplicationController {
     @Autowired
     ApplicationServiceImpl applicationService;
+    @Autowired
+    UserServiceImpl userService;
+    @Autowired
+    TeamServiceImpl teamService;
     @PostMapping
     public Result add(@RequestBody Application a) {
         Result result = new Result();
@@ -73,4 +85,63 @@ public class ApplicationController {
         return result;
     }
 
+    @GetMapping("/offer/{id}")
+    public Result getOffersByTeamId(@PathVariable int id) {
+        Result result = new Result();
+        List<Application> list = applicationService.getByTeamId(id);
+        if (list == null) {
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败");
+            result.setData("Err");
+        } else {
+            list = list.stream()
+                    .filter(application -> application.getType() == 0)
+                    .collect(Collectors.toList());
+            List<Map<String, Object>> res = new ArrayList<>();
+            for(Application app:list){
+                Map<String, Object> map =new HashMap<>();
+                map.put("userId",app.getUserId());
+                map.put("teamId", app.getTeamId());
+                User user = userService.getById(app.getUserId());
+                map.put("userName", user.getName());
+                Team team = teamService.selectByID(app.getTeamId());
+                map.put("teamName", team.getName());
+                res.add(map);
+            }
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+            result.setData(res);
+        }
+        return result;
+    }
+
+    @GetMapping("/invitation/{id}")
+    public Result getInvitationsByTeamId(@PathVariable int id) {
+        Result result = new Result();
+        List<Application> list = applicationService.getByPersonId(id);
+        if (list == null) {
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败");
+            result.setData("Err");
+        } else {
+            list = list.stream()
+                    .filter(application -> application.getType() == 1)
+                    .collect(Collectors.toList());
+            List<Map<String, Object>> res = new ArrayList<>();
+            for(Application app:list){
+                Map<String, Object> map =new HashMap<>();
+                map.put("userId",app.getUserId());
+                map.put("teamId", app.getTeamId());
+                User user = userService.getById(app.getUserId());
+                map.put("userName", user.getName());
+                Team team = teamService.selectByID(app.getTeamId());
+                map.put("teamName", team.getName());
+                res.add(map);
+            }
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+            result.setData(res);
+        }
+        return result;
+    }
 }

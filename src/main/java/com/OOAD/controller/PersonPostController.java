@@ -15,7 +15,7 @@ public class PersonPostController {
     @Autowired
     PersonPostServiceImpl service;
     @GetMapping("/writer/{id}")
-    public Result deleteByWriterID(@PathVariable int id) {
+    public Result getByWriterID(@PathVariable int id) {
         List<PersonPost> personPost = service.getByWriterId(id);
         Result result = new Result();
         if (personPost != null) {
@@ -105,7 +105,7 @@ public class PersonPostController {
         return result;
     }
     @GetMapping("/user/{id}")
-    public Result getByTeamId(@PathVariable int id) {
+    public Result getByPersonId(@PathVariable int id) {
         List<PersonPost> list = service.getByPersonId(id);
         Result result = new Result();
         if (list == null || list.isEmpty()) {
@@ -119,4 +119,5 @@ public class PersonPostController {
         }
         return result;
     }
+
 }

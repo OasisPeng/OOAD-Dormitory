@@ -1,17 +1,29 @@
 package com.OOAD.controller;
 
 import com.OOAD.domain.CommentPersonPost;
+import com.OOAD.domain.FavouritePersonPost;
+import com.OOAD.domain.PersonPost;
+import com.OOAD.domain.User;
 import com.OOAD.service.ICommentPersonPostService;
+import com.OOAD.service.IUserService;
+import com.OOAD.service.PersonPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/commentPersonPost")
 public class CommentPersonPostController {
     @Autowired
     ICommentPersonPostService service;
+    @Autowired
+    PersonPostService personPostService;
+    @Autowired
+    IUserService userService;
 
     @GetMapping("/post/{id}")
     public Result GetByPostId(@PathVariable int id) {
@@ -71,6 +83,37 @@ public class CommentPersonPostController {
             result.setCode(Code.DELETE_ERR);
             result.setData("ERR");
             result.setMsg("删除评论失败，请重试");
+        }
+        return result;
+    }
+    @GetMapping("/comment/{userId}")
+    public Result getLikesByPostIdOfUser(@PathVariable int userId) {  //个人发帖获赞情况
+        List<PersonPost> list = personPostService.getByWriterId(userId); //个人发的所有帖子
+        Result result = new Result();
+        if (!list.isEmpty()) {
+            List<Map<String, Object>> res = new ArrayList<>();
+            for (PersonPost post:list) {  //根据帖子id查找有没有人点赞
+                List<CommentPersonPost> commentlist = service.GetByPostId(post.getId());
+                for (CommentPersonPost comment:commentlist) {
+                    User user = userService.getById(comment.getPersonId());
+                    if(user.getId() != userId) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("postId", post.getId());
+                        map.put("postTitle", post.getTitle());
+                        map.put("commentByName", user.getName());
+                        map.put("commentById", user.getId());
+                        map.put("content", comment.getContent());
+                        res.add(map);
+                    }
+                }
+            }
+            result.setMsg("查询成功");
+            result.setCode(Code.GET_OK);
+            result.setData(res);
+        } else {
+            result.setMsg("未查询到任何信息请重试");
+            result.setCode(Code.GET_Err);
+            result.setData("Empty");
         }
         return result;
     }
