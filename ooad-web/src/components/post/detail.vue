@@ -117,8 +117,6 @@ export default {
           "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
         }).then(res => {
           this.isFans = !this.isFans
-
-
         })
       } else {
         this.$axios.get(this.$httpUrl + `/favouriteTeamPost`, data, {

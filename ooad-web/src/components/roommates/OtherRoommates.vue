@@ -3,15 +3,25 @@
     <el-button @click="clearFilter">清除所有过滤器</el-button>
 
     <el-table
-        :data="allTeams",
-        style="width: 100%">
+        :data="allTeams"
+        >
+      <el-table-column
+          prop="headId"
+          label="队长学号"
+          width="180">
+      </el-table-column>
       <el-table-column
           prop="id"
-          label="队长名"
+          label="组队编号"
           width="180">
       </el-table-column>
       <el-table-column
           prop="name"
+          label="组队名"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="current"
           label="当前人数"
           width="180">
       </el-table-column>
@@ -20,30 +30,13 @@
           label="容量"
           width="180">
       </el-table-column>
-      <el-table-column
-          prop="current"
-          label="当前人数"
-          :formatter="formatter">
-      </el-table-column>
-<!--      <el-table-column-->
-<!--          prop="region"-->
-<!--          label="地区"-->
-<!--          width="100"-->
 
-<!--          :filters="[{ text: '湖畔', value: '湖畔' }, { text: '二期', value: '二期' }]"-->
-<!--          :filter-method="filterTag"-->
-<!--          filter-placement="bottom-end">-->
+      <el-table-column label="操作" >
 
-<!--        <template slot-scope="scope">-->
-<!--          <el-tag-->
-<!--              :type="scope.row.region === '二期' ? 'primary' : 'success'"-->
-<!--              disable-transitions>-->
-<!--            {{ scope.row.region }}-->
-<!--          </el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-      <el-table-column>
-        <el-button type="primary" @click="apply">申请加入</el-button>
+        <template slot-scope="scope">
+          <el-button type="primary" @click="apply(scope.row)">申请加入</el-button>
+        </template>
+
       </el-table-column>
 
 
@@ -70,7 +63,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm">确 定</el-button>
+        <el-button type="primary" @click="createTeam">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -91,6 +84,7 @@ export default {
       allTeams: [],
       capacity: 3,
       dialogVisible : false,
+      input:null,
 
       teams: [{
         leaderName: 'leader1',
@@ -137,20 +131,42 @@ export default {
     showInputDialog() {
       this.dialogVisible = true;
     },
-    async apply(){
+    async apply(rowData){
+      try {
+        const resopnse = await axios.post(this.$httpUrl + '/application',{
+          teamId:rowData.id,
+          userId:this.input,
+          type:0
+        },{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        console.log(resopnse.data)
+      }
+      catch (error){console.error('验证出错', error);
+      }
+
+
 
     },
 
     async getAllTeams(){
       try {
-        const resopnse = await axios.get(this.$httpUrl + '/teams');
-        if (resopnse.code == 2010){
-          this.allTeams = resopnse.data;
+        const resopnse = await axios.get(this.$httpUrl + '/teams',{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        if (resopnse.data.code == 2010){
+          this.allTeams = resopnse.data.data;
           console.log('查询全部组队成功')
           console.log(this.allTeams)
         }
         else
-          if (resopnse.code == 2011){
+          if (resopnse.data.code == 2011){
           console.error('查询全部组队失败，请重试')
         }
       }
@@ -162,7 +178,12 @@ export default {
       try {
         const resopnse = await axios.post(this.$httpUrl + '/team',{
           headId: this.user.id,
-          capacity: this.capacity
+          capacity: this.input
+        },{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
         });
         if (resopnse.code == 2040){
           console.log('成功添加寝室')
@@ -173,7 +194,7 @@ export default {
       }
       catch (error){console.error('验证出错', error);
       }
-
+      this.dialogVisible = false
     }
     ,
 
