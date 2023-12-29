@@ -1,53 +1,46 @@
 <template>
+
+
+  <!--  redis-server.exe redis.windows.conf-->
+  <!--  D:\OneDrive - 南方科技大学\课程\创新实践-->
   <div>
+
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <el-menu-item index="1">简介</el-menu-item>
       <el-menu-item index="2">评分</el-menu-item>
       <el-menu-item index="3">查看可选宿舍</el-menu-item>
+      <el-menu-item index="4">查看房型</el-menu-item>
     </el-menu>
 
     <div class="line"></div>
-
-    <div v-if="activeIndex === '1'">
-      <el-carousel :interval="4000" type="card" height="300px" style="width: 50%; margin: 0 auto;">
-        <el-carousel-item v-for="(image, index) in imageList" :key="index">
-          <img :src="image" alt="照片" class="current-image" style="max-height: 300px; margin-bottom: 1px;" />
-        </el-carousel-item>
-      </el-carousel>
-
-      <div style="  font-family: '宋体',sans-serif; font-weight: bold; " >
-        <p >荔园位于二期宿舍区的北侧，这里有公共教学楼、自习室、同时还有本科生和研究生的学生宿舍。</p>
+    <div v-if="showHupan4Image" class="image-container">
+      <img src="/荔园4.png" alt="荔园7栋的图片" class="center-top">
+      <div class="button-container">
+        <el-button type="primary" plain @click="goBack">返回</el-button>
       </div>
-
-      <div class="right">
-        <el-row >
-          <el-col :span="24" >
-            <div class="grid-content bg-purple-dark">
-              <div style="flex: 1; font-size: 30px; text-align: center; font-weight: bold; color: #282626; font-family: 'Arial', sans-serif; ">
-                <span>优点</span>
-              </div>
-
-            </div>
-          </el-col>
-        </el-row>
-        <div class="content-container" >
-          <p class="content">学校的第三家超市天天购荔园超市位于荔园四栋楼下，荔园食堂位于六栋楼下，荔园收发室位于七栋楼下。居住在这里的同学们上课自习、购物、吃饭、住宿一条龙服务，可以说是非常方便了！</p>
-        </div>
-        <el-row>
-          <el-col :span="24"><div class="grid-content bg-purple-dark">
-            <div style="flex: 1; font-size: 30px; text-align: center; font-weight: bold; color: #282626; font-family: 'Arial', sans-serif;">
-              <span>缺点</span>
-            </div>
-          </div></el-col>
-        </el-row>
-        <div class="content-container" >
-          <p class="content">距离学校中心较远</p>
-        </div>
+    </div>
+    <div class="line"></div>
+    <div v-if="showHupan5Image" class="image-container">
+      <img src="/荔园7.png" alt="荔园8栋的图片" class="center-top">
+      <div class="button-container">
+        <el-button type="primary" plain @click="goBack">返回</el-button>
       </div>
     </div>
 
 
-    <div v-if="activeIndex === '2'">
+    <div v-show="quanju&& !tupian">
+      <div class="credit"></div>
+      <!-- 全景容器 -->
+      <div v-show="activeIndex === '1'" ref="panoramaContainer" style="width: 100%; height: 85vh;"></div>
+    </div>
+
+
+
+
+
+
+
+    <div v-if="activeIndex === '2'&& !tupian">
 
       <div class="title-container">
         <h2  class="conference-title" >总分</h2>
@@ -83,7 +76,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage4"
-            :page-sizes="[10, 20, 30, 40]"
+            :page-sizes="[10,20, 30, 40]"
             :page-size="pageSize"
             :total="flights.length"
             layout="total, sizes, prev, pager, next, jumper"
@@ -153,61 +146,64 @@
 
 
 
-    <div v-if="activeIndex === '3'">
+    <div v-if="activeIndex === '3'&& !tupian">
       <div>
 
-        <template>
-          <div>
-            <div class="search-header">
-              <el-button
-                  type="primary"
-                  style="width: 100%;;margin: 0 auto;"
-                  @click="toggleSearch">
-                {{ isSearchExpanded ? '收起查询' : '展开查询' }}</el-button>
-            </div>
-
-            <div class="search-row" v-show="isSearchExpanded" >
-              <el-input
-                  v-model="searchParams['distribution']"
-                  placeholder="distribution"
-                  clearable
-              ></el-input>
-              <el-input
-                  v-model="searchParams['building']"
-                  placeholder="building"
-                  clearable
-              ></el-input>
-              <el-input
-                  v-model="searchParams['room']"
-                  placeholder="room"
-                  clearable
-              ></el-input>
-              <!-- 添加其他查询输入框 -->
-              <el-input
-                  v-model="searchParams['floor']"
-                  placeholder="floor"
-                  clearable
-              ></el-input>
-              <el-input
-                  v-model="searchParams['floorSex']"
-                  placeholder="floorSex"
-                  clearable
-              ></el-input>
-              <el-input
-                  v-model="searchParams['availiable']"
-                  placeholder="availiable"
-                  clearable
-              ></el-input>
-              <el-input
-                  v-model="searchParams['detail']"
-                  placeholder="detail"
-                  clearable
-              ></el-input>
-            </div>
-
-
+        <div>
+          <div class="search-header">
+            <el-button
+                type="primary"
+                style="width: 100%;;margin: 20px auto;"
+                @click="toggleSearch">
+              {{ isSearchExpanded ? '收起查询' : '展开查询' }}</el-button>
           </div>
-        </template>
+
+
+          <div class="search-row" v-show="isSearchExpanded" >
+            <el-input
+                v-model="searchParams['distribution']"
+                placeholder="distribution"
+                clearable
+            ></el-input>
+            <el-input
+                v-model="searchParams['building']"
+                placeholder="building"
+                clearable
+            ></el-input>
+            <el-input
+                v-model="searchParams['room']"
+                placeholder="room"
+                clearable
+            ></el-input>
+            <!-- 添加其他查询输入框 -->
+            <el-input
+                v-model="searchParams['floor']"
+                placeholder="floor"
+                clearable
+            ></el-input>
+            <el-input
+                v-model="searchParams['floorSex']"
+                placeholder="floorSex"
+                clearable
+            ></el-input>
+            <el-input
+                v-model="searchParams['available']"
+                placeholder="available"
+                clearable
+            ></el-input>
+            <el-input
+                v-model="searchParams['detail']"
+                placeholder="detail"
+                clearable
+            ></el-input>
+            <el-input
+                v-model="searchParams['size']"
+                placeholder="size"
+                clearable
+            ></el-input>
+          </div>
+        </div>
+
         <div class="content-above" ref="tableContainer" :style="{ 'max-height': isSearchExpanded ? 'calc(100vh - 400px)' : 'calc(100vh - 200px)' }">
           <el-table :header-cell-style="{ background:'#f2f5fc', color: '#555555',fontSize: '20px', fontWeight: 'bold', height: '50px', lineHeight: '50px'}"
                     :data="displayedFlights1"
@@ -220,13 +216,17 @@
             <el-table-column prop="building" label="building" :min-width="100" />
             <!-- 其他列 -->
             <el-table-column prop="room" label="room"/>
-
+            <el-table-column prop="floor" label="floor"/>
+            <el-table-column prop="floorSex" label="floorSex"/>
+            <el-table-column prop="available" label="available"/>
+            <el-table-column prop="size" label="size"/>
+            <el-table-column prop="detail" label="detail"/>
             <el-table-column label="Operations">
               <template #default="scope">
                 <div class="button-group">
                   <el-button type="primary" @click="editRoom(scope.row)">收藏</el-button>
 
-                  <el-button type="danger" @click="deleteRoom(scope.$index)">取消收藏</el-button>
+                  <el-button type="danger" @click="deleteRoom(scope.row.id)">取消收藏</el-button>
 
                 </div>
               </template>
@@ -246,7 +246,7 @@
               :current-page="currentPage4"
               :page-sizes="[10,20, 30, 40]"
               :page-size="pageSize"
-              :total="flights.length"
+              :total="filteredFlights.length"
               layout="total, sizes, prev, pager, next, jumper"
           >
           </el-pagination>
@@ -263,6 +263,33 @@
       </div>
 
     </div>
+    <div v-if="activeIndex === '4'&& !tupian">
+      <el-row>
+        <el-col :span="8">
+          <div class="room-container">
+            <div class="room-title">双人间</div>
+            <img v-for="(image, index) in imageList" :src="image" :key="index" alt="照片" class="room-image" />
+          </div>
+        </el-col>
+
+        <el-col :span="8">
+          <div class="room-container">
+            <div class="room-title">三人间</div>
+            <img v-for="(image, index) in imageList2" :src="image" :key="index" alt="照片" class="room-image" />
+          </div>
+        </el-col>
+
+        <el-col :span="8">
+          <div class="room-container">
+            <div class="room-title">四人间</div>
+            <img v-for="(image, index) in imageList3" :src="image" :key="index" alt="照片" class="room-image" />
+          </div>
+        </el-col>
+      </el-row>
+
+
+
+    </div>
 
   </div>
 
@@ -275,14 +302,35 @@
 </template>
 
 <script>
-import pictur1 from '@/picture/liyuan1.jpg'
-import pictur2 from '@/picture/liyuan2.jpg'
-import pictur3 from '@/picture/liyuan3.jpg'
-import pictur4 from '@/picture/liyuan4.jpg'
-
+import pictur1 from  '@/picture/荔园双人1.jpg'
+import pictur2 from   '@/picture/荔园双人2.jpg'
+import pictur3 from  '@/picture/荔园三人1.jpg'
+import pictur4 from  '@/picture/荔园三人2.jpg'
+import pictur5 from  '@/picture/荔园四人1.jpg'
+import pictur6 from  '@/picture/荔园四人2.jpg'
+import * as PANOLENS from 'panolens';
 export default {
+
+  mounted() {
+    const img = new Image();
+    img.src = '/liyuan.jpg';
+    img.onload = () => {
+      this.initPanorama(img.width, img.height);
+    };
+  },
   data() {
     return {
+      usersex:" ",
+      tupian:false,
+      quanju:true,
+      showFangXing:true,
+      panoramaContainer: null,
+      showHupan4Image: false,
+      showHupan5Image: false,
+
+
+      panorama: null,
+      viewer: null,
       searchParams: {}, // 存储查询条件
       isSearchExpanded: true, // 控制查询框展开与隐藏
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -290,6 +338,7 @@ export default {
 
 
       },
+      // viewer: null,
       dialogVisible: false,
       editMode: false,
       activeIndex: '1',
@@ -297,8 +346,14 @@ export default {
       imageList: [
         pictur1,
         pictur2,
+      ],
+      imageList2: [
         pictur3,
         pictur4,
+      ],
+      imageList3: [
+        pictur5,
+          pictur6
       ],
       currentPage4: 1, // 当前页数
       pageSize: 10,   // 初始每页显示的条数
@@ -310,9 +365,8 @@ export default {
       flights: [
 
       ],
-
-
       Room: [],
+      filteredFlights:[],
       RoomForm: {
         distribution: "",
         building: "",
@@ -320,14 +374,55 @@ export default {
         detail: "",
         favourite:"",
         id:"",
-        version:""
+        version:"",
+        floor: " ",
+        floorSex:" ",
+        available:" ",
+        size:""
+
       },
       value: 0
     }
   },
+
   created() {
+    this.$nextTick(() => {
+      this.$axios.get(this.$httpUrl+`/user/${JSON.parse(sessionStorage.getItem('CurUser')).id}`,{
+        withCredentials: true,
+        headers:{
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        },
+
+
+      }).then(res=>{
+        // 假设 res.data 是您从后端获得的数据
+        const data = res.data.data;
+        console.log(res)
+        console.log(data)
+        // 检查 data 是否为数组
+
+
+
+        // 将转换后的数据添加到 Room 数组
+        this.usersex = data.sex
+        // 打印转换后的数据
+        console.log( "fuck",this.usersex);
+
+      });
+    });
+
+
+
+    console.log("token","Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token)
     // 在组件创建时计算初始平均值并设置给 value
-    this.$axios.get(this.$httpUrl+'/distributionGrade/荔园').then(res=>{
+    this.$axios.get(this.$httpUrl+'/distributionGrade/荔园',{
+      withCredentials: true,
+      headers:{
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+      },
+
+
+    }).then(res=>{
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
       console.log(res)
@@ -355,33 +450,41 @@ export default {
         console.error("The response data is not an array.");
       }
     });
-    this.updateTableHeight();
-    this.$axios.get(this.$httpUrl+'/dorms',{
-      withCredentials: true,
-          headers:{
-        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
-      },
 
+
+    console.log("token",sessionStorage.getItem('CurUser'))
+    this.updateTableHeight();
+    this.$axios.get(this.$httpUrl+'/dorms', {
+      withCredentials: true,
+      headers: {
+        'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('CurUser')).token
+      },
 
     }).then(res => {
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
-      console.log(res)
+      console.log("1111",this.usersex)
       console.log(data)
       // 检查 data 是否为数组
       if (Array.isArray(data)) {
+
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
         const flights = data
             .filter(roomData => roomData.distribution === "荔园") // 过滤符合条件的数据
+            .filter(roomData => roomData.floorSex=== this.usersex)
             .map(roomData => {
               return {
-                distribution: roomData.distribution || "",
-                building: roomData.building || "",
-                room: roomData.room || "",
-                detail: roomData.detail || "",
-                favourite: roomData.favourite || "",
-                id: roomData.id || "",
-                version: roomData.version || ""
+                distribution:  String(roomData.distribution || ""),
+                building:  String(roomData.building || ""),
+                room: String(roomData.room || ""),
+                detail: String(roomData.detail || ""),
+                favourite: String(roomData.favourite || ""),
+                id: String(roomData.id || ""),
+                version: String(roomData.version || ""),
+                floor: String(roomData.floor || ""),
+                floorSex: String(roomData.floorSex || ""),
+                available: String(roomData.available|| ""),
+                size: String(roomData.size|| ""),
               };
             });
 
@@ -398,7 +501,74 @@ export default {
 
 
   },
+
   methods: {
+
+    initPanorama(width, height) {
+      var infospot, infospot5, infospot6, infospot7,infospot8,infospot9, panorama, viewer;
+
+      infospot = new PANOLENS.Infospot();
+      // ... (为 infospot2 到 infospot12 重复 Infospot 配置)
+
+
+
+
+      infospot5 = new PANOLENS.Infospot();
+      infospot5.position.set( -2356, -3954, 1935 );
+      infospot5.addHoverText( '荔园4栋' );
+      infospot5.addEventListener('click', () => {
+        // 点击湖畔4栋时切换到图片模式
+        this.showHupan5Image = true;
+        this.tupian = true;
+        this.quanju=false;
+
+      });
+
+      infospot6 = new PANOLENS.Infospot();
+      infospot6.position.set( -2356, -2954, 1935 );
+      infospot6.addHoverText( '荔园7栋' );
+      infospot6.addEventListener('click', () => {
+        // 点击湖畔4栋时切换到图片模式
+        this.showHupan4Image = true;
+        this.tupian = true;
+        this.quanju=false;
+
+      });
+
+
+
+
+
+      this.panorama = new PANOLENS.ImagePanorama('/liyuan.jpg');
+
+
+      this.panorama.add(infospot5);
+      this.panorama.add(infospot6);
+
+
+      this.viewer = new PANOLENS.Viewer({
+        container: this.$refs.panoramaContainer,
+      });
+
+      this.viewer.add(this.panorama);
+      this.panorama.position.set(1356, -1954, 935);
+    },
+    goBack() {
+      // 返回到全景容器
+      this.quanju=true;
+      this.showHupan4Image = false;
+      this.showHupan5Image = false;
+
+      this.tupian = false;
+      // 重新初始化全景容器
+      // this.viewer.remove(this.panorama);
+      //   const img = new Image();
+      //   img.src = '/lakeside.jpg';
+      //   img.onload = () => {
+      //     this.initPanorama(img.width, img.height);
+      // }
+    },
+
     updateTableHeight() {
       this.$nextTick(() => {
         const tableContainer = this.$refs.tableContainer; // 表格容器的引用，需要在模板中设置ref="tableContainer"
@@ -409,6 +579,7 @@ export default {
       });
     },
     toggleSearch() {
+      console.log('toggleSearch called');
       this.isSearchExpanded = !this.isSearchExpanded;
       // 根据查询框的展开状态动态设置表格容器的高度
       this.$nextTick(() => {
@@ -418,11 +589,10 @@ export default {
     calculateInitialAverageValue() {
       // 计算初始平均值
       let total = 0;
-      console.log("fliaghts",this.flights)
+
       for (let i = 0; i < this.flights.length; i++) {
         total += parseFloat(this.flights[i].grade);
-        console.log("grade",this.flights[i].grade)
-        console.log("total",total)
+
       }
       this.value = this.flights.length > 0 ? total / this.flights.length : 0;
       this.value=this.value.toFixed(2);
@@ -436,16 +606,48 @@ export default {
       this.value = (total / this.flights.length).toFixed(2);
     },
     handleSelect(key) {
-      this.activeIndex = key;
+      this.$nextTick(() => {
+        if (key !== '1') {
+          this.viewer.visibility = 'hidden'
+        }
+
+        if (key === '1') {
+          this.quanju = true;
+        }
+
+        // 在下一个事件循环中进行页面跳转
+        setTimeout(() => {
+          this.activeIndex = key;
+        }, 100);
+      });
+      //  this.activeIndex = key;
     },
 
+
+
+
+
+    handleFilterChange(filteredData) {
+      // 当筛选条件发生变化时，更新筛选后的全部数据
+      this.filteredFlights = filteredData;
+      console.log(this.filteredFlights)
+      // 更新每页显示的条数
+      this.pageSize = 10; // 重置 pageSize 为默认值
+      // 更新当前页数
+      this.currentPage4 = 1; // 重置 currentPage4 为第一页
+
+      // 计算当前页的起始索引
+      const startIndex = (this.currentPage4 - 1) * this.pageSize;
+      // 使用数组的 slice 方法获取当前页的数据
+      this.displayedFlights = this.filteredFlights.slice(startIndex, startIndex + this.pageSize);
+    },
     handleSizeChange(val) {
       // 更新每页显示的条数
       this.pageSize = val;
       // 计算当前页的起始索引
       const startIndex = (this.currentPage4 - 1) * this.pageSize;
       // 使用数组的 slice 方法获取当前页的数据
-      this.displayedFlights = this.flights.slice(startIndex, startIndex + this.pageSize);
+      this.displayedFlights = this.filteredFlights.slice(startIndex, startIndex + this.pageSize);
     },
 
     handleCurrentChange(val) {
@@ -454,7 +656,7 @@ export default {
       // 计算当前页的起始索引
       const startIndex = (this.currentPage4 - 1) * this.pageSize;
       // 使用数组的 slice 方法获取当前页的数据
-      this.displayedFlights = this.flights.slice(startIndex, startIndex + this.pageSize);
+      this.displayedFlights = this.filteredFlights.slice(startIndex, startIndex + this.pageSize);
     },
 
     createComment() {
@@ -468,15 +670,33 @@ export default {
         type: 'warning'
       }).then(() => {
         // User clicked the OK button, execute delete operation
+        console.log("check",JSON.parse(sessionStorage.getItem('CurUser')))
 
+        //去后台验证用户密码
+        this.$axios.post(this.$httpUrl+'/favouriteDorm',{
+          FavouriteDorm: sessionStorage.getItem('CurUser')
 
+        },{
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          },
+          withCredentials: true // 允许跨域请求中的Cookie
+        }).then(res=>{
 
+          console.log(res)
+          if (res.data.code===2041){
+            this.$message.warning(res.data.msg);
+          }
+          else {
+            this.$message.success(res.data.msg);
+          }
 
-        this.$message.success('Deleted successfully');
+        })
+
 
       }).catch(() => {
         // User clicked the Cancel button, cancel the delete operation
-        this.$message.info('Deletion canceled');
+        this.$message.info('Favorite canceled');
       });
 
 
@@ -486,16 +706,18 @@ export default {
     AddRoom(FormName) {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
-          // this.flights.push({
-          //   "grade": this.comment.grade,
-          //   "content": this.comment.content,
-          // });
+
           this.$axios.post(this.$httpUrl+'/distributionGrade',{
-            distribution:"荔园",
+            distribution:"二期",
             grade: this.comment.grade,
             msg: this.comment.content,
           },{
-            withCredentials: true // 允许跨域请求中的Cookie
+            withCredentials: true,
+            headers:{
+              'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            },
+
+
           }).then(res=>{
             console.log(res.data)
 
@@ -503,11 +725,10 @@ export default {
           })
 
           this.flights.push({
-            "distribution": "荔园",
+            "distribution": "二期",
             "grade": this.comment.grade,
             "content": this.comment.content,
           });
-
 
 
 
@@ -525,24 +746,45 @@ export default {
         }
       });
     },
-    deleteRoom(index) {
+    deleteRoom(roomId) {
       this.$confirm('确定取消收藏？', 'Tips', {
         confirmButtonText: 'Submit',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         // User clicked the OK button, execute delete operation
-        if (index !== -1) {
+        console.log("check", JSON.parse(sessionStorage.getItem('CurUser')));
+
+        //去后台验证用户密码
+        this.$axios.delete(this.$httpUrl + '/favouriteDorm', {
+          data: {
+            FavouriteDorm: {
+              personId: sessionStorage.getItem('CurUser')},
+            dormId: roomId
+          },
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
 
 
 
-          this.$message.success('Deleted successfully');
-        }
+        }).then(res => {
+          // console.log(this.loginUsername)
+          // console.log(this.loginPassword)
+          console.log(res);
+          if (res.data.code === 2031) {
+            this.$message.warning(res.data.msg);
+          } else {
+            this.$message.success(res.data.msg);
+          }
+        });
       }).catch(() => {
         // User clicked the Cancel button, cancel the delete operation
         this.$message.info('Deletion canceled');
       });
     },
+
     cancel(){
       this.dialogVisible = false;
       this.$message.success('Cancel  operation');
@@ -569,23 +811,31 @@ export default {
 
     displayedFlights1() {
       // 根据查询条件筛选数据
-      const filteredFlights = this.Room.filter((flight) => {
+
+      this.filteredFlights = this.Room.filter((flight) => {
         if (
-            (!this.searchParams.distribution || flight.distribution.toLowerCase().includes(this.searchParams.distribution.toLowerCase())) &&
-            (!this.searchParams.building || flight.building.toLowerCase().includes(this.searchParams.building.toLowerCase())) &&
-            (!this.searchParams.room || flight.room.toLowerCase().includes(this.searchParams.room.toLowerCase()))
+            (!this.searchParams.distribution || (flight.distribution && flight.distribution.toLowerCase().includes(this.searchParams.distribution.toLowerCase()))) &&
+            (!this.searchParams.building || (flight.building && flight.building.toLowerCase().includes(this.searchParams.building.toLowerCase()))) &&
+            (!this.searchParams.room || (flight.room && flight.room.toLowerCase().includes(this.searchParams.room.toLowerCase()))) &&
+            (!this.searchParams.floor || (flight.floor && flight.floor.toLowerCase().includes(this.searchParams.floor.toLowerCase()))) &&
+            (!this.searchParams.floorSex || (flight.floorSex && flight.floorSex.toLowerCase().includes(this.searchParams.floorSex.toLowerCase()))) &&
+            (!this.searchParams.available || (flight.available && flight.available.toLowerCase().includes(this.searchParams.available.toLowerCase()))) &&
+            (!this.searchParams.detail || (flight.detail && flight.detail.toLowerCase().includes(this.searchParams.detail.toLowerCase())))&&
+            (!this.searchParams.size || (flight.size && flight.size.toLowerCase().includes(this.searchParams.size.toLowerCase())))
         ) {
+
           return true;
         }
 
         return false;
       });
 
+
       // 根据当前页数和每页显示的条数进行分页
       const startIndex = (this.currentPage4 - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
-
-      return filteredFlights.slice(startIndex, endIndex);
+      this.handleFilterChange(this.filteredFlights)
+      return this.filteredFlights.slice(startIndex, endIndex);
     }
 
   }
@@ -594,6 +844,79 @@ export default {
 </script>
 
 <style scoped>
+
+.room-container {
+  border: 1px solid #dcf3d8;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: center;
+  background: #dcf3d8;
+  height: 40% ;
+  overflow-y: auto; /* 添加垂直滚动条 */
+}
+
+.room-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.room-image {
+  max-width: 70%;
+  max-height: 70%; /* 新增 max-height 属性 */
+  width: 100%; /* 调整宽度 */
+  margin-bottom: 10px;
+  object-fit: cover; /* 保持图片比例 */
+}
+
+
+
+.el-descriptions-item {
+  font-size: 16px; /* 设置字体大小 */
+  font-weight: bold; /* 设置字体加粗 */
+}
+.button-container {
+  margin-top: 10px; /* 你可以根据需要调整间隔的大小 */
+}
+.image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.center-top {
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 100%; /* 确保图片不超过容器宽度 */
+  max-height: 100%; /* 确保图片不超过容器高度 */
+  width: 50%;
+  height: 50%;
+  /* 可以根据需要添加其他样式，例如最大宽度、最大高度等 */
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+}
+
+a:link,
+a:visited {
+  color: #bdc7c6;
+}
+
+.credit {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
+  color: #fff;
+}
 .content-container {
   font-size: 1.2em; /* 将文字大小放大两倍 */
 }

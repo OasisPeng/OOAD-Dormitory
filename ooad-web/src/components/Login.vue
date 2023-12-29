@@ -122,7 +122,7 @@
                       fill="#ffffff" p-id="3809"></path></svg>
                 </span>
           <span>用户名</span>
-          <input maxlength="16" placeholder="   UserName" type="text">
+          <input maxlength="16" placeholder="   UserName" type="text" v-model="registerUsername">
         </label>
       </div>
       <div class="password">
@@ -136,7 +136,7 @@
                       fill="#ffffff" p-id="4679"></path></svg>
                 </span>
           <span>密码</span>
-          <input maxlength="16" placeholder="   Password" type="password">
+          <input maxlength="16" placeholder="   Password" type="password" v-model="registerPassword">
         </label>
       </div>
       <div class="confirm_password">
@@ -150,7 +150,7 @@
                       fill="#ffffff" p-id="4679"></path></svg>
                 </span>
           <span>确认密码</span>
-          <input maxlength="16" placeholder="   Password" type="password">
+          <input maxlength="16" placeholder="   Password" type="password"v-model="confirmPassword">
         </label>
       </div>
       <div class="buttons2">
@@ -189,6 +189,7 @@ export default {
       loginPassword: "",
       loginAdminname: "",
       loginAdminPassword: "",
+
       registerUsername: "",
       registerPassword: "",
       confirmPassword: "",
@@ -271,9 +272,33 @@ export default {
           this.$message.success(res.msg);
         }
       });
+    },
 
+    check() {
+      const formData = new FormData();
+      formData.append('username', this.loginAdminname);
+      formData.append('password', this.loginAdminPassword);
 
+      this.$axios.post(this.$httpUrl+'/auth/login', formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }).then(res => {
+        console.log(res);
 
+        if (res.data.code === 2000) {
+          this.$router.push({ name:'indexAdmin' });
+          console.log(res.data.msg);
+          console.log("1");
+          sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));
+          localStorage.setItem("CurUser", JSON.stringify(res.data.data));
+          console.log(JSON.parse(sessionStorage.getItem('CurUser')));
+        } else {
+          console.log(res.msg);
+          this.$message.success(res.msg);
+        }
+      });
     },
     out() {
       this.loginDialogVisible = false;
