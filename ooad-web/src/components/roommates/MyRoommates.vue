@@ -16,12 +16,10 @@
       <el-table-column prop="id" label="SID"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
       <el-table-column label="操作" >
-
         <template slot-scope="scope">
           <el-button type="danger" @click="seeStudentDet(scope.row)">查看</el-button>
           <el-button type="danger" v-if="isLeader" @click="kick(scope.row)">踢出</el-button>
         </template>
-
       </el-table-column>
     </el-table>
 
@@ -106,7 +104,6 @@ export default {
       try {
         var path = this.$httpUrl + '/team/' + String(this.curTeamId+'/'+rowData.id)
         console.log(path)
-
         const response = await axios.delete(path,{
           withCredentials: true,
           headers:{
@@ -129,7 +126,6 @@ export default {
     async seeStudentDet(rowData){
       this.studentDetailsVis = true
       try {
-
         var path = this.$httpUrl + `/user/${rowData.id}`
         console.log(path)
         const response = await axios.get(path,{

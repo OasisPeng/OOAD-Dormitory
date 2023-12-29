@@ -122,17 +122,19 @@ export default {
               if(i != 0)
                jsonArray.push(jsonObj); // 将创建的JSON对象添加到数组中
             }
-            console.log(jsonArray); // 输出包装成数组的JSON对象
 
+            console.log(jsonArray); // 输出包装成数组的JSON对象
+            // console.log(this.List)
             try {
-              const resopnse = await axios.post(this.$httpUrl + '/user/upload',{
+
+              const resopnse = await axios.post(this.$httpUrl + '/user/upload',jsonArray,{
                 withCredentials: true,
                 headers:{
                   'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
                 }
               });
-              if (resopnse.code == 2040) {
-                console.log('上传用户成功')
+              console.log(resopnse.data)
+              if (resopnse.data.code == 2040) {
               }
               else
                 console.log('上传用户失败')
@@ -303,7 +305,10 @@ export default {
     return {
       targetTeam:null,
       currentTeam: null,
-
+      List:[{
+        "id": 12111119,
+        "password": 123
+      }],
 
       dormSelction:[],
       tableData: [],

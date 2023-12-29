@@ -121,9 +121,19 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         for (User user: list) {
             SysUser sysUser = new SysUser();
             sysUser.setRole("user");
+            sysUser.setId(user.getId());
             sysUser.setUsername(user.getId().toString());
             sysUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            int id = user.getId();
+            User user1 = userDao.selectById(id);
+            if (user1 != null) {
+                userDao.deleteById(id);
+            }
+            SysUser user2 = sysUserDao.selectById(id);
+            if (user2 != null) {
+                sysUserDao.deleteById(id);
+            }
             userDao.insert(user);
             sysUserDao.insert(sysUser);
             size++;
