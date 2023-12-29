@@ -230,7 +230,7 @@ export default {
 
 
       }).catch((e) => {
-        console.log(e);
+        console.error("Failed to load AMap:", e);
       });
       // 创建多边形 Polygon 实例
 
