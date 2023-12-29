@@ -70,7 +70,7 @@ export default {
         },
         handleAccept(invitation) {
             // 处理同意操作，可以在这里触发相关逻辑
-            this.$axios.post(this.$httpUrl+'/team/'+invitation.teamId+'/'+invitation.userId,
+            this.$axios.post(this.$httpUrl+'/team/'+invitation.teamId+'/'+this.user.id,
                 {
                     withCredentials: true,
                     headers:{
@@ -87,6 +87,25 @@ export default {
                 }
 
             })
+            // this.$axios.delete(this.$httpUrl+'/application', {
+            //         teamId
+            //     },
+            //     {
+            //         withCredentials: true,
+            //         headers:{
+            //             'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            //         }}
+            // ).then(res=>{
+            //     if (res.data.code===2030) {
+            //         console.log(res.data.msg)
+            //     } else {
+            //         this.$message({
+            //             type: 'error',
+            //             message: res.data.msg
+            //         });
+            //     }
+            //
+            // })
         },
         handleReject(invitation) {
             // 处理拒绝操作，可以在这里触发相关逻辑

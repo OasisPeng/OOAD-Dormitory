@@ -52,6 +52,9 @@ export default {
     },
     methods: {
         getAllOffers() { //“我是队长，别人申请加入我的组队”
+            if (this.user.teamId == null) {
+                return;
+            }
             this.$axios.get(this.$httpUrl+'/application/offer/'+this.user.teamId,
                 {
                     withCredentials: true,
@@ -79,6 +82,10 @@ export default {
             ).then(res=>{
                 if (res.data.code===2040) {
                     console.log(res.data.msg)
+                    this.$message({
+                        type: 'error',
+                        message: '已加入'
+                    });
                 } else {
                     this.$message({
                         type: 'error',
