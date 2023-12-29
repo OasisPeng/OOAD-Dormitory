@@ -106,7 +106,9 @@ public class ApplicationController {
                 map.put("userName", user.getName());
                 Team team = teamService.selectByID(app.getTeamId());
                 map.put("teamName", team.getName());
-                res.add(map);
+                if (team.getHeadId() == id) {
+                    res.add(map); //只有队长收到通知
+                }
             }
             result.setCode(Code.GET_OK);
             result.setMsg("查询成功");
@@ -130,11 +132,11 @@ public class ApplicationController {
             List<Map<String, Object>> res = new ArrayList<>();
             for(Application app:list){
                 Map<String, Object> map =new HashMap<>();
-                map.put("userId",app.getUserId());
                 map.put("teamId", app.getTeamId());
-                User user = userService.getById(app.getUserId());
-                map.put("userName", user.getName());
                 Team team = teamService.selectByID(app.getTeamId());
+                User user = userService.getById(team.getHeadId());
+                map.put("userId", user.getId()); //队长
+                map.put("userName", user.getName()); //队长
                 map.put("teamName", team.getName());
                 res.add(map);
             }
