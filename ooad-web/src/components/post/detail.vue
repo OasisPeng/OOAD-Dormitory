@@ -72,7 +72,8 @@
 </template>
 <script>
 import router from "@/router";
-
+import axios from "axios";
+import qs from "qs"
 export default {
   data() {
     return {
@@ -91,6 +92,7 @@ export default {
     // this.type = data.type ? data.type : 1;
     this.getpost()
     this.getreply()
+    this.getFavourite()
   },
   methods: {
     // 获取用户信息
@@ -101,30 +103,91 @@ export default {
         console.log(res.data)
         this.user = res.data.data
       })
-
-
     },
+    getFavourite(){
+      if (this.$router.history.current.query.type == 1) {
+        this.$axios.get(this.$httpUrl + `/favouritePersonPost/post/${this.$router.history.current.query.id}`, {},{
+          withCredentials: true, // 允许跨域请求中的Cookie
+          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+        }).then(res => {
+          console.log(res)
+          if(res.data.data!='Empty'){
+            this.isFans = true
+          }
+
+        })
+      }else{
+
+        this.$axios.get(this.$httpUrl + `/favouriteTeamPost/post/${this.$router.history.current.query.id}`, {},{
+          withCredentials: true, // 允许跨域请求中的Cookie
+          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+        }).then(res => {
+          if(res.data.data!='Empty'){
+            this.isFans = true
+          }
+        })
+      }
+    },
+
     // 点赞
     getFans(){
       let data = {
-        postid:this.$router.history.current.query.id,
-        personid:JSON.parse(localStorage.getItem("CurUser")).id
+        postId:this.$router.history.current.query.id,
+        personId:JSON.parse(localStorage.getItem("CurUser")).id
 
       }
-      if (this.$router.history.current.query.type == 1) {
-        this.$axios.get(this.$httpUrl + `/favouritePersonPost`, data,{
-          withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-        }).then(res => {
-          this.isFans = !this.isFans
-        })
+      if (this.$router.history.current.query.type === 1) {
+
+        if(this.isFans){
+          this.$axios.delete(this.$httpUrl + `/favouritePersonPost`,{
+            data:data
+          },{
+            withCredentials: true, // 允许跨域请求中的Cookie
+            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          }).then(res => {
+            this.isFans = !this.isFans
+          })
+        }else{
+          this.$axios.post(this.$httpUrl + `/favouritePersonPost`, data,{
+            withCredentials: true, // 允许跨域请求中的Cookie
+            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          }).then(res => {
+            this.isFans = !this.isFans
+          })
+        }
+
       } else {
-        this.$axios.get(this.$httpUrl + `/favouriteTeamPost`, data, {
-          withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-        }).then(res => {
-          this.isFans = !this.isFans
-        })
+        if(this.isFans){
+
+          console.log(data)
+          // let ata= qs.stringify(data)
+          // axios({
+          //   url:this.$httpUrl + `/favouriteTeamPost`,
+          //   method:"delete",
+          //   params:ata,
+          //   headers:{
+          //     uthorization: `Bearer ${JSON.parse(localStorage.getItem("CurUser")).token}`,
+          //   }
+          // }).then(res=>{
+          //   this.isFans = !this.isFans
+          // })
+
+          this.$axios.delete(this.$httpUrl + `/favouriteTeamPost`, {
+            data:data
+          },{
+            withCredentials: true, // 允许跨域请求中的Cookie
+            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          }).then(res => {
+            this.isFans = !this.isFans
+          })
+        }else {
+          this.$axios.post(this.$httpUrl + `/favouriteTeamPost`, data, {
+            withCredentials: true, // 允许跨域请求中的Cookie
+            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          }).then(res => {
+            this.isFans = !this.isFans
+          })
+        }
       }
     },
 
@@ -194,9 +257,9 @@ export default {
           this.content = res.data.data.content;
           this.time = res.data.data.time;
 
-        if(res.data.data.writerId){
-          that.getUser(res.data.data.writerId)
-        }
+          if(res.data.data.writerId){
+            that.getUser(res.data.data.writerId)
+          }
 
 
         })
