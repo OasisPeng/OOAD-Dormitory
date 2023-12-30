@@ -22,4 +22,5 @@ public interface ITeamService {
     public int addUser(int teamID, int userID);
     public int deleteUser(int teamID, int userID);
     public int creat(Team team);
+    public int change(int personId1, int personId2);
 }

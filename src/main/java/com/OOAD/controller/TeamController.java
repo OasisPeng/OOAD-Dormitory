@@ -4,6 +4,7 @@ package com.OOAD.controller;
 import com.OOAD.domain.Team;
 import com.OOAD.service.impl.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -50,6 +51,26 @@ public class TeamController {
         }
         return res;
     }
+    @PostMapping("/change/{personId1}/{personId2}")
+    public Result change(@PathVariable int personId1, @PathVariable int personId2) {
+        int x = teamService.change(personId1, personId2);
+        Result result = new Result();
+        if (x == 2) {
+            result.setMsg("换宿舍成功");
+            result.setCode(Code.INSERT_OK);
+            result.setData("OK");
+        } else if (x == -1) {
+            result.setMsg("换宿舍失败,队长不允许更换");
+            result.setCode(Code.INSERT_ERR);
+            result.setData("ERR");
+        } else {
+            result.setMsg("换宿舍失败");
+            result.setCode(Code.INSERT_ERR);
+            result.setData("ERR");
+        }
+        return result;
+    }
+
     @PostMapping("/{teamID}/{UserID}")
     public Result addAUser(@PathVariable int teamID, @PathVariable int UserID) {
         int i = teamService.addUser(teamID, UserID);

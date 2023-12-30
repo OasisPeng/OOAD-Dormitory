@@ -124,4 +124,32 @@ public class TeamServiceImpl implements ITeamService{
 
 
     }
+
+    @Override
+    public int change(int personId1, int personId2) {
+        try {
+        User user1 = userDao.selectById(personId1);
+        User user2 = userDao.selectById(personId2);
+        int teamId1 = user1.getTeamId();
+        int teamId2 = user2.getTeamId();
+        Team team1 = teamDao.selectById(teamId1);
+        Team team2 = teamDao.selectById(teamId2);
+        int head1 = team1.getHeadId();
+        int head2 = team2.getHeadId();
+        if (head1 == personId1 || head2 == personId2) {
+            return -1;
+        }
+        int dormId1 = user1.getDormId();
+        int dormId2 = user2.getDormId();
+        user1.setTeamId(teamId2);
+        user1.setDormId(dormId2);
+        user2.setTeamId(teamId1);
+        user2.setDormId(dormId1);
+        int x = userDao.updateById(user1);
+        int y = userDao.updateById(user2);
+        return x + y;
+        } catch (Exception e) {
+            return -2;
+        }
+    }
 }
