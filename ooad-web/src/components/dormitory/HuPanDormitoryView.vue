@@ -739,9 +739,9 @@ export default {
         //去后台验证用户密码
         this.$axios.delete(this.$httpUrl + '/favouriteDorm', {
           data: {
-            FavouriteDorm: {
-              personId: sessionStorage.getItem('CurUser')},
-              dormId: roomId
+            personId: JSON.parse(sessionStorage.getItem('UserData')).id,
+            dormId:roomId,
+            teamId:JSON.parse(sessionStorage.getItem('UserData')).teamId,
           },
           withCredentials: true,
               headers:{
