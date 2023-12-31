@@ -45,7 +45,7 @@
               })
           },
           init(){
-              this.userSID=JSON.parse(sessionStorage.getItem('CurUser')).id
+              this.userSID=JSON.parse(sessionStorage.getItem('UserData')).id
           },
           UserMoreInfo() {
               // 判断用户信息是否完整，如果不完整则显示提示框
@@ -59,7 +59,7 @@
           },
           submitUserMoreInfo() {
               // 在这里执行提交到后台的逻辑，例如使用axios或者Vue Resource发送HTTP请求
-              this.$axios.put(this.$httpUrl+'/user/updateAUser',this.user, {
+              this.$axios.put(this.$httpUrl+'/user',this.user, {
                   withCredentials: true,
                   headers:{
                       'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
