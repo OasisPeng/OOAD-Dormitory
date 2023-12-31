@@ -390,34 +390,9 @@ export default {
   },
 
   created() {
-    this.$nextTick(() => {
-    this.$axios.get(this.$httpUrl+`/user/${JSON.parse(sessionStorage.getItem('CurUser')).id}`,{
-      withCredentials: true,
-      headers:{
-        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
-      },
-
-
-    }).then(res=>{
-      // 假设 res.data 是您从后端获得的数据
-      const data = res.data.data;
-      console.log(res)
-      console.log(data)
-      // 检查 data 是否为数组
 
 
 
-        // 将转换后的数据添加到 Room 数组
-        this.usersex = data.sex
-        // 打印转换后的数据
-        console.log( "fuck",this.usersex);
-
-    });
-    });
-
-
-
-     console.log("token","Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token)
     // 在组件创建时计算初始平均值并设置给 value
     this.$axios.get(this.$httpUrl+'/distributionGrade/湖畔',{
       withCredentials: true,
@@ -429,8 +404,6 @@ export default {
     }).then(res=>{
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
-      console.log(res)
-      console.log(data)
       // 检查 data 是否为数组
       if (Array.isArray(data)) {
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
@@ -468,14 +441,14 @@ export default {
       // 假设 res.data 是您从后端获得的数据
       const data = res.data.data;
       console.log("1111",this.usersex)
-      console.log(data)
+      console.log("寝室",data)
       // 检查 data 是否为数组
       if (Array.isArray(data)) {
 
         // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
         const flights = data
             .filter(roomData => roomData.distribution === "湖畔") // 过滤符合条件的数据
-            .filter(roomData => roomData.floorSex=== this.usersex)
+            .filter(roomData => roomData.floorSex===JSON.parse(sessionStorage.getItem('UserData')).sex)
             .map(roomData => {
               return {
                 distribution:  String(roomData.distribution || ""),
@@ -671,35 +644,36 @@ export default {
       this.dialogVisible = true;
       this.editMode = false; // 进入添加模式
     },
-    editRoom() {
+    editRoom(row) {
       this.$confirm('确定收藏？', 'Tips', {
         confirmButtonText: 'Submit',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         // User clicked the OK button, execute delete operation
-        console.log("check",JSON.parse(sessionStorage.getItem('CurUser')))
+        console.log("check",JSON.parse(sessionStorage.getItem('UserData')))
 
-          //去后台验证用户密码
-          this.$axios.post(this.$httpUrl+'/favouriteDorm',{
-            FavouriteDorm: sessionStorage.getItem('CurUser')
+        //去后台验证用户密码
+        this.$axios.post(this.$httpUrl+'/favouriteDorm',{
+          personId: JSON.parse(sessionStorage.getItem('UserData')).id,
+          dormId:row.id,
+          teamId:JSON.parse(sessionStorage.getItem('UserData')).teamId,
+        },{
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          },
+          withCredentials: true // 允许跨域请求中的Cookie
+        }).then(res=>{
 
-          },{
-            headers:{
-              'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
-            },
-            withCredentials: true // 允许跨域请求中的Cookie
-          }).then(res=>{
+          console.log(res)
+          if (res.data.code===2041){
+            this.$message.warning(res.data.msg);
+          }
+          else {
+            this.$message.success(res.data.msg);
+          }
 
-            console.log(res)
-            if (res.data.code===2041){
-              this.$message.warning(res.data.msg);
-            }
-            else {
-              this.$message.success(res.data.msg);
-            }
-
-          })
+        })
 
 
       }).catch(() => {
@@ -708,9 +682,8 @@ export default {
       });
 
 
-
-
     },
+
     AddRoom(FormName) {
       this.$refs[FormName].validate((valid) => {
         if (valid) {

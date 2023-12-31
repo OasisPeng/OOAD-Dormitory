@@ -138,7 +138,24 @@ export default {
       } catch (error) {
         console.error('请求失败：', error);
       }
+
+      this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+        withCredentials: true,
+        headers:{
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        }
+      }).then(res=>{
+        if (res.data.code===2010) {
+          sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+          console.log(JSON.parse(sessionStorage.getItem('UserData')));
+          this.$router.push({ name:'index' });
+        } else {
+          console.log(res.data.msg)
+          // 登录失败，可以显示错误消息
+        }
+      })
       this.init()
+
     }
     ,
     async seeStudentDet(rowData){
@@ -194,7 +211,6 @@ export default {
 
     },
     async isTeamLeader(){
-
       console.log('当前用户id: ' + this.user.id + ' 队长id: ' + this.curTeam.headId)
       if (this.user.id == this.curTeam.headId) this.isLeader = true
       else this.isLeader = false
