@@ -56,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         if (originUser == null) {
             return false;
         } else {
-            if (!Objects.equals(user.getPassword(), originUser.getPassword())) {
+            if (user.getPassword() != null && !Objects.equals(user.getPassword(), originUser.getPassword())) {
                 user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
                 LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
                 lqw.eq(SysUser::getUsername, user.getId().toString());
