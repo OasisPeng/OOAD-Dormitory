@@ -52,7 +52,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public List<Application> getByPersonId(int id) {
         LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Application::getUserId, id).eq(Application::getType, 1);
+        lqw.eq(Application::getUserId, id);
         return dao.selectList(lqw);
     }
 }

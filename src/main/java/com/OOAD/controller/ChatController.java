@@ -12,11 +12,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,7 +120,7 @@ public class ChatController {
     }
 
     @GetMapping("/unReadNums")
-    public Result unReadNums(@RequestParam String toUser) {
+    public Result unReadNums(@RequestParam String toUser, @RequestParam String currentUser) {
         Result result = new Result();
         Dictionary<String, Integer> dict = new Hashtable<>();
         //私聊未读
@@ -135,28 +132,29 @@ public class ChatController {
 
         Map<String, List<Chat>> collect = list.stream().collect(Collectors.groupingBy(Chat::getFromuser));
         collect.forEach((k, v) -> dict.put(k, v.size()));
+        dict.put(currentUser, 0);
 
-        //群聊未读
-        LambdaQueryWrapper<Chat> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper1.eq(Chat::getReaded, 0);
-        lambdaQueryWrapper1.eq(Chat::getIsGroup, 1);
-        List<Chat> list1 = chatService.list(lambdaQueryWrapper1);
-        List<Chat> list2 = new ArrayList<>();
-        for (Chat chat : list1) {
-            String str = chat.getTouser();
-            // 使用正则表达式匹配最后一个括号内的内容
-            Pattern pattern = Pattern.compile("\\(([^)]+)\\)$");
-            Matcher matcher = pattern.matcher(str);
-            if (matcher.find()) {
-                String contentInsideLastParentheses = matcher.group(1);
-                String[] array = contentInsideLastParentheses.split(",");
-                if (Arrays.asList(array).contains(toUser)) {
-                    list2.add(chat);
-                }
-            }
-        }
-        Map<String, List<Chat>> collect1 = list2.stream().collect(Collectors.groupingBy(Chat::getTouser)); //按群聊名字分组
-        collect1.forEach((k, v) -> dict.put(k, v.size()));
+//        //群聊未读
+//        LambdaQueryWrapper<Chat> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+//        lambdaQueryWrapper1.eq(Chat::getReaded, 0);
+//        lambdaQueryWrapper1.eq(Chat::getIsGroup, 1);
+//        List<Chat> list1 = chatService.list(lambdaQueryWrapper1);
+//        List<Chat> list2 = new ArrayList<>();
+//        for (Chat chat : list1) {
+//            String str = chat.getTouser();
+//            // 使用正则表达式匹配最后一个括号内的内容
+//            Pattern pattern = Pattern.compile("\\(([^)]+)\\)$");
+//            Matcher matcher = pattern.matcher(str);
+//            if (matcher.find()) {
+//                String contentInsideLastParentheses = matcher.group(1);
+//                String[] array = contentInsideLastParentheses.split(",");
+//                if (Arrays.asList(array).contains(toUser)) {
+//                    list2.add(chat);
+//                }
+//            }
+//        }
+//        Map<String, List<Chat>> collect1 = list2.stream().collect(Collectors.groupingBy(Chat::getTouser)); //按群聊名字分组
+//        collect1.forEach((k, v) -> dict.put(k, v.size()));
 
         result.setCode(2010);
         result.setMsg("成功");
@@ -189,4 +187,23 @@ public class ChatController {
         }
         return result;
     }
+
+    @PostMapping("/sendMessage")
+    public Result sendMessage(@RequestBody Chat message) {
+        Result result = new Result();
+
+        // 保存消息到数据库
+        boolean saved = chatService.save(message);
+
+        if (saved) {
+            result.setCode(2010);
+            result.setMsg("消息发送成功");
+        } else {
+            result.setCode(2011);
+            result.setMsg("消息发送失败");
+        }
+
+        return result;
+    }
+
 }

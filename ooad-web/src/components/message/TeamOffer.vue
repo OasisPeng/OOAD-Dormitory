@@ -5,7 +5,7 @@
             <!-- 内容区域 -->
             <el-main style="padding: 20px;">
                 <!-- 申请列表 -->
-                <el-card v-for="(application, index) in applications" :key="index" style="margin-bottom: 20px;">
+                <el-card v-for="(application, index) in applications" v-if="application.teamHeadId === user.id" :key="index" style="margin-bottom: 20px;">
                     <!-- 申请人信息 -->
                     <div style="display: flex; align-items: center; margin-bottom: 10px;">
                         <img :src="avatar" alt="User Avatar" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
