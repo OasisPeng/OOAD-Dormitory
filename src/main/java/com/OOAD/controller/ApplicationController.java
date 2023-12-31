@@ -1,8 +1,11 @@
 package com.OOAD.controller;
 
 import com.OOAD.domain.Application;
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.Team;
 import com.OOAD.domain.User;
+import com.OOAD.service.ApplicationService;
+import com.OOAD.service.IDormService;
 import com.OOAD.service.impl.ApplicationServiceImpl;
 import com.OOAD.service.impl.TeamServiceImpl;
 import com.OOAD.service.impl.UserServiceImpl;
@@ -19,11 +22,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/application")
 public class ApplicationController {
     @Autowired
-    ApplicationServiceImpl applicationService;
+    ApplicationService applicationService;
     @Autowired
     UserServiceImpl userService;
     @Autowired
     TeamServiceImpl teamService;
+    @Autowired
+    IDormService dormService;
+
     @PostMapping
     public Result add(@RequestBody Application a) {
         Result result = new Result();
@@ -106,9 +112,8 @@ public class ApplicationController {
                 map.put("userName", user.getName());
                 Team team = teamService.selectByID(app.getTeamId());
                 map.put("teamName", team.getName());
-                if (team.getHeadId() == id) {
-                    res.add(map); //只有队长收到通知
-                }
+                map.put("teamHeadId", team.getHeadId());
+                res.add(map);
             }
             result.setCode(Code.GET_OK);
             result.setMsg("查询成功");
@@ -138,6 +143,35 @@ public class ApplicationController {
                 map.put("userId", user.getId()); //队长
                 map.put("userName", user.getName()); //队长
                 map.put("teamName", team.getName());
+                res.add(map);
+            }
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+            result.setData(res);
+        }
+        return result;
+    }
+
+    @GetMapping("/change/{id}")
+    public Result getChangesByTeamId(@PathVariable int id) { //id是被申请换宿舍的人
+        Result result = new Result();
+        List<Application> list = applicationService.getByPersonId(id);
+        if (list == null) {
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败");
+            result.setData("Err");
+        } else {
+            list = list.stream()
+                    .filter(application -> application.getType() == 2)
+                    .collect(Collectors.toList());
+            List<Map<String, Object>> res = new ArrayList<>();
+            for(Application app:list){
+                Map<String, Object> map =new HashMap<>();
+                map.put("userId", app.getTeamId());
+                User user = userService.getById(app.getTeamId());
+                Dorm dorm = dormService.selectByID(user.getDormId());
+                map.put("userName", user.getName());
+                map.put("Dorm", dorm.getDistribution()+"-"+dorm.getBuilding()+"-"+dorm.getRoom());
                 res.add(map);
             }
             result.setCode(Code.GET_OK);

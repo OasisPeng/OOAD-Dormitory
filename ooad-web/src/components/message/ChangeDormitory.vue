@@ -14,14 +14,14 @@
 
                     <!-- 邀请内容 -->
                     <div style="font-size: 16px">
-                        <span>邀请您加入他们的组队：</span>
-                        {{ invitation.teamName }}
+                        <span>申请与您更换宿舍</span><br>
+                        <span>更换至：{{invitation.Dorm}}</span>
                     </div>
 
                     <!-- 操作按钮 -->
                     <div style="margin-top: 10px;">
                         <el-button type="success" @click="handleAccept(invitation)">同意</el-button>
-<!--                        <el-button type="danger" @click="handleReject(invitation)">拒绝</el-button>-->
+                        <!--                        <el-button type="danger" @click="handleReject(invitation)">拒绝</el-button>-->
                     </div>
                 </el-card>
             </el-main>
@@ -51,8 +51,8 @@ export default {
         };
     },
     methods: {
-        getAllInvitations(){  //别人邀请我加入他们的组队
-            this.$axios.get(this.$httpUrl+'/application/invitation/'+this.user.id,
+        getAllInvitations(){
+            this.$axios.get(this.$httpUrl+'/application/change/'+this.user.id,
                 {
                     withCredentials: true,
                     headers:{
@@ -69,8 +69,8 @@ export default {
             })
         },
         handleAccept(invitation) {
-            // 处理同意操作，可以在这里触发相关逻辑
-            this.$axios.post(this.$httpUrl+'/team/'+invitation.teamId+'/'+this.user.id,
+            // 触发换宿舍的方法
+            this.$axios.post(this.$httpUrl+'/team/change/'+invitation.userId+'/'+this.user.id,
                 {
                     withCredentials: true,
                     headers:{
@@ -84,7 +84,7 @@ export default {
                     });
                     // 成功同意后删除该通知
                     const application = {
-                        teamId: invitation.teamId,
+                        teamId: invitation.userId,
                         userId: this.user.id,
                         type: 1
                     }
@@ -113,7 +113,6 @@ export default {
                         message: res.data.msg
                     });
                 }
-
             })
         },
         handleReject(invitation) {

@@ -35,6 +35,7 @@ export default {
                 { menuClick: "BroadcastMessages", menuName: "广播通知", icon: "el-icon-service" },
                 { menuClick: "TeamInvitation", menuName: "组队邀请", icon: "el-icon-user" },
                 { menuClick: "TeamOffer", menuName: "组队申请", icon: "el-icon-suitcase" },
+                { menuClick: "ChangeDormitory", menuName: "换宿舍", icon: "el-icon-guide" },
             ],
             dynamicBackground: "", // 添加动态背景样式
         };

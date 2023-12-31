@@ -81,23 +81,37 @@ export default {
             document.getElementById('im-content').innerHTML += emoji
         },
         send() {
-            if(!this.touser) {
-                this.$notify.error('请选择用户')
-                return
+            if (!this.touser) {
+                this.$notify.error('请选择用户');
+                return;
             }
-            if(client) {
-                let message = this.getMessage('text')
-                client.send(JSON.stringify(message))
 
-            }
-            document.getElementById('im-content').innerHTML=''//清空输入框
+            let message = this.getMessage('text');
+
+
+            // 使用HTTP Long Polling发送消息
+            this.$axios.post(this.$httpUrl + '/chat/sendMessage', message, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('CurUser')).token,
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => {
+                this.load()
+                // 清空输入框
+                document.getElementById('im-content').innerHTML = '';
+            }).catch(error => {
+                console.error("发送消息失败:", error);
+                this.$notify.error('发送消息失败');
+            });
         },
+
         scrollToBottom() {
             this.$nextTick(() => {
                 //设置聊天滚动条到底部
                 let imMessageBox = document.getElementsByClassName("im-message-box")[0]
                 imMessageBox.scrollTop = imMessageBox.scrollHeight
-                console.log('触发滚动')
+                // console.log('触发滚动')
             })
         },
         setSingleReaded() {
@@ -111,14 +125,14 @@ export default {
         },
         loadUnReadNums() {
            // 未读消息数量
-            this.$axios.get(this.$httpUrl+'/chat/unReadNums?toUser='+this.fromuser, {
+            this.$axios.get(this.$httpUrl+'/chat/unReadNums?toUser='+this.fromuser+'&currentUser='+this.touser, {
                 withCredentials: true,
                 headers:{
                     'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
                 }}).then(res=>{
                 if (res.data.code===2010) {
                     this.unRead = res.data.data
-                    console.log(res.data.data);
+                    // console.log(res.data.data);
                 } else {
                     // 登录失败，可以显示错误消息
                     console.log(res.data.msg);
@@ -132,13 +146,14 @@ export default {
                 this.$notify.error('请输入聊天内容')
                 return
             }
+            console.log(this.user)
             return {
                 content: content,
                 fromuser: this.fromuser,
                 touser: this.touser,
-                fromuserName: this.fromuserName,
+                fromuserName: this.user.name,
                 touserName: this.touserName,
-                fromavatar: this.user.avatar,
+                fromavatar: this.toAvatar,
                 toavatar: this.toAvatar,
                 time: null,
                 type: 'text',
@@ -146,20 +161,20 @@ export default {
                 isGroup: this.touserName === ''? 1:0
             }
         },
-        extractContent(inputString) {
-            // 使用正则表达式匹配最后一个括号以前的内容
-            const match = inputString.match(/^(.*)\([^)]*\)$/);
-
-            // 如果匹配成功，返回匹配的内容；否则返回原始字符串
-            return match ? match[1].trim() : inputString.trim();
-        },
+        // extractContent(inputString) {
+        //     // 使用正则表达式匹配最后一个括号以前的内容
+        //     const match = inputString.match(/^(.*)\([^)]*\)$/);
+        //
+        //     // 如果匹配成功，返回匹配的内容；否则返回原始字符串
+        //     return match ? match[1].trim() : inputString.trim();
+        // },
 
     },
     data(){
         return {
             // groups:[],
             users:[],
-            user:JSON.parse(sessionStorage.getItem('CurUser')),
+            user:JSON.parse(sessionStorage.getItem('UserData')),
             fromuser:'',
             touser:'', //群组名或者聊天对象
             touserName: '',//私聊对象名称
@@ -173,7 +188,6 @@ export default {
         }
     },
     mounted() {
-        this.user = JSON.parse(localStorage.getItem('CurUser'))
         this.fromuser = this.user.id
         this.fromuserName = this.user.name
         this.emojis = emojis.split(' ')
@@ -207,43 +221,16 @@ export default {
 
         // this.loadGroupList()
         this.load()
-
-        client = new WebSocket('ws://localhost:8090/chatServer')
-        client.onopen = () => {
-            console.log('websocket open')
-        }
-        client.onclose = function (e) {
-            console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
-            console.log(e)
-        }
-
-        client.onerror = (error) => {
-            console.error(`WebSocket error: ${error}`);
-        };
-        client.onmessage = (msg) => {
-            if(msg.data) {
-                let json = JSON.parse(msg.data)
-                if(json.content && (json.fromuser === this.fromuser && json.touser === this.touser)
-                    || json.touser === this.fromuser && json.fromuser === this.touser) {
-                    // this.messages.push(json)
-                    // this.scrollToBottom()
-                }
-                //加载消息数字
-                if((this.touser === json.fromuser&&json.isGroup === 0)||(this.touser === json.touser&&json.isGroup === 1)) {
-                    this.setSingleReaded()
-                } else {
-                    this.loadUnReadNums()
-                }
-                this.load()
-                this.scrollToBottom()
-            }
-        }
+        // 在组件挂载时启动定时器，每隔一定时间检查一次是否有新消息
+        this.intervalId = setInterval(() => {
+            // 发起请求检查是否有新消息
+            this.load();
+        }, 500); // 每隔 5 秒检查一次，你可以根据需要调整时间间隔
     },
     beforeDestroy() {
-        if(client){
-            client.close()
-        }
-    }
+        // 在组件销毁前清除定时器
+        clearInterval(this.intervalId);
+    },
 }
 </script>
 

@@ -235,6 +235,14 @@ const routes =[
                 },
                 component: () => import('../components/message/TeamOffer.vue')
             },
+            {
+                path: '/ChangeDormitory',
+                name: 'changeDormitory',
+                meta: {
+                    title: '换宿舍'
+                },
+                component: () => import('../components/message/ChangeDormitory.vue')
+            },
         ]
     },
 ]

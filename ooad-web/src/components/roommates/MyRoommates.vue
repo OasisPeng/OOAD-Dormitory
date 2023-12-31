@@ -25,6 +25,7 @@
 
     <el-button type="primary" style="margin-left:30px" @click="exitTeam">退出组队</el-button>
     <el-button type="primary" v-if="isLeader" style="margin-left:30px" @click="showDialog">邀请成员</el-button>
+    <el-button type="primary" v-if="isLeader" style="margin-left:30px" @click="showDialog2">交换宿舍</el-button>
 
     <el-dialog
         title="邀请成员"
@@ -35,6 +36,18 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="inviteMemberVis= false">取 消</el-button>
         <el-button type="primary" @click="handleConfirm">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+        title="交换宿舍"
+        :visible.sync="exchangeVis"
+        width="30%">
+      <el-input v-model="input" placeholder="目标学号"></el-input>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="inviteMemberVis= false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm2">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -86,8 +99,10 @@ export default {
       isLeader:null,
       inviteMemberVis:false,
       input:null,
+      input2:null,
       studentDetailsVis:false,
-      targetStudent:[]
+      targetStudent:[],
+      exchangeVis:null
     };
   },
 
@@ -100,6 +115,9 @@ export default {
   },
 
   methods: {
+    showDialog2(){
+      this.exchangeVis = true
+    },
     async kick(rowData){
       try {
         var path = this.$httpUrl + '/team/' + String(this.curTeamId+'/'+rowData.id)
@@ -249,6 +267,7 @@ export default {
         console.error('请求失败：', error);
       }
     },
+      // 邀请成员
       async handleConfirm(){
         try {
           const resopnse = await axios.post(this.$httpUrl + '/application',{
@@ -272,8 +291,34 @@ export default {
         catch (error){console.error('验证出错', error);
         }
         this.inviteMemberVis = false
+      },
+    async handleConfirm2(){
+      try {
+        const resopnse = await axios.post(this.$httpUrl + '/application',{
+          teamId:this.user.id,
+          userId:this.input,
+          type:2
+        },{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        console.log(resopnse.data)
+        if (resopnse.code == 2040){
+          console.log('成功邀请')
+        }
+        else if (resopnse.code == 2041){
+          console.error('邀请失败')
+        }
       }
+      catch (error){console.error('验证出错', error);
+      }
+      this.exchangeVis = false
+    }
+
   },
+  // 交换宿舍
 
   // computed内容回自动计算并动态变化
   computed: {
