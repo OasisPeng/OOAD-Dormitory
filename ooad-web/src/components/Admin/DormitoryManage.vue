@@ -6,7 +6,7 @@ export default {
             this.$axios.get(this.$httpUrl+'/dorms/loadPage?pageSize='+this.pageSize+'&pageNum='+this.pageNum,
             {
                 withCredentials: true, headers:{
-                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 }
             }).then(res=>res.data).then(res=>{
                 console.log(res)
@@ -22,7 +22,7 @@ export default {
             this.$axios.get(this.$httpUrl+'/dorm2/'+this.distribution+'?pageSize='+this.pageSize+'&pageNum='+this.pageNum,
                 {
                     withCredentials: true, headers:{
-                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                     }
                 }
             ).then(res=>res.data).then(res=>{
@@ -69,7 +69,7 @@ export default {
         del(id){
             this.$axios.delete(this.$httpUrl+'/dorm/'+id,{
                 withCredentials: true, headers:{
-                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 }
             }).then(res=>res.data).then(res=>{
                 console.log(res)
@@ -113,7 +113,7 @@ export default {
         doSave(){
             this.$axios.post(this.$httpUrl+'/dorm',this.form,{
                 withCredentials: true, headers:{
-                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 }
             }).then(res=>res.data).then(res=>{
                 console.log(res)
@@ -135,7 +135,7 @@ export default {
         doMod(){
             this.$axios.put(this.$httpUrl+'/dorm', this.form, {
                 withCredentials: true, headers:{
-                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 }
             }).then(res=>res.data).then(res=>{
                 console.log(res)

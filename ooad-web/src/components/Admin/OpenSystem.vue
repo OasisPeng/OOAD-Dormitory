@@ -3,7 +3,7 @@ export default {
   created() {
     this.$axios.get(this.$httpUrl+'/openTime/1',{
       headers:{
-        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
       },
       withCredentials: true // 允许跨域请求中的Cookie
     }).then(res=>{
@@ -31,7 +31,7 @@ export default {
 
     this.$axios.get(this.$httpUrl+'/openTime/2',{
       headers:{
-        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
       },
       withCredentials: true // 允许跨域请求中的Cookie
     }).then(res=>{
@@ -59,7 +59,7 @@ export default {
 
     this.$axios.get(this.$httpUrl+'/openTime/3',{
       headers:{
-        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
       },
       withCredentials: true // 允许跨域请求中的Cookie
     }).then(res=>{
@@ -87,7 +87,7 @@ export default {
 
     this.$axios.get(this.$httpUrl+'/openTime/4',{
       headers:{
-        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
       },
       withCredentials: true // 允许跨域请求中的Cookie
     }).then(res=>{
@@ -257,7 +257,7 @@ export default {
             },{
               withCredentials: true, // 允许跨域请求中的Cookie
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
             }).then(res=>{
               console.log(res.data)
@@ -271,7 +271,7 @@ export default {
             },{
               withCredentials: true, // 允许跨域请求中的Cookie
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
             }).then(res=>{
               console.log(res.data)
@@ -299,7 +299,7 @@ export default {
               closeTime: this.yanjiusheng.yanjiu_endtime,
             },{
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
               withCredentials: true // 允许跨域请求中的Cookie
             }).then(res=>{
@@ -313,7 +313,7 @@ export default {
               closeTime: this.yanjiusheng.yanjiu_endtime,
             },{
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
               withCredentials: true // 允许跨域请求中的Cookie
             }).then(res=>{
@@ -343,7 +343,7 @@ export default {
             },{
               withCredentials: true, // 允许跨域请求中的Cookie
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
 
             }).then(res=>{
@@ -358,7 +358,7 @@ export default {
             },{
               withCredentials: true, // 允许跨域请求中的Cookie
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
             }).then(res=>{
               console.log(res.data)
@@ -386,7 +386,7 @@ export default {
               closeTime: this.houbusheng.houbu_endtime,
             },{
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
               withCredentials: true // 允许跨域请求中的Cookie
             }).then(res=>{
@@ -400,7 +400,7 @@ export default {
               closeTime: this.houbusheng.houbu_endtime,
             },{
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
               withCredentials: true // 允许跨域请求中的Cookie
             }).then(res=>{
@@ -421,7 +421,7 @@ export default {
       this.benke_edit = false;
       this.$axios.get(this.$httpUrl+'/openTime/1',{
         headers:{
-          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
         },
         withCredentials: true // 允许跨域请求中的Cookie
       }).then(res=>{
@@ -455,7 +455,7 @@ export default {
       this.yanjiu_edit = false;
       this.$axios.get(this.$httpUrl+'/openTime/2',{
         headers:{
-          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
         },
         withCredentials: true // 允许跨域请求中的Cookie
       }).then(res=>{
@@ -491,7 +491,7 @@ export default {
       this.boshi_edit = false;
       this.$axios.get(this.$httpUrl+'/openTime/3',{
         headers:{
-          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
         },
         withCredentials: true // 允许跨域请求中的Cookie
       }).then(res=>{
@@ -528,7 +528,7 @@ export default {
       this.houbu_edit = false;
       this.$axios.get(this.$httpUrl+'/openTime/4',{
         headers:{
-          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
         },
         withCredentials: true // 允许跨域请求中的Cookie
       }).then(res=>{
