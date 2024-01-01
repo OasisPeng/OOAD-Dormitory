@@ -16,8 +16,17 @@ public class ApplicationServiceImpl implements ApplicationService {
     ApplicationDao dao;
     @Autowired
     TeamDao teamDao;
+
+    @Override
+    public int deleteAllType1(int personId) {
+        LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Application::getUserId, personId).eq(Application::getType, 1);
+        return dao.delete(lqw);
+    }
+
     @Override
     public int add(Application a) {
+        if (a.getType() == 0 || a.getType() == 1) {
         LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Application::getUserId, a.getUserId());
         List<Application> list = dao.selectList(lqw);
@@ -27,11 +36,21 @@ public class ApplicationServiceImpl implements ApplicationService {
         } else if (t.getCurrent() >= t.getCapacity()) {
             return 0;
         } else {
-            if (!list.isEmpty()) {
+            if (a.getType() == 0 && !list.isEmpty()) {
                 return 0;
-            } else {
+             } else {
                 return dao.insert(a);
             }
+        }
+    } else {
+            LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
+            lqw.eq(Application::getUserId, a.getUserId());
+            lqw.eq(Application::getTeamId, a.getTeamId());
+            List<Application> list = dao.selectList(lqw);
+            if (!list.isEmpty()) {
+                return 0;
+            }
+            return dao.insert(a);
         }
     }
 

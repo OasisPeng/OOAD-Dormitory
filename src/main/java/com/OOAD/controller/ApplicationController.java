@@ -48,7 +48,12 @@ public class ApplicationController {
     @DeleteMapping
     public Result delete(@RequestBody Application a) {
         Result result = new Result();
-        int i = applicationService.delete(a);
+        int i = 0;
+        if (a.getType() == 1) {
+          i = applicationService.deleteAllType1(a.getUserId());
+        } else {
+          i = applicationService.delete(a);
+        }
         if (i == 0) {
             result.setCode(Code.DELETE_ERR);
             result.setMsg("删除失败");

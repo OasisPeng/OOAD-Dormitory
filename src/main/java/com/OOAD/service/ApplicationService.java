@@ -7,6 +7,7 @@ import java.util.List;
 
 @Transactional
 public interface ApplicationService {
+    public int deleteAllType1(int personId);
     public int add(Application a);
     public int delete(Application a);
     public List<Application> getByTeamId(int id);
