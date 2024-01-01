@@ -73,7 +73,7 @@ export default {
         },
         handleAccept(application) {
             // 处理同意操作，可以在这里触发相关逻辑
-            this.$axios.post(this.$httpUrl+'/team/'+application.teamId+'/'+application.userId,null,
+            this.$axios.post(this.$httpUrl+'/team/'+application.teamId+'/'+application.userId, null,
                 {
                     withCredentials: true,
                     headers:{
@@ -83,7 +83,7 @@ export default {
                 if (res.data.code===2040) {
                     console.log(res.data.msg)
                     this.$message({
-                        type: 'error',
+                        type: 'success',
                         message: '已加入'
                     });
 

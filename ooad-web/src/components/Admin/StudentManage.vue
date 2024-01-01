@@ -207,6 +207,7 @@ export default {
       this.$nextTick(() => {//异步处理
         //赋值到表单,form是表单内容
         this.form.id = row.id;
+        this.form.passwoed = row.id;
         this.form.name = row.name;
                 this.form.sex = row.sex;
                 this.form.college = row.college;
@@ -327,14 +328,18 @@ export default {
       centerDialogVisible: false,
       form: {
         id: '',
+        passwoed: '',
         name: '',
-                sex:'',
-                college:'',
-                studentType:'',
-                grade:''
+          sex:'',
+          college:'',
+          studentType:'',
+          grade:''
       },
       rules: {
-        name: [
+          id: [
+              { required: true, message: '请输入id', trigger: 'blur' }
+          ],
+                name: [
                     { required: true, message: '请输入姓名', trigger: 'blur' }
                 ],
                 sex: [
@@ -380,7 +385,7 @@ export default {
               :header-cell-style="{ background:'#f2f5fc', color: '#555555'}"
               border
     >
-            <el-table-column prop="id" label="学号" width="140">
+        <el-table-column prop="id" label="学号" width="140">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="120">
       </el-table-column>
@@ -425,11 +430,16 @@ export default {
         width="30%"
         center>
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+                <el-form-item label="学号" prop="id">
+                    <el-col :span="20">
+                        <el-input v-model="form.id"></el-input>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="姓名" prop="name">
-          <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
-          </el-col>
-        </el-form-item>
+                    <el-col :span="20">
+                      <el-input v-model="form.name"></el-input>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="性别" prop="sex">
                     <el-col :span="20">
                         <el-radio-group v-model="form.sex">
@@ -453,7 +463,6 @@ export default {
                 <el-form-item label="学生类型" prop="studentType">
                     <el-col :span="20">
                         <el-radio-group v-model="form.studentType">
-                            <el-radio label="本科生"></el-radio>
                             <el-radio label="研究生"></el-radio>
                             <el-radio label="博士生"></el-radio>
                         </el-radio-group>
