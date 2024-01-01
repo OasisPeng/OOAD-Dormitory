@@ -57,13 +57,13 @@ export default {
         });
         console.log(resopnse)
         this.allTeams = resopnse.data.data;
-        if (resopnse.data.code == 2010){
+        if (resopnse.data.code === 2010){
 
           console.log('查询全部组队成功')
           console.log(this.allTeams)
         }
         else
-        if (resopnse.code == 2011){
+        if (resopnse.data.code === 2011){
           console.error('查询全部组队失败，请重试')
         }
       }

@@ -2,11 +2,14 @@ package com.OOAD.service.impl;
 
 import com.OOAD.dao.DormDao;
 import com.OOAD.dao.TeamDao;
+import com.OOAD.dao.UserDao;
 import com.OOAD.domain.Dorm;
+import com.OOAD.domain.User;
 import com.OOAD.service.IDormService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,7 @@ import java.util.Objects;
  * @since 2023-10-30
  */
 @Service
-public class DormServiceImpl implements IDormService {
+public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDormService {
 
     @Autowired
     DormDao dormDao;
