@@ -9,6 +9,8 @@ spring:
     url: jdbc:mysql://203.195.66.67:3306/OOAD
     username: hailong
     password: 337845818
+    hikari:
+      maximum-pool-size: 1000
   security:
     jwt:
       key: aukhcu

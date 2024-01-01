@@ -9,6 +9,7 @@ import com.OOAD.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             }
         }
     }
-
+    @Cacheable("getall")
     @Override
     public List<User> getAll() {
         return userDao.selectList(null);
@@ -116,7 +117,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
 
     @Override
     public int insertByList(List<User> list) {
-
         int size = 0;
         for (User user: list) {
             SysUser sysUser = new SysUser();
@@ -124,7 +124,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             sysUser.setId(user.getId());
             sysUser.setUsername(user.getId().toString());
             sysUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            user.setPassword(sysUser.getPassword());
             int id = user.getId();
             User user1 = userDao.selectById(id);
             if (user1 != null) {
