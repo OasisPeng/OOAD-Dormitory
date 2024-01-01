@@ -97,8 +97,11 @@ export default {
   methods: {
     // 获取用户信息
     getUser(id){
-      this.$axios.get(this.$httpUrl + `/user/${id}`, {}, {
-        withCredentials: true // 允许跨域请求中的Cookie
+      this.$axios.get(this.$httpUrl + `/user/${id}`, {
+        withCredentials: true ,// 允许跨域请求中的Cookie
+        headers:{
+          "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+        },
       }).then(res => {
         console.log(res.data)
         this.user = res.data.data
@@ -106,9 +109,11 @@ export default {
     },
     getFavourite(){
       if (this.$router.history.current.query.type == 1) {
-        this.$axios.get(this.$httpUrl + `/favouritePersonPost/post/${this.$router.history.current.query.id}`, {},{
+        this.$axios.get(this.$httpUrl + `/favouritePersonPost/post/${this.$router.history.current.query.id}`, {
           withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           console.log(res)
           if(res.data.data!='Empty'){
@@ -118,9 +123,11 @@ export default {
         })
       }else{
 
-        this.$axios.get(this.$httpUrl + `/favouriteTeamPost/post/${this.$router.history.current.query.id}`, {},{
+        this.$axios.get(this.$httpUrl + `/favouriteTeamPost/post/${this.$router.history.current.query.id}`, {
           withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           if(res.data.data!='Empty'){
             this.isFans = true
@@ -140,17 +147,21 @@ export default {
 
         if(this.isFans){
           this.$axios.delete(this.$httpUrl + `/favouritePersonPost`,{
-            data:data
-          },{
+            data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
-            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            headers:{
+              "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            },
           }).then(res => {
             this.isFans = !this.isFans
           })
         }else{
-          this.$axios.post(this.$httpUrl + `/favouritePersonPost`, data,{
+          this.$axios.post(this.$httpUrl + `/favouritePersonPost`,{
+            data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
-            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            headers:{
+              "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            },
           }).then(res => {
             this.isFans = !this.isFans
           })
@@ -173,17 +184,21 @@ export default {
           // })
 
           this.$axios.delete(this.$httpUrl + `/favouriteTeamPost`, {
-            data:data
-          },{
+            data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
-            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            headers:{
+              "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            },
           }).then(res => {
             this.isFans = !this.isFans
           })
         }else {
           this.$axios.post(this.$httpUrl + `/favouriteTeamPost`, data, {
+            data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
-            "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            headers:{
+              "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            },
           }).then(res => {
             this.isFans = !this.isFans
           })
@@ -194,8 +209,12 @@ export default {
     // /获取帖子评论列表
     getreply() {
       if (this.$router.history.current.query.type == 1) {
-        this.$axios.get(this.$httpUrl + `/commentPersonPost/post/${this.$router.history.current.query.id}`, {}, {
-          withCredentials: true // 允许跨域请求中的Cookie
+        this.$axios.get(this.$httpUrl + `/commentPersonPost/post/${this.$router.history.current.query.id}`,  {
+          // data:data,
+          withCredentials: true, // 允许跨域请求中的Cookie
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           console.log(res.data.data,"评论")
           if(res.data.data == 'Err') return
@@ -203,8 +222,12 @@ export default {
         })
 
       } else {
-        this.$axios.get(this.$httpUrl + `/commentTeamPost/post/${this.$router.history.current.query.id}`, {}, {
-          withCredentials: true // 允许跨域请求中的Cookie
+        this.$axios.get(this.$httpUrl + `/commentTeamPost/post/${this.$router.history.current.query.id}`, {
+          // data:data,
+          withCredentials: true, // 允许跨域请求中的Cookie
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           console.log(res.data.data,"团队")
           if(res.data.data == 'Err') return
@@ -216,19 +239,28 @@ export default {
     addReply() {
       console.log("cesi");
       if (this.$router.history.current.query.type == 1) {
-        this.$axios.post(this.$httpUrl + `/commentPersonPost`, { personId:JSON.parse(localStorage.getItem("CurUser")).id, postId: this.$router.history.current.query.id, content: this.context }, {
+        this.$axios.post(this.$httpUrl + `/commentPersonPost`, {
+          personId:JSON.parse(localStorage.getItem("CurUser")).id,
+          postId: this.$router.history.current.query.id,
+          content: this.context },{
           withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           console.log(res)
           this.context = ''
           this.getreply()
         })
       }else{
-        this.$axios.post(this.$httpUrl + `/commentTeamPost`, { postId: this.$router.history.current.query.id,personId:JSON.parse(localStorage.getItem("CurUser")).id, content: this.context }, {
+        this.$axios.post(this.$httpUrl + `/commentTeamPost`,{
+          postId: this.$router.history.current.query.id,personId:JSON.parse(localStorage.getItem("CurUser")).id, content: this.context },{
+
           withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
-        }).then(res => {
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
+        }, ).then(res => {
           console.log(res)
           this.context = ''
           this.getreply()
@@ -242,9 +274,11 @@ export default {
       let that = this
       console.log(this.$router.history.current.query);
       if (this.$router.history.current.query.type == 1) {
-        this.$axios.get(this.$httpUrl + `/personPost/${this.$router.history.current.query.id}`, {},{
+        this.$axios.get(this.$httpUrl + `/personPost/${this.$router.history.current.query.id}`,{
           withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           console.log(res.data.data[0], "帖子2");
           if (res.data.data.length > 0 && res.data.code == 2011) {
@@ -264,9 +298,11 @@ export default {
 
         })
       } else {
-        this.$axios.get(this.$httpUrl + `/teamPost/${this.$router.history.current.query.id}`, {}, {
+        this.$axios.get(this.$httpUrl + `/teamPost/${this.$router.history.current.query.id}`, {
           withCredentials: true, // 允许跨域请求中的Cookie
-          "token":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          headers:{
+            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          },
         }).then(res => {
           console.log(res.data, "帖子1");
           this.title = res.data.data.title;
