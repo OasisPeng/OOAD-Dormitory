@@ -9,6 +9,8 @@ import com.OOAD.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,13 +46,13 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             }
         }
     }
-    @Cacheable("getall")
+    @Cacheable("user")
     @Override
     public List<User> getAll() {
         return userDao.selectList(null);
     }
 
-
+    @CacheEvict(value = "user", allEntries = true)
     @Override
     public boolean updateById(User user) {
         User originUser = userDao.selectById(user.getId());
@@ -78,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     public User getById(int id) {
        return userDao.selectById(id);
     }
-
+    @CacheEvict(value = "user", allEntries = true)
     @Override
     public boolean deleteById(int id) {
         int i = userDao.deleteById(id);
@@ -88,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             return true;
         }
     }
-
+    @CacheEvict(value = "user", allEntries = true)
     @Override
     public boolean insert(User user) {
         User user1 = userDao.selectById(user.getId());
@@ -114,7 +116,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             return user.getTeamId();
         }
     }
-
+    @CacheEvict(value = "user", allEntries = true)
     @Override
     public int insertByList(List<User> list) {
         int size = 0;
