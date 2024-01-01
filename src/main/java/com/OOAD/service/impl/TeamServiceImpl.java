@@ -61,6 +61,9 @@ public class TeamServiceImpl implements ITeamService{
             nt.setId(teamID);
             nt.setCurrent(team.getCurrent() + 1);
             user.setTeamId(teamID);
+            if (team.getDorm() != null) {
+                user.setDormId(team.getDorm());
+            }
             int i = teamDao.updateById(nt);
             int j = userDao.updateById(user);
             //加入失败
