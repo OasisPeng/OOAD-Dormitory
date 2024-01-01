@@ -3,16 +3,20 @@ export default {
     name:"DomritoryManage",
     methods:{
         loadPost(){
-            this.$axios.get(this.$httpUrl+'/dorms/loadPage?pageSize='+this.pageSize+'&pageNum='+this.pageNum,
-            {
+            this.$axios.get(this.$httpUrl + '/dorms/listPage', {
+                params: {
+                    pageNum: this.pageNum,
+                    pageSize: this.pageSize
+                },
                 withCredentials: true, headers:{
                     'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 }
             }).then(res=>res.data).then(res=>{
                 console.log(res)
-                if(res.code==2010){
+                if(res.code==2020){
                     this.tableData=res.data.records
                     this.total=res.data.total
+                    console.log(this.total)
                 }else {
                     alert('获取数据失败')
                 }

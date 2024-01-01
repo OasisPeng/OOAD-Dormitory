@@ -17,7 +17,7 @@ Vue.filter('timefilter',function(originVal){
 
     return bb
 })
-
+/*
 axios.interceptors.request.use(
     config => {
       if (localStorage.getItem("CurUser")) { //判断token是否存在
@@ -30,7 +30,7 @@ axios.interceptors.request.use(
     }
 );
 
-
+*/
 Vue.prototype.$axios=axios;
 Vue.prototype.$httpUrl='http://localhost:8090'
 Vue.config.productionTip = false
