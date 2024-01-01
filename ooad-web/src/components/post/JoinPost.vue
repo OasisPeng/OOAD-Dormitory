@@ -252,7 +252,7 @@ export default {
         content: this.form.content,
         time: new Date(),
         teamId: "1",
-        writerId:JSON.parse(localStorage.getItem("CurUser")).id
+        writerId:JSON.parse(sessionStorage.getItem("CurUser")).id
         // id:2
       }
       if (this.form.region == 1) {
@@ -326,7 +326,7 @@ export default {
           }
         }, {
           withCredentials: true, // 允许跨域请求中的Cookie
-          "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+          "Authorization":"Bearer"+" "+JSON.parse(sessionStorage.getItem("CurUser")).token
         }).then(res => {
           console.log(res.data, "帖子1");
           this.tableData = res.data.data
@@ -335,7 +335,7 @@ export default {
         // 个人
         this.$axios.get(this.$httpUrl + '/personPosts', {
           headers:{
-            "Authorization":"Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token
+            "Authorization":"Bearer"+" "+JSON.parse(sessionStorage.getItem("CurUser")).token
           },
           params:{
             title:this.title
