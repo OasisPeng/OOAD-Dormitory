@@ -70,7 +70,7 @@ export default {
         },
         handleAccept(invitation) {
             // 触发换宿舍的方法
-            this.$axios.post(this.$httpUrl+'/team/change/'+invitation.userId+'/'+this.user.id,
+            this.$axios.post(this.$httpUrl+'/team/change/'+invitation.userId+'/'+this.user.id,null,
                 {
                     withCredentials: true,
                     headers:{
@@ -86,7 +86,7 @@ export default {
                     const application = {
                         teamId: invitation.userId,
                         userId: this.user.id,
-                        type: 1
+                        type: 2
                     }
                     this.$axios.delete(this.$httpUrl+'/application',
                         {
@@ -128,6 +128,7 @@ export default {
                         message: res.data.msg
                     });
                 }
+
             })
         },
         handleReject(invitation) {

@@ -209,7 +209,7 @@ export default {
       const formData = new FormData();
       formData.append('username', this.loginUsername);
       formData.append('password', this.loginPassword);
-
+console.log(formData)
       this.$axios.post(this.$httpUrl+'/auth/login', formData, {
         withCredentials: true,
         headers: {

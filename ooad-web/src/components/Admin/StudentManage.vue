@@ -112,7 +112,7 @@ export default {
             }
             console.log(data);  // data就是文件里面的数据
 
-            let jsonArray = []; // 用于存储转换后的JSON对象
+            // let jsonArray = []; // 用于存储转换后的JSON对象
             for (let i = 0; i < data.length; i++) {
               let jsonObj = {}; // 创建一个新的JSON对象
               // 假设CSV文件的第一行是标题行
@@ -120,47 +120,48 @@ export default {
                 jsonObj[data[0][j]] = data[i][j]; // 使用标题行作为属性，当前行的值作为对应属性的值
               }
               if(i != 0)
-               jsonArray.push(jsonObj); // 将创建的JSON对象添加到数组中
+
+               this.jsonArray.push(jsonObj); // 将创建的JSON对象添加到数组中
             }
 
-            console.log(jsonArray); // 输出包装成数组的JSON对象
-            // console.log(this.List)
-            try {
+            console.log(this.jsonArray); // 输出包装成数组的JSON对象
 
-              const resopnse = await axios.post(this.$httpUrl + '/user/upload',jsonArray,{
-                withCredentials: true,
-                headers:{
-                  'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
-                }
-              });
-              console.log(resopnse.data)
-              if (resopnse.data.code == 2040) {
-              }
-              else
-                console.log('上传用户失败')
-            } catch (error) {
-              console.error('验证出错', error);
-            }
+            // try {
+            //   const resopnse = await axios.post(this.$httpUrl + '/user/upload',jsonArray,{
+            //     withCredentials: true,
+            //     headers:{
+            //       'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+            //     }
+            //   });
+            //   console.log(resopnse.data)
+            //   if (resopnse.data.code == 2040) {
+            //   }
+            //   else
+            //     console.log('上传用户失败')
+            // } catch (error) {
+            //   console.error('验证出错', error);
+            // }
           }
         });
       };
     },
-    async upLoadStudent(data){
+    async upLoadStudent(){
+      console.log('111')
+      console.log(this.jsonArray)
       try {
-        const resopnse = await axios.post(this.$httpUrl + '/user/upload',{List: data},{
+        const resopnse = await axios.post(this.$httpUrl + '/user/upload',this.jsonArray,{
           withCredentials: true,
           headers:{
             'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
           }
         });
-        if (resopnse.code == 2020){
-        console.log('学生上传成功')
+        console.log(resopnse.data)
+        if (resopnse.data.code == 2040) {
         }
         else
-          console.error('学生上传失败')
-
-      }
-      catch (error){console.error('上传错误', error);
+          console.log('上传用户失败')
+      } catch (error) {
+        console.error('验证出错', error);
       }
     },
     loadPost() {
@@ -214,7 +215,12 @@ export default {
       })
     },
     del(id) {
-            this.$axios.delete(this.$httpUrl+'/user/'+id).then(res=>res.data).then(res=>{
+            this.$axios.delete(this.$httpUrl+'/user/'+id,{
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+              },
+              withCredentials: true // 允许跨域请求中的Cookie
+            }).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2030){
                     this.$message({
@@ -309,6 +315,7 @@ export default {
         "id": 12111119,
         "password": 123
       }],
+      jsonArray:[],
 
       dormSelction:[],
       tableData: [],
@@ -468,34 +475,19 @@ export default {
 
 
     <el-dialog :title="'导入文件'" :visible.sync="csvVisible" width="50%">
-      <div>
-        <el-form ref="file" label-width="120px">
-          <el-form-item label="CSV文件导入：">
-            <el-upload
-                class="upload-demo"
-                action
-                :limit="1"
-                :file-list="formFileList"
-                :http-request="handleUploadForm"
-                :on-exceed="formHandleExceed"
-                :on-remove="formHandleRemove"
-                :before-upload="beforeUploadForm"
-                accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
-            >
-              <el-button type="primary">上传文件</el-button>
-              <span slot="tip" class="el-upload__tip" style="margin: 0 10px;"
-              >只能上传xlsx/xls/csv文件，且不超过{{ formMaxSize }}M</span
-              >
-            </el-upload>
-          </el-form-item>
-        </el-form>
+      <div >
+        <input  type="file"  id="files" ref="refFile" v-on:change="importCsv">
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="csvVisible = false">取消</el-button>
-      </span>
+  <span>
+    <el-button type="primary" @click ="upLoadStudent">确认导入</el-button>
+      <el-button type="primary" @click ="csvVisible = false">取消</el-button>
+  </span>
+
     </el-dialog>
 
-    <input  type="file" id="files" ref="refFile" v-on:change="importCsv">
+
+
+    <el-button type="primary" @click ="csvVisible = true">导入学生信息</el-button>
     <el-button type="primary" @click ="exportStudentCsv">导出学生</el-button>
     <el-button type="primary" @click ="exportDormCsv">导出宿舍选择情况</el-button>
 <!--    <el-button type="primary" @click ="exchangeDorm">交换宿舍</el-button>-->
@@ -504,5 +496,11 @@ export default {
 </template>
 
 <style scoped>
+div {
+  margin-bottom: 10px; /* 例如，添加10像素的下间距 */
+}
 
+span {
+  margin-top: 10px; /* 例如，添加10像素的上间距 */
+}
 </style>

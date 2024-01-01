@@ -143,7 +143,9 @@ public class ApplicationController {
             for(Application app:list){
                 Map<String, Object> map =new HashMap<>();
                 map.put("teamId", app.getTeamId());
+                System.out.println("------------------------------------");
                 Team team = teamService.selectByID(app.getTeamId());
+                System.out.println(team.getHeadId());
                 User user = userService.getById(team.getHeadId());
                 map.put("userId", user.getId()); //队长
                 map.put("userName", user.getName()); //队长

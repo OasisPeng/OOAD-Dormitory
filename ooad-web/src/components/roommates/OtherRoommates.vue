@@ -86,31 +86,6 @@ export default {
       dialogVisible : false,
       input:null,
 
-      teams: [{
-        leaderName: 'leader1',
-        current: 1,
-        capacity: 5,
-        dorm: '1009',
-        region: '湖畔'
-      }, {
-        leaderName: 'leader2',
-        current: 2,
-        capacity: 5,
-        dorm: '1010',
-        region: '二期'
-      }, {
-        leaderName: 'leader3',
-        current: 3,
-        capacity: 5,
-        dorm: '1011',
-        region: '湖畔'
-      }, {
-        leaderName: 'leader4',
-        current: 4,
-        capacity: 5,
-        dorm: '1019',
-        region: '二期'
-      }]
     };
   },
   created() {
@@ -135,7 +110,7 @@ export default {
       try {
         const resopnse = await axios.post(this.$httpUrl + '/application',{
           teamId:rowData.id,
-          userId:this.input,
+          userId:this.user.id,
           type:0
         },{
           withCredentials: true,
@@ -194,6 +169,21 @@ export default {
       }
       catch (error){console.error('验证出错', error);
       }
+      this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+        withCredentials: true,
+        headers:{
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+        }
+      }).then(res=>{
+        if (res.data.code===2010) {
+          sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+          console.log(JSON.parse(sessionStorage.getItem('UserData')));
+          this.$router.push({ name:'index' });
+        } else {
+          console.log(res.data.msg)
+          // 登录失败，可以显示错误消息
+        }
+      })
       this.dialogVisible = false
     }
     ,

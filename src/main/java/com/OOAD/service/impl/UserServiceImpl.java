@@ -46,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             }
         }
     }
-    @Cacheable("user")
+//    @Cacheable("user")
     @Override
     public List<User> getAll() {
         return userDao.selectList(null);
