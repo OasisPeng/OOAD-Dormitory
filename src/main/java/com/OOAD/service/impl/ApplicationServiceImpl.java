@@ -29,6 +29,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (a.getType() == 0 || a.getType() == 1) {
         LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Application::getUserId, a.getUserId());
+        lqw.eq(Application::getType, a.getType());
         List<Application> list = dao.selectList(lqw);
         Team t = teamDao.selectById(a.getTeamId());
         if (t == null) {
@@ -46,6 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             LambdaQueryWrapper<Application> lqw = new LambdaQueryWrapper<>();
             lqw.eq(Application::getUserId, a.getUserId());
             lqw.eq(Application::getTeamId, a.getTeamId());
+            lqw.eq(Application::getType, 2);
             List<Application> list = dao.selectList(lqw);
             if (!list.isEmpty()) {
                 return 0;
