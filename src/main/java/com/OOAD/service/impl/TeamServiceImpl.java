@@ -84,6 +84,18 @@ public class TeamServiceImpl implements ITeamService{
         } else if (team.getCurrent() <= 0) {
             return -2;
         } else {
+            if (team.getHeadId() == userID) {
+                LambdaUpdateWrapper<User> selectWrapper = new LambdaUpdateWrapper<>();
+                selectWrapper.eq(User::getTeamId, teamID);
+                List<User> users = userDao.selectList(selectWrapper);
+                for (int i = 0; i < users.size(); i++) {
+                    LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+                    updateWrapper.eq(User::getId, users.get(i).getId());
+                    updateWrapper.set(User::getTeamId,null);
+                    int x = userDao.update(user, updateWrapper);
+                    int y = teamDao.deleteById(teamID);
+                }
+            } else {
             Team nt = new Team();
             nt.setId(teamID);
             nt.setCurrent(team.getCurrent() - 1);
@@ -101,6 +113,7 @@ public class TeamServiceImpl implements ITeamService{
             }
             if (i != 1 || j != 1) {
                 return -1;
+            }
             }
         return 0;
     }
