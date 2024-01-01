@@ -73,7 +73,7 @@ export default {
         },
         handleAccept(application) {
             // 处理同意操作，可以在这里触发相关逻辑
-            this.$axios.post(this.$httpUrl+'/team/'+application.teamId+'/'+application.userId,
+            this.$axios.post(this.$httpUrl+'/team/'+application.teamId+'/'+application.userId, null,
                 {
                     withCredentials: true,
                     headers:{
@@ -83,7 +83,7 @@ export default {
                 if (res.data.code===2040) {
                     console.log(res.data.msg)
                     this.$message({
-                        type: 'error',
+                        type: 'success',
                         message: '已加入'
                     });
 
@@ -91,7 +91,7 @@ export default {
                     const app = {
                         teamId: this.user.teamId,
                         userId: application.userId,
-                        type: 1
+                        type: 0
                     }
                     this.$axios.delete(this.$httpUrl+'/application',
                         {
@@ -103,7 +103,7 @@ export default {
                     ).then(res=>{
                         if (res.data.code===2030) {
                             console.log(res.data.msg)
-                            this.getAllInvitations()
+                            this.getAllOffers()
 
                         } else {
                             this.$message({

@@ -18,17 +18,17 @@ Vue.filter('timefilter',function(originVal){
     return bb
 })
 /*
-axios.interceptors.request.use(
-    config => {
-      if (localStorage.getItem("CurUser")) { //判断token是否存在
-        config.headers.Authorization = "Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token;  //将token设置成请求头
-      }
-      return config;
-    },
-    err => {
-      return Promise.reject(err);
-    }
-);
+// axios.interceptors.request.use(
+//     config => {
+//       if (localStorage.getItem("CurUser")) { //判断token是否存在
+//         config.headers.Authorization = "Bearer"+" "+JSON.parse(localStorage.getItem("CurUser")).token;  //将token设置成请求头
+//       }
+//       return config;
+//     },
+//     err => {
+//       return Promise.reject(err);
+//     }
+// );
 
 */
 Vue.prototype.$axios=axios;

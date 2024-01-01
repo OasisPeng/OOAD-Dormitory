@@ -70,7 +70,9 @@ export default {
         },
         handleAccept(invitation) {
             // 处理同意操作，可以在这里触发相关逻辑
-            this.$axios.post(this.$httpUrl+'/team/'+invitation.teamId+'/'+this.user.id,
+            console.log(JSON.parse(sessionStorage.getItem('CurUser')).token)
+
+            this.$axios.post(this.$httpUrl+'/team/'+invitation.teamId+'/'+this.user.id,null,
                 {
                     withCredentials: true,
                     headers:{

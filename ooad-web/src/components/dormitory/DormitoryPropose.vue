@@ -155,7 +155,7 @@ export default {
         grab(){
             // 抢、
             // 抢到了就更新team的dorm,user的dorm_id和
-            this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,
+            this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,null,
                 {
                     withCredentials: true,
                     headers:{

@@ -57,6 +57,7 @@
                       message: this.$t('退出登录成功')
                   });
                   this.$router.push('/'); //路由
+                  //调一下后端的logout
                   sessionStorage.clear();
               }).catch(() => {
                   this.$message({

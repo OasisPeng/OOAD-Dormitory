@@ -25,7 +25,7 @@
 
         <el-button type="primary" style="margin-left:30px" @click="exitTeam">退出组队</el-button>
         <el-button type="primary" v-if="isLeader" style="margin-left:30px" @click="showDialog">邀请成员</el-button>
-        <el-button type="primary" v-if="isLeader" style="margin-left:30px" @click="showDialog2">交换宿舍</el-button>
+        <el-button type="primary"  style="margin-left:30px" @click="showDialog2">交换宿舍</el-button>
 
         <el-dialog
                 title="邀请成员"
@@ -200,14 +200,17 @@ export default {
                 if (response.data.code === 2010) {
                     console.log('查询成功，组队ID为：', response.data);
                     this.curTeamId = response.data.data;
+                  await this.getUserTeamData()
+                  this.getTeamMembers()
                 } else {
                     console.error('查询失败：', response.msg);
+                  this.$message.warning("请创建或者加入组队");
+                  await this.$router.push('/OtherRoommates')
                 }
             } catch (error) {
                 console.error('请求失败：', error);
             }
-            this.getUserTeamData()
-            this.getTeamMembers()
+
 
         },
         async isTeamLeader(){
@@ -228,7 +231,9 @@ export default {
                     // 过滤队友
                     console.log(res.data.data)
                     this.teamMembers = res.data.data.filter(member => member.teamId === this.curTeamId);
+
                     console.log("组队成员信息：")
+                    console.log('curTeamId: ' + String(this.curTeamId) )
                     console.log(this.teamMembers)
                 } else {
                     console.log(res.data.msg)
@@ -264,7 +269,7 @@ export default {
 
         async exitTeam(){
             try {
-                var path = this.$httpUrl +'/team/' + this.team + '/'+ String(this.user.id);
+                var path = this.$httpUrl +'/team/' + this.curTeamId + '/'+ String(this.user.id);
                 console.log(path)
                 const response = await axios.delete(path,{
                     withCredentials: true,
@@ -282,10 +287,29 @@ export default {
             } catch (error) {
                 console.error('请求失败：', error);
             }
+
+          this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+            withCredentials: true,
+            headers:{
+              'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            }
+          }).then(res=>{
+            if (res.data.code===2010) {
+              sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+              console.log(JSON.parse(sessionStorage.getItem('UserData')));
+              this.$router.push({ name:'index' });
+            } else {
+              console.log(res.data.msg)
+              // 登录失败，可以显示错误消息
+            }
+          })
+
+            await this.init()
         },
         // 邀请成员
         async handleConfirm(){
             try {
+
                 const resopnse = await axios.post(this.$httpUrl + '/application',{
                     teamId:this.curTeamId,
                     userId:this.input,

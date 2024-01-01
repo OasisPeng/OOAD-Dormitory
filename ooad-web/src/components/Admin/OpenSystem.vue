@@ -158,38 +158,38 @@ export default {
 
 
       rules: {
-        benke_opentime: [
-          { required: true, message: '请选择开始时间', trigger: 'change' },
-          { validator: this.validateOpenTime, trigger: 'change' },
-        ],
-        benke_endtime: [
-          { required: true, message: '请选择结束时间', trigger: 'change' },
-          { validator: this.validateEndTime, trigger: 'change' },
-        ],
-        yanjiu_opentime: [
-          { required: true, message: '请选择开始时间', trigger: 'change' },
-          { validator: this.validateOpenTime, trigger: 'change' },
-        ],
-        yanjiu_endtime: [
-          { required: true, message: '请选择结束时间', trigger: 'change' },
-          { validator: this.validateEndTime2, trigger: 'change' },
-        ],
-        boshi_opentime: [
-          { required: true, message: '请选择开始时间', trigger: 'change' },
-          { validator: this.validateOpenTime, trigger: 'change' },
-        ],
-        boshi_endtime: [
-          { required: true, message: '请选择结束时间', trigger: 'change' },
-          { validator: this.validateEndTime3, trigger: 'change' },
-        ],
-        houbu_opentime: [
-          { required: true, message: '请选择开始时间', trigger: 'change' },
-          { validator: this.validateOpenTime, trigger: 'change' },
-        ],
-        houbu_endtime: [
-          { required: true, message: '请选择结束时间', trigger: 'change' },
-          { validator: this.validateEndTime4, trigger: 'change' },
-        ],
+        // benke_opentime: [
+        //   { required: true, message: '请选择开始时间', trigger: 'change' },
+        //   { validator: this.validateOpenTime, trigger: 'change' },
+        // ],
+        // benke_endtime: [
+        //   { required: true, message: '请选择结束时间', trigger: 'change' },
+        //   { validator: this.validateEndTime, trigger: 'change' },
+        // ],
+        // yanjiu_opentime: [
+        //   { required: true, message: '请选择开始时间', trigger: 'change' },
+        //   { validator: this.validateOpenTime, trigger: 'change' },
+        // ],
+        // yanjiu_endtime: [
+        //   { required: true, message: '请选择结束时间', trigger: 'change' },
+        //   { validator: this.validateEndTime2, trigger: 'change' },
+        // ],
+        // boshi_opentime: [
+        //   { required: true, message: '请选择开始时间', trigger: 'change' },
+        //   { validator: this.validateOpenTime, trigger: 'change' },
+        // ],
+        // boshi_endtime: [
+        //   { required: true, message: '请选择结束时间', trigger: 'change' },
+        //   { validator: this.validateEndTime3, trigger: 'change' },
+        // ],
+        // houbu_opentime: [
+        //   { required: true, message: '请选择开始时间', trigger: 'change' },
+        //   { validator: this.validateOpenTime, trigger: 'change' },
+        // ],
+        // houbu_endtime: [
+        //   { required: true, message: '请选择结束时间', trigger: 'change' },
+        //   { validator: this.validateEndTime4, trigger: 'change' },
+        // ],
       },
     }
   },
@@ -248,8 +248,9 @@ export default {
       this.$refs[FormName].validate((valid) => {
         if (valid) {
           this.benke_edit = false;
-          console.log(this.benke)
+
           if (this.benke===2){
+           const fuck = JSON.parse(sessionStorage.getItem('admin')).token
             this.$axios.put(this.$httpUrl+'/openTime',{
               id: 1 ,
               openTime: this.benkesheng.benke_opentime,
@@ -257,7 +258,7 @@ export default {
             },{
               withCredentials: true, // 允许跨域请求中的Cookie
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+                'Authorization':"Bearer"+" "+fuck
               },
             }).then(res=>{
               console.log(res.data)
