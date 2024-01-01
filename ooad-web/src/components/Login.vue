@@ -135,7 +135,7 @@
                       d="M777.580606 417.122263l-1.989818 0 0-0.232727-36.848485 0 0-101.520808c0-0.67103-0.045253-1.343354-0.126707-2.014384-6.923636-54.061253-33.298101-103.833859-74.272323-140.166465C623.009616 136.546263 569.792646 116.363636 514.505697 116.363636c-60.353939 0-117.095434 23.505455-159.773737 66.177293-42.67701 42.67701-66.176 99.419798-66.176 159.772444l0 74.78303-43.132121 0.025859c-29.812364 0-54.070303 24.256646-54.070303 54.070303l0 383.171232c0 29.818828 24.257939 54.071596 54.070303 54.071596l330.369293 0c0.479677 0 0.954182-0.020687 1.424808-0.065939l198.93398 0c0.469333 0.045253 0.943838 0.065939 1.428687 0.065939 29.808485 0 54.065131-24.252768 54.065131-54.071596L831.645737 471.192566C831.64703 441.378909 807.394263 417.122263 777.580606 417.122263L777.580606 417.122263zM320.246949 342.313374c0-51.889131 20.207192-100.671354 56.899232-137.358222 36.686869-36.69204 85.470384-56.899232 137.358222-56.899232 47.530667 0 93.282263 17.348525 128.806788 48.848162 34.990545 31.021253 57.597414 73.420283 63.733657 119.489939l0 100.495515-386.799192 0.232727L320.245657 342.313374 320.246949 342.313374zM799.954747 854.363798c0 11.773414-9.135838 21.449697-20.69204 22.313374l-0.126707 0L245.423838 876.739232c-12.338424 0-22.37802-10.03701-22.37802-22.375434L223.045818 471.192566c0-12.338424 10.039596-22.379313 22.37802-22.379313l58.984727-0.029737c0.808081 0 1.596768-0.081455 2.373818-0.196525 0.849455 0.135758 1.71701 0.231434 2.606545 0.231434l299.146343 0c0.288323 0.005172 0.731798 0.015515 1.313616 0.015515 1.247677 0 3.152162-0.029737 5.590626-0.156444l105.742222 0c0.656808 0.080162 1.322667 0.135758 2.000162 0.135758l54.398707 0c12.333253 0 22.374141 10.046061 22.374141 22.379313L799.954747 854.363798 799.954747 854.363798zM799.954747 854.363798"
                       fill="#ffffff" p-id="4679"></path></svg>
                 </span>
-          <span>密码</span>
+          <span>旧密码</span>
           <input maxlength="16" placeholder="   Password" type="password" v-model="registerPassword">
         </label>
       </div>
@@ -149,7 +149,7 @@
                       d="M777.580606 417.122263l-1.989818 0 0-0.232727-36.848485 0 0-101.520808c0-0.67103-0.045253-1.343354-0.126707-2.014384-6.923636-54.061253-33.298101-103.833859-74.272323-140.166465C623.009616 136.546263 569.792646 116.363636 514.505697 116.363636c-60.353939 0-117.095434 23.505455-159.773737 66.177293-42.67701 42.67701-66.176 99.419798-66.176 159.772444l0 74.78303-43.132121 0.025859c-29.812364 0-54.070303 24.256646-54.070303 54.070303l0 383.171232c0 29.818828 24.257939 54.071596 54.070303 54.071596l330.369293 0c0.479677 0 0.954182-0.020687 1.424808-0.065939l198.93398 0c0.469333 0.045253 0.943838 0.065939 1.428687 0.065939 29.808485 0 54.065131-24.252768 54.065131-54.071596L831.645737 471.192566C831.64703 441.378909 807.394263 417.122263 777.580606 417.122263L777.580606 417.122263zM320.246949 342.313374c0-51.889131 20.207192-100.671354 56.899232-137.358222 36.686869-36.69204 85.470384-56.899232 137.358222-56.899232 47.530667 0 93.282263 17.348525 128.806788 48.848162 34.990545 31.021253 57.597414 73.420283 63.733657 119.489939l0 100.495515-386.799192 0.232727L320.245657 342.313374 320.246949 342.313374zM799.954747 854.363798c0 11.773414-9.135838 21.449697-20.69204 22.313374l-0.126707 0L245.423838 876.739232c-12.338424 0-22.37802-10.03701-22.37802-22.375434L223.045818 471.192566c0-12.338424 10.039596-22.379313 22.37802-22.379313l58.984727-0.029737c0.808081 0 1.596768-0.081455 2.373818-0.196525 0.849455 0.135758 1.71701 0.231434 2.606545 0.231434l299.146343 0c0.288323 0.005172 0.731798 0.015515 1.313616 0.015515 1.247677 0 3.152162-0.029737 5.590626-0.156444l105.742222 0c0.656808 0.080162 1.322667 0.135758 2.000162 0.135758l54.398707 0c12.333253 0 22.374141 10.046061 22.374141 22.379313L799.954747 854.363798 799.954747 854.363798zM799.954747 854.363798"
                       fill="#ffffff" p-id="4679"></path></svg>
                 </span>
-          <span>确认密码</span>
+          <span>新密码</span>
           <input maxlength="16" placeholder="   Password" type="password"v-model="confirmPassword">
         </label>
       </div>
@@ -224,7 +224,7 @@ console.log(formData)
           sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));
           localStorage.setItem("CurUser", JSON.stringify(res.data.data));
           console.log(JSON.parse(sessionStorage.getItem('CurUser')));
-
+          this.$message.success(res.data.msg);
           //获取用户的完整信息，存入sessionStorage
             this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
                 withCredentials: true,
@@ -235,19 +235,24 @@ console.log(formData)
                 if (res.data.code===2010) {
                     sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
                     console.log(JSON.parse(sessionStorage.getItem('UserData')));
+
                     this.$router.push({ name:'index' });
                 } else {
-                    console.log(res.data.msg)
+
+
                     // 登录失败，可以显示错误消息
                 }
             })
         } else {
+          this.$message.warning(res.data.msg);
           console.log(res.data.msg);
         }
       });
     },
 
     check2() {
+
+
       const formData = new FormData();
       formData.append('username', this.loginAdminname);
       formData.append('password', this.loginAdminPassword);
@@ -261,6 +266,7 @@ console.log(formData)
         console.log(res);
 
         if (res.data.code === 2000) {
+          this.$message.success(res.data.msg);
           this.$router.push({ name:'indexAdmin' });
           console.log(res.data.msg);
           console.log("1");
@@ -269,36 +275,70 @@ console.log(formData)
           console.log(JSON.parse(sessionStorage.getItem('admin')));
         } else {
           console.log(res.msg);
-          this.$message.success(res.msg);
+          this.$message.warning(res.data.msg);
         }
       });
     },
 
     check() {
-      const formData = new FormData();
-      formData.append('username', this.loginAdminname);
-      formData.append('password', this.loginAdminPassword);
-
-      this.$axios.post(this.$httpUrl+'/auth/login', formData, {
+      const formData1 = new FormData();
+      formData1.append('username', this.registerUsername);
+      formData1.append('password', this.registerPassword);
+      console.log(formData1)
+      this.$axios.post(this.$httpUrl+'/auth/login', formData1, {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       }).then(res => {
-        console.log(res);
-
         if (res.data.code === 2000) {
-          this.$router.push({ name:'indexAdmin' });
-          console.log(res.data.msg);
-          console.log("1");
           sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));
           localStorage.setItem("CurUser", JSON.stringify(res.data.data));
           console.log(JSON.parse(sessionStorage.getItem('CurUser')));
+          this.$message.success(res.data.msg);
+          //获取用户的完整信息，存入sessionStorage
+          this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+            withCredentials: true,
+            headers:{
+              'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            }}
+          ).then(res=>{
+            if (res.data.code===2010) {
+              sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+              console.log(JSON.parse(sessionStorage.getItem('UserData')));
+
+
+              this.$axios.put(this.$httpUrl+'/user', {
+                id:  this.registerUsername,
+                password: this.confirmPassword,
+
+              }, {
+                withCredentials: true,
+                headers:{
+                  'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                }
+              }).then(res => {
+                console.log(res);
+
+                if (res.data.code === 2020) {
+                  this.$message.success(res.data.msg);
+                  this.out()
+                } else {
+                  this.$message.warning(res.data.msg);
+                }
+              });
+            } else {
+
+
+              // 登录失败，可以显示错误消息
+            }
+          })
         } else {
-          console.log(res.msg);
-          this.$message.success(res.msg);
+          this.$message.warning(res.data.msg);
+          console.log(res.data.msg);
         }
       });
+
     },
     out() {
       this.loginDialogVisible = false;
