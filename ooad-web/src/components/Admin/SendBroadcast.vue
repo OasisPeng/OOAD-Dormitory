@@ -168,7 +168,7 @@ export default {
     this.$axios.get(this.$httpUrl+'/broadCasts', {
       withCredentials: true,
       headers: {
-        'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('CurUser')).token
+        'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('admin')).token
       },
 
     }).then(res => {
@@ -279,7 +279,7 @@ export default {
             },{
               withCredentials: true,
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
 
 
@@ -316,7 +316,7 @@ export default {
             },{
               withCredentials: true,
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
 
 
@@ -361,7 +361,7 @@ export default {
             this.$axios.delete(this.$httpUrl+`/broadCast/${index}`,{
               withCredentials: true,
               headers:{
-                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
               },
             }).then(res=>{
               console.log(res.data)

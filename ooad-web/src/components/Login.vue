@@ -264,9 +264,9 @@ export default {
           this.$router.push({ name:'indexAdmin' });
           console.log(res.data.msg);
           console.log("1");
-          sessionStorage.setItem("CurUser", JSON.stringify(res.data.data));
-          localStorage.setItem("CurUser", JSON.stringify(res.data.data));
-          console.log(JSON.parse(sessionStorage.getItem('CurUser')));
+          sessionStorage.setItem("admin", JSON.stringify(res.data.data));
+          localStorage.setItem("admin", JSON.stringify(res.data.data));
+          console.log(JSON.parse(sessionStorage.getItem('admin')));
         } else {
           console.log(res.msg);
           this.$message.success(res.msg);

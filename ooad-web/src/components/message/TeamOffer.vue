@@ -86,13 +86,54 @@ export default {
                         type: 'error',
                         message: '已加入'
                     });
+
+                    // 成功同意后删除该通知
+                    const app = {
+                        teamId: this.user.teamId,
+                        userId: application.userId,
+                        type: 1
+                    }
+                    this.$axios.delete(this.$httpUrl+'/application',
+                        {
+                            data: app,
+                            withCredentials: true,
+                            headers:{
+                                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                            }}
+                    ).then(res=>{
+                        if (res.data.code===2030) {
+                            console.log(res.data.msg)
+                            this.getAllInvitations()
+
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.msg
+                            });
+                        }
+                    })
+                    //更新用户的完整信息，存入sessionStorage
+                    this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+                        withCredentials: true,
+                        headers:{
+                            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                        }}
+                    ).then(res=>{
+                        if (res.data.code===2010) {
+                            sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+                            console.log(JSON.parse(sessionStorage.getItem('UserData')));
+                            this.$router.push({ name:'index' });
+                        } else {
+                            console.log(res.data.msg)
+                            // 登录失败，可以显示错误消息
+                        }
+                    })
                 } else {
                     this.$message({
                         type: 'error',
                         message: res.data.msg
                     });
                 }
-
             })
 
         },

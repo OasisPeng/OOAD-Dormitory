@@ -10,7 +10,7 @@ export default {
         const resopnse = await axios.get(this.$httpUrl + '/users',{
           withCredentials: true,
           headers:{
-            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
           }
         });
         console.log(resopnse)
@@ -52,7 +52,7 @@ export default {
         const resopnse = await axios.get(this.$httpUrl + '/teams',{
           withCredentials: true,
           headers:{
-            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
           }
         });
         console.log(resopnse)
@@ -130,7 +130,7 @@ export default {
               const resopnse = await axios.post(this.$httpUrl + '/user/upload',jsonArray,{
                 withCredentials: true,
                 headers:{
-                  'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                  'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 }
               });
               console.log(resopnse.data)
@@ -150,7 +150,7 @@ export default {
         const resopnse = await axios.post(this.$httpUrl + '/user/upload',{List: data},{
           withCredentials: true,
           headers:{
-            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
           }
         });
         if (resopnse.code == 2020){
@@ -172,7 +172,7 @@ export default {
                 },
 
             withCredentials: true, headers:{
-            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
             },
             }).then(res => res.data).then(res => {
                 console.log(res);
@@ -256,7 +256,7 @@ export default {
     doSave() {
             this.$axios.post(this.$httpUrl+'/user', this.form,
                 {withCredentials: true, headers:{
-                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 },}).then(res=>res.data).then(res=>{
                 console.log(res)
                 if(res.code==2040){
@@ -277,7 +277,7 @@ export default {
     doMod() {
             this.$axios.put(this.$httpUrl+'/user', this.form,{
                 withCredentials: true, headers:{
-                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
                 },
             }).then(res=>res.data).then(res=>{
                 console.log(res)

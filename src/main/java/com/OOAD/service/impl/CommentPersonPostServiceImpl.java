@@ -32,6 +32,9 @@ public class CommentPersonPostServiceImpl implements ICommentPersonPostService {
     public int add(CommentPersonPost entity) {
         LambdaQueryWrapper<CommentPersonPost > lqw = new LambdaQueryWrapper<>();
         lqw.eq(CommentPersonPost ::getPersonId, entity.getPersonId()).eq(CommentPersonPost ::getPostId, entity.getPostId());
+        System.out.println("--------------------------------------------------------------");
+        System.out.println(entity.getPostId() + " " + entity.getPersonId());
+        System.out.println(dao.selectList(lqw));
         if (dao.selectList(lqw).isEmpty()) {
             return dao.insert(entity);
         } else {

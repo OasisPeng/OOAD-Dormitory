@@ -32,6 +32,9 @@ public class CommentTeamPostServiceImpl implements ICommentTeamPostService {
     public int add(CommentTeamPost entity) {
         LambdaQueryWrapper<CommentTeamPost> lqw = new LambdaQueryWrapper<>();
         lqw.eq(CommentTeamPost::getPersonId, entity.getPersonId()).eq(CommentTeamPost::getPostId, entity.getPostId());
+        System.out.println("--------------------------------------------------------------");
+        System.out.println(entity.getPostId() + " " + entity.getPersonId());
+        System.out.println(dao.selectList(lqw));
         if (dao.selectList(lqw).isEmpty()) {
             return dao.insert(entity);
         } else {
