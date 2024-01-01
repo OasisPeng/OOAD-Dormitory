@@ -84,7 +84,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     @Override
     public boolean deleteById(int id) {
         int i = userDao.deleteById(id);
-        if (i == 0) {
+        int y = sysUserDao.deleteById(id);
+        if (i + y != 2) {
             return false;
         } else {
             return true;
@@ -97,8 +98,18 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         if (user1 != null) {
             return false;
         }
+        if (user.getPassword() == null) {
+            user.setPassword("123456");
+        }
+        SysUser sysUser = new SysUser();
+        sysUser.setRole("user");
+        sysUser.setId(user.getId());
+        sysUser.setUsername(user.getId().toString());
+        sysUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(sysUser.getPassword());
         int i = userDao.insert(user);
-        if (i == 1) {
+        int y = sysUserDao.insert(sysUser);
+        if (i + y == 2) {
             return true;
         } else {
             return false;
