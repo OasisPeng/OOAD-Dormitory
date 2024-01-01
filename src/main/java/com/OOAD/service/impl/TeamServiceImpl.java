@@ -95,6 +95,7 @@ public class TeamServiceImpl implements ITeamService{
                     LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
                     updateWrapper.eq(User::getId, users.get(i).getId());
                     updateWrapper.set(User::getTeamId,null);
+                    updateWrapper.set(User::getDormId,null);
                     int x = userDao.update(users.get(i), updateWrapper);
                     int y = teamDao.deleteById(teamID);
                 }
@@ -106,6 +107,7 @@ public class TeamServiceImpl implements ITeamService{
             LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
             updateWrapper.eq(User::getId,userID);
             updateWrapper.set(User::getTeamId,null);
+            updateWrapper.set(User::getDormId,null);
             int j = userDao.update(user, updateWrapper);
             int i = teamDao.updateById(nt);
             if (nt.getCurrent() == 0) {
