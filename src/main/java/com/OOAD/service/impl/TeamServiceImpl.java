@@ -92,7 +92,7 @@ public class TeamServiceImpl implements ITeamService{
                     LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
                     updateWrapper.eq(User::getId, users.get(i).getId());
                     updateWrapper.set(User::getTeamId,null);
-                    int x = userDao.update(user, updateWrapper);
+                    int x = userDao.update(users.get(i), updateWrapper);
                     int y = teamDao.deleteById(teamID);
                 }
             } else {
