@@ -112,7 +112,34 @@ export default {
         console.error("The response data is not an array.");
       }
     });
+    this.$axios.get(this.$httpUrl+'/openTime/5',{
+      headers:{
+        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+      },
+      withCredentials: true // 允许跨域请求中的Cookie
+    }).then(res=>{
+      // 假设 res.data 是您从后端获得的数据
+      const data = res.data.data;
+      console.log(res)
+      console.log(data)
+      // 检查 data 是否为数组
+      if (res.data.code===2010) {
+        // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
+        this.guer.guer_opentime=data.openTime
+        this.guer.guer_endtime=data.closeTime
+        // 将转换后的数据添加到 Room 数组
 
+        console.log(this.guer)
+        this.gu= 2
+        console.log(this.gu)
+        // 打印转换后的数据
+
+      } else {
+        this.gu= 1
+        console.log(this.gu)
+        console.error("The response data is not an array.");
+      }
+    });
 
   },
   filters: {
@@ -132,7 +159,7 @@ export default {
       yanjiu:"",
       bo:"",
       houbu:"",
-
+      gu: " ",
       benkesheng:{
         benke_opentime:null,
         benke_endtime:null,
@@ -150,12 +177,15 @@ export default {
         houbu_opentime:null,
         houbu_endtime:null,
       },
-
+      guer:{
+        guer_opentime:null,
+        guer_endtime:null,
+      },
       houbu_edit: false,
       benke_edit: false,
       yanjiu_edit:false,
       boshi_edit:false,
-
+      guer_edit: false,
 
       rules: {
         // benke_opentime: [
@@ -243,6 +273,9 @@ export default {
     },
     add2(){
       this.houbu_edit=true
+    },
+    add3(){
+      this.guer_edit=true
     },
     AddRoom(FormName) {
       this.$refs[FormName].validate((valid) => {
@@ -418,6 +451,49 @@ export default {
         }
       });
     },
+    AddRoom5(FormName) {
+      this.$refs[FormName].validate((valid) => {
+        if (valid) {
+          this.guer_edit = false;
+
+          if (this.gu===2){
+            this.$axios.put(this.$httpUrl+'/openTime',{
+              id: 5 ,
+              openTime: this.guer.guer_opentime,
+              closeTime: this.guer.guer_endtime,
+            },{
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+              },
+              withCredentials: true // 允许跨域请求中的Cookie
+            }).then(res=>{
+              console.log(res.data)
+            })
+          }
+          else  if (this.gu===1){
+            this.$axios.post(this.$httpUrl+'/openTime',{
+              id: 5 ,
+              openTime: this.guer.guer_opentime,
+              closeTime: this.guer.guer_endtime,
+            },{
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+              },
+              withCredentials: true // 允许跨域请求中的Cookie
+            }).then(res=>{
+              console.log(res.data)
+            })
+            this.$message.success( 'Time set successfully');
+          }else {
+            console.log("wrong")
+          }
+
+        } else {
+          // 表单验证不通过，不执行提交操作，显示错误提示
+          this.$message.error('表单验证不通过，请检查输入');
+        }
+      });
+    },
     cancel(){
       this.benke_edit = false;
       this.$axios.get(this.$httpUrl+'/openTime/1',{
@@ -560,6 +636,42 @@ export default {
 
       // 清空表单
 
+    },
+    cancel5(){
+      this.guer_edit = false;
+      this.$axios.get(this.$httpUrl+'/openTime/5',{
+        headers:{
+          'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('admin')).token
+        },
+        withCredentials: true // 允许跨域请求中的Cookie
+      }).then(res=>{
+        // 假设 res.data 是您从后端获得的数据
+        const data = res.data.data;
+        console.log(res)
+        console.log(data)
+        // 检查 data 是否为数组
+        if (res.data.code===2010) {
+          // 使用 Array.map 将每个符合条件的房间的数据转换为 RoomForm 格式
+          this.guer.guer_opentime=data.openTime
+          this.guer.guer_endtime=data.closeTime
+          // 将转换后的数据添加到 Room 数组
+
+          this.gu= 2
+
+          // 打印转换后的数据
+
+        } else {
+          this.gu= 1
+          this.guer.guer_opentime=null
+          this.guer.guer_endtime=null
+          console.log(this.houbu)
+          console.error("The response data is not an array.");
+        }
+      });
+      this.$message.success('Cancel  operation');
+
+      // 清空表单
+
     }
   }
 
@@ -575,6 +687,7 @@ export default {
       <el-button type="success" @click="resetParam">设置研究女生时间</el-button>
       <el-button type="primary" style="margin-left: 5px" @click="add">设置博士男时间</el-button>
       <el-button type="success" style="margin-left: 5px" @click="add2">设置博士女生时间</el-button>
+      <el-button type="primary" style="margin-left: 5px" @click="add3">设置候补生时间</el-button>
     </div>
     <el-descriptions  :column="3" border>
       <el-descriptions-item label="学生类别" style=" background: #dcf3d8" >研究男生</el-descriptions-item>
@@ -593,6 +706,10 @@ export default {
       <el-descriptions-item label="学生类别" style=" background: #dcf3d8" >博士女生</el-descriptions-item>
       <el-descriptions-item label="开始时间">{{ houbusheng.houbu_opentime | formatDate }} </el-descriptions-item>
       <el-descriptions-item label="结束时间">{{ houbusheng.houbu_endtime | formatDate }} </el-descriptions-item>
+
+      <el-descriptions-item label="学生类别" style=" background: #dcf3d8" >候补生</el-descriptions-item>
+      <el-descriptions-item label="开始时间">{{ guer.guer_opentime | formatDate }} </el-descriptions-item>
+      <el-descriptions-item label="结束时间">{{ guer.guer_endtime | formatDate }} </el-descriptions-item>
     </el-descriptions>
 
     <el-dialog
@@ -773,6 +890,52 @@ export default {
 
       </el-form>
     </el-dialog>
+
+    <el-dialog
+        :visible.sync="guer_edit"
+        title="Undergraduate Time"
+        width="600px"
+        center
+    >
+      <el-form
+          ref="Room-name"
+          :model="guer"
+          :rules="rules"
+          label-width="auto"
+          label-position="right"
+          size="default"
+          style="font-size: 20px;"
+      >
+        <el-form-item label="OpenTime" prop="guer_opentime">
+          <el-date-picker
+              type="datetime"
+              v-model="guer.guer_opentime"
+              label="Pick a time"
+              placeholder="Pick a time"
+              style="width: 100%"
+          />
+        </el-form-item>
+
+        <el-form-item label="EndTime" prop="guer_endtime">
+          <el-date-picker
+              type="datetime"
+              v-model="guer.guer_endtime"
+              label="Pick a time"
+              placeholder="Pick a time"
+              style="width: 100%"
+          />
+        </el-form-item>
+        <el-form-item>
+          <div class="button-group2">
+            <el-button type="primary" @click="AddRoom5('Room-name')" class="submit-button">Submit</el-button>
+            <el-button @click="cancel5('Room-name')" class="cancel-button">Cancel</el-button>
+          </div>
+        </el-form-item>
+
+
+      </el-form>
+    </el-dialog>
+
   </div>
 </template>
 

@@ -239,14 +239,15 @@ export default {
 
                     this.$router.push({ name:'index' });
                 } else {
-
-
+                  this.$message.warning(res.data.msg);
+                  this.$router.push({ name:'index' });
                     // 登录失败，可以显示错误消息
                 }
             })
         } else {
           this.$message.warning(res.data.msg);
           console.log(res.data.msg);
+          this.out()
         }
       });
     },
