@@ -281,6 +281,7 @@ export default {
                 if (response.data.code === 2030) {
                     console.log('删除成功');
                     console.log(response.data)
+                  // await this.$router.push('/OtherRoommates')
                 } else {
                     console.error('删除失败，请重试');
                 }

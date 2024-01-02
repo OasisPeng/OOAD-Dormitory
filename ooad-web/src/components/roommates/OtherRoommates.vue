@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button @click="clearFilter">清除所有过滤器</el-button>
+    <el-button @click="getAllTeamsavailable">筛选未满组队</el-button>
 
     <el-table
         :data="allTeams"
@@ -23,18 +23,20 @@
       <el-table-column
           prop="current"
           label="当前人数"
-          width="180">
+          width="180"
+          sortable>
       </el-table-column>
       <el-table-column
           prop="capacity"
           label="容量"
-          width="180">
+          width="180"
+          sortable>
       </el-table-column>
 
       <el-table-column label="操作" >
 
         <template slot-scope="scope">
-          <el-button type="primary" @click="apply(scope.row)">申请加入</el-button>
+          <el-button type="text" @click="apply(scope.row)">申请加入</el-button>
         </template>
 
       </el-table-column>
@@ -42,15 +44,15 @@
 
     </el-table>
 
-    <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="pageSize"
-        :total="totalTeams"
-        layout="total, sizes, prev, pager, next, jumper"
-    ></el-pagination>
+<!--    <el-pagination-->
+<!--        @size-change="handleSizeChange"-->
+<!--        @current-change="handleCurrentChange"-->
+<!--        :current-page="currentPage"-->
+<!--        :page-sizes="[10, 20, 30, 40]"-->
+<!--        :page-size="pageSize"-->
+<!--        :total="totalTeams"-->
+<!--        layout="total, sizes, prev, pager, next, jumper"-->
+<!--    ></el-pagination>-->
 
 
     <el-button type="primary" @click="showInputDialog">创建组队</el-button>
@@ -87,12 +89,15 @@ export default {
       capacity: 3,
       dialogVisible : false,
       input:null,
-      inputname:null
+      inputname:null,
+      userData:null
 
     };
   },
   created() {
-    this.user = JSON.parse(sessionStorage.getItem('CurUser'));
+    this.user = JSON.parse(sessionStorage.getItem('CurUser'))
+    this.userData = JSON.parse(sessionStorage.getItem('UserData'))
+
     this.getAllTeams();
     // this.userId = this.user.id;
   },
@@ -150,6 +155,104 @@ export default {
       }
       catch (error){console.error('验证出错', error);
       }
+
+
+    },
+    // getTeamMembers() {  //通过队伍id获得成员信息
+    //   // console.log('getTeamMembers调用：' + this.curTeamId)
+    //   this.$axios.get(this.$httpUrl+'/users',
+    //       {
+    //         withCredentials: true,
+    //         headers:{
+    //           'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+    //         }}
+    //   ).then(res=>{
+    //     if (res.data.code===2010) {
+    //       // 过滤队友
+    //       console.log(res.data.data)
+    //       this.teamMembers = res.data.data.filter(member => member.teamId === this.curTeamId);
+    //
+    //       console.log("组队成员信息：")
+    //       console.log('curTeamId: ' + String(this.curTeamId) )
+    //       console.log(this.teamMembers)
+    //     } else {
+    //       console.log(res.data.msg)
+    //     }
+    //   })
+    // },
+    async getAllTeamsAlt(){
+      try {
+        const resopnse = await axios.get(this.$httpUrl + '/teams/getUnFull/' + this.user.sex,{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        if (resopnse.data.code == 2010){
+          this.allTeams = resopnse.data.data;
+          console.log('查询全部组队成功')
+          console.log(this.allTeams)
+        }
+        else
+        if (resopnse.data.code == 2011){
+          console.error('查询全部组队失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
+    },
+    async checkSex(targetId){
+      try {
+        console.log('target: ' + targetId)
+
+        const resopnse = await axios.get(this.$httpUrl + '/user/' + targetId,{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        console.log('checking sex: ' + resopnse.data)
+        if (resopnse.data.code == 2010){
+          console.log('target sex:')
+          console.log(resopnse.data.data.sex + this.userData.sex)
+
+          if (resopnse.data.data.sex == this.userData.sex)
+          {console.log('true')
+            return true}
+          else
+          {console.log('false')
+            return false}
+        }
+        else
+        if (resopnse.data.code == 2011){
+          console.error('查询全部组队失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
+    },
+
+
+    async getAllTeamsavailable(){
+      try {
+        const resopnse = await axios.get(this.$httpUrl + '/teams',{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }
+        });
+        if (resopnse.data.code == 2010){
+          this.allTeams = resopnse.data.data.filter(member => ((member.capacity - member.current > 0) && this.checkSex(member.headId)));
+          console.log('筛选全部组队成功')
+          console.log(this.allTeams)
+        }
+        else
+        if (resopnse.data.code == 2011){
+          console.error('筛选全部组队失败，请重试')
+        }
+      }
+      catch (error){console.error('验证出错', error);
+      }
     },
 
     async createTeam(){
@@ -166,6 +269,7 @@ export default {
         });
         if (resopnse.code == 2040){
           console.log('成功添加寝室')
+          await this.$router.push('/MyRoommates')
         }
         else if (resopnse.code == 2041){
           console.error('增加失败，请重试')
