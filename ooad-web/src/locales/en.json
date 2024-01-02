@@ -49,5 +49,13 @@
 
   "返回首页": "Back to Home",
   "欢迎来到消息中心": "Welcome to the Message Center",
-  "切换语言": "Switch Language"
+  "切换语言": "Switch Language",
+
+  "提交宿舍": "Submit Dormitory",
+  "抢宿舍": "Grab Dormitory",
+  "候补宿舍": "Waitlist Dormitory",
+
+  "由队长提交心仪的宿舍，可以从收藏中选择，组队信息在抢宿舍阶段不可变更": "The team leader submits the desired dormitory, which can be selected from the favorites. The team information cannot be changed during the dormitory grabbing phase.",
+  "手速拼起来~": "Quick fingers~",
+  "抢宿舍阶段已结束，如果您还没有宿舍，您可以选择剩余的宿舍，但请先自己创建或加入一个人数未满的组队": "The dormitory grabbing phase has ended. If you still don't have a dormitory, you can choose from the remaining dormitories, but please create or join a team with less than full members first."
 }

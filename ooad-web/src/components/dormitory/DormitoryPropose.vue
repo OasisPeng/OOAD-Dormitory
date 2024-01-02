@@ -563,9 +563,9 @@ export default {
     <div>
         <div style="margin: 10px 30px 10px 150px; font-family: arial, sans-serif">
             <el-steps :active="active" finish-status="success" >
-                <el-step :title="submitTitle" description="由队长提交心仪的宿舍，可以从收藏中选择，组队信息在抢宿舍阶段不可变更"></el-step>
-                <el-step :title="grabTitle" description="手速拼起来~"></el-step>
-                <el-step :title="waitTitle" description="抢宿舍阶段已结束，如果您还没有宿舍，您可以选择剩余的宿舍，但请先自己创建或加入一个人数未满的组队"></el-step>
+                <el-step :title="submitTitle" :description="$t('由队长提交心仪的宿舍，可以从收藏中选择，组队信息在抢宿舍阶段不可变更')"></el-step>
+                <el-step :title="grabTitle" :description="$t('手速拼起来~')"></el-step>
+                <el-step :title="waitTitle" :description="$t('抢宿舍阶段已结束，如果您还没有宿舍，您可以选择剩余的宿舍，但请先自己创建或加入一个人数未满的组队')"></el-step>
             </el-steps>
         </div>
         <el-divider></el-divider>
