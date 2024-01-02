@@ -46,6 +46,7 @@ public class SecurityConfiguration {
     @Resource
     ISysUserService service;
     public static Map<String, String> tokenMap = new ConcurrentHashMap<>();
+    public static Map<String, String> ipTokenMap = new ConcurrentHashMap<>();
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(conf -> conf
@@ -105,10 +106,16 @@ public class SecurityConfiguration {
             User user = (User) authentication.getPrincipal();
         SysUser sysUser = service.findByName(user.getUsername());
         String token = utils.createJwt(user, sysUser.getId(), sysUser.getUsername());
+           String ip = request.getRemoteAddr();
             if (tokenMap.containsKey(user.getUsername())) {
                 utils.invalidJwt(tokenMap.get(user.getUsername()));
             } else {
                 tokenMap.put(user.getUsername(), "Bearer "+token);
+            }
+            if (ipTokenMap.containsKey(ip)) {
+                utils.invalidJwt(ipTokenMap.get(ip));
+            } else {
+                ipTokenMap.put(ip, "Bearer "+token);
             }
         AuthorizeVO vo = new AuthorizeVO();
         vo.setExpire(utils.expireTime());
