@@ -383,8 +383,15 @@ export default {
 </script>
 
 <style>
-.el-descriptions{
+el-descriptions{
     border-radius: 30px;
     margin-bottom: 100px;
+}
+div {
+  margin-bottom: 10px; /* 例如，添加10像素的下间距 */
+}
+
+span {
+  margin-top: 10px; /* 例如，添加10像素的上间距 */
 }
 </style>

@@ -209,7 +209,8 @@ export default {
       const formData = new FormData();
       formData.append('username', this.loginUsername);
       formData.append('password', this.loginPassword);
-console.log(formData)
+      console.log(formData)
+
       this.$axios.post(this.$httpUrl+'/auth/login', formData, {
         withCredentials: true,
         headers: {
@@ -256,6 +257,7 @@ console.log(formData)
       const formData = new FormData();
       formData.append('username', this.loginAdminname);
       formData.append('password', this.loginAdminPassword);
+      console.log('user login:' + formData)
 
       this.$axios.post(this.$httpUrl+'/auth/login', formData, {
         withCredentials: true,

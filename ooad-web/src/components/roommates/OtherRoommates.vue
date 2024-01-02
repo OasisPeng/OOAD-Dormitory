@@ -60,6 +60,8 @@
         :visible.sync="dialogVisible"
         width="30%">
       <el-input v-model="input" placeholder="组队人数"></el-input>
+      <el-input v-model="inputname" placeholder="队名"></el-input>
+
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -85,6 +87,7 @@ export default {
       capacity: 3,
       dialogVisible : false,
       input:null,
+      inputname:null
 
     };
   },
@@ -152,6 +155,7 @@ export default {
     async createTeam(){
       try {
         const resopnse = await axios.post(this.$httpUrl + '/team',{
+          name:this.inputname,
           headId: this.user.id,
           capacity: this.input
         },{
@@ -220,3 +224,16 @@ export default {
   },
 };
 </script>
+<style>
+el-descriptions{
+  border-radius: 30px;
+  margin-bottom: 100px;
+}
+div {
+  margin-bottom: 10px; /* 例如，添加10像素的下间距 */
+}
+
+span {
+  margin-top: 10px; /* 例如，添加10像素的上间距 */
+}
+</style>
