@@ -23,4 +23,5 @@ public interface ITeamService {
     public int deleteUser(int teamID, int userID);
     public int creat(Team team);
     public int change(int personId1, int personId2);
+    public List<Team> getAllUnFullTeam(String sex);
 }

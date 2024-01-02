@@ -1,16 +1,22 @@
 package com.OOAD.service.impl;
 
+import com.OOAD.dao.DormDao;
 import com.OOAD.dao.TeamDao;
 import com.OOAD.dao.UserDao;
+import com.OOAD.domain.Dorm;
 import com.OOAD.domain.Team;
 import com.OOAD.domain.User;
 import com.OOAD.service.ITeamService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -27,7 +33,8 @@ public class TeamServiceImpl implements ITeamService{
     TeamDao teamDao;
     @Autowired
     UserDao userDao;
-
+    @Autowired
+    DormDao dormDao;
     @Override
     public int Update(Team team) {
         return teamDao.updateById(team);
@@ -169,5 +176,24 @@ public class TeamServiceImpl implements ITeamService{
         } catch (Exception e) {
             return -2;
         }
+    }
+
+    @Override
+    public List<Team> getAllUnFullTeam(String sex){
+        List<Team> all = teamDao.selectList(null);
+        List<Team> result = new ArrayList<>();
+        for (int i = 0; i < all.size(); i++) {
+            Team team = all.get(i);
+            Integer headId = team.getHeadId();
+            User user = userDao.selectById(headId);
+            String trueSex = user.getSex();
+            if (team.getCurrent() < team.getCapacity() && Objects.equals(sex, trueSex) && all.get(i).getDorm() != null) {
+                Dorm dorm = dormDao.selectById(team.getDorm());
+                if (dorm.getSize() > team.getCurrent()) {
+                    result.add(team);
+                }
+            }
+        }
+        return result;
     }
 }

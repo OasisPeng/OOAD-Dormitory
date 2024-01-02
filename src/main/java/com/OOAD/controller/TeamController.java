@@ -3,9 +3,12 @@ package com.OOAD.controller;
 
 import com.OOAD.domain.Team;
 import com.OOAD.service.impl.TeamServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -118,6 +121,21 @@ public class TeamController {
             }
         }
         return result;
+    }
+    @GetMapping("/getUnFull/{sex}")
+    public Result GetUnFull(@PathVariable String sex) {
+        List<Team> list = teamService.getAllUnFullTeam(sex);
+        Result result = new Result();
+        if (list == null || list.isEmpty()) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败或查询为空，请重试");
+        } else {
+            result.setData(list);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+            return result;
     }
     @GetMapping("/submit")
     public Result submitDormById(@RequestParam int teamId, @RequestParam String dormName) {
