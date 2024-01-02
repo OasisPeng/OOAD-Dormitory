@@ -371,30 +371,79 @@ export default {
                 return "寝室申请已经结束";
             }
         },
-        wait(){
-            this.submit();
-            // 抢到了就更新team的dorm,user的dorm_id和
-            this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,null,
+        wait() {
+          // 判断所选信息是否为空
+          if (
+              this.selectedTeam === "" ||
+              this.selectedArea === "" ||
+              this.selectedBuilding === "" ||
+              this.selectedRoom === ""
+          ) {
+            this.$message({
+              type: "warning",
+              message: "请完善组队和寝室信息",
+            });
+            return; // 中断操作，不继续执行下面的逻辑
+          }
+          //退出确认
+          this.$confirm('您确定要所选组队和寝室信息吗？','提示',{
+            confirmButtonText:'确定',
+            type:'warning',
+            center:true
+          }).then(()=>{
+            this.submittedDormitory = this.selectedArea+'-'+this.selectedBuilding+'-'+this.selectedRoom;
+            this.submittedTeam = this.selectedTeam;
+            console.log(this.submittedDormitory)
+            console.log(this.submittedTeam.id)
+            this.$axios.get(this.$httpUrl+'/team/submit?teamId='+this.submittedTeam.id+'&dormName='+this.submittedDormitory,
                 {
-                    withCredentials: true,
-                    headers:{
-                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
-                    }}
+                  withCredentials: true,
+                  headers:{
+                    'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                  }}
             ).then(res=>{
-                if(res && res.data.code === 2040 ){
+              if (res.data.code===2020) {
+                this.$message({
+                  type:'success',
+                  message:'提交成功'
+                })
+                // 抢到了就更新team的dorm,user的dorm_id和
+                this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,null,
+                    {
+                      withCredentials: true,
+                      headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                      }}
+                ).then(res=>{
+                  if(res && res.data.code === 2040 ){
                     this.$message({
-                        type: 'success',
-                        message: '已抢到该宿舍'
+                      type: 'success',
+                      message: '已抢到该宿舍'
                     })
                     this.successDorm = this.submittedDormitory
                     this.active = 3
-                }else {
+                  }else {
                     this.$message({
-                        type: 'info',
-                        message: '抢宿舍失败，请重试或更换其他宿舍'
+                      type: 'info',
+                      message: '抢宿舍失败，请重试或更换其他宿舍'
                     })
-                }
+                  }
+                })
+              } else {
+                console.log(res.data.msg)
+                // 登录失败，可以显示错误消息
+              }
+
             })
+            // this.$router.push('/');//路由
+            // sessionStorage.clear()
+          })
+              .catch(()=>{
+                this.$message({
+                  type:'info',
+                  message:'已取消提交'
+                })
+              })
         }
     },
     created() {
