@@ -3,6 +3,25 @@ export default {
     name:"DormitoryPropose",
     methods:{
         loadDateData() {
+            //候补时间
+            this.$axios
+                .get(this.$httpUrl+'/openTime/'+ 5,{
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}) //
+                .then( (res => {
+                    const data = res.data.data; // 假设后端返回的数据包含日期信息
+                    if (res.data.code === 2010) {
+                        this.waitStartDate = new Date(data.openTime);
+                        this.waitEndDate = new Date(data.closeTime);
+                    }else {
+                        // alert('获取数据失败')
+                    }
+                }))
+                .catch((error) => {
+                    console.error('Failed to load date data:', error);
+                });
             // 发起后端请求以加载日期数据
             this.$axios
                 .get(this.$httpUrl+'/openTime/'+ this.studentType,{
@@ -28,8 +47,11 @@ export default {
                             this.active = 0; // 在提交宿舍日期范围内
                         } else if (currentDate >= this.grabStartDate && currentDate <= this.grabEndDate && this.successDorm === '') {
                             this.active = 1; // 在抢宿舍日期范围内
-                        } else {
-                            this.active = 2; // 其他情况
+                        } else if( currentDate >= this.waitStartDate && currentDate <= this.waitEndDate  && this.successDorm === '') {
+                            this.active = 2; //在候补宿舍日期内
+                        }
+                        else {
+                            this.active = 3; // 其他情况
                             console.log(1234)
                             console.log((this.successDorm))
                         }
@@ -153,6 +175,16 @@ export default {
                 })
         },
         grab(){
+            if (
+                this.submittedTeam === "" ||
+                this.submittedDormId === ""
+            ) {
+                this.$message({
+                    type: "warning",
+                    message: "未提供预选信息",
+                });
+                return; // 中断操作，不继续执行下面的逻辑
+            }
             // 抢、
             // 抢到了就更新team的dorm,user的dorm_id和
             this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,null,
@@ -168,7 +200,7 @@ export default {
                         message: '已抢到该宿舍'
                     })
                     this.successDorm = this.submittedDormitory
-                    this.active = 2
+                    this.active = 3
                 }else {
                     this.$message({
                         type: 'info',
@@ -233,7 +265,7 @@ export default {
                         this.submittedDormitory = team.submittedDorm;
                         this.successDorm = JSON.parse(sessionStorage.getItem('UserData')).dormId === null? '':this.submittedDormitory
                         if (this.successDorm !== ''){
-                            this.active = 2  // 如果已经有抢到的宿舍，直接跳转到第三个页面
+                            this.active = 3  // 如果已经有抢到的宿舍，直接跳转到第三个页面
                         }
                         this.getTeamHeadName();
                         this.getTeamMembers()
@@ -338,6 +370,31 @@ export default {
                 // 如果申请没有结束，可以返回其他描述
                 return "寝室申请已经结束";
             }
+        },
+        wait(){
+            this.submit();
+            // 抢到了就更新team的dorm,user的dorm_id和
+            this.$axios.post(this.$httpUrl + '/dorm/qiang/'+this.submittedTeam.id+'/'+this.submittedDormId,null,
+                {
+                    withCredentials: true,
+                    headers:{
+                        'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+                    }}
+            ).then(res=>{
+                if(res && res.data.code === 2040 ){
+                    this.$message({
+                        type: 'success',
+                        message: '已抢到该宿舍'
+                    })
+                    this.successDorm = this.submittedDormitory
+                    this.active = 3
+                }else {
+                    this.$message({
+                        type: 'info',
+                        message: '抢宿舍失败，请重试或更换其他宿舍'
+                    })
+                }
+            })
         }
     },
     created() {
@@ -380,6 +437,8 @@ export default {
             submitEndDate: new Date('2000/00/00 00:00:00'), // 提交宿舍结束日期
             grabStartDate: new Date('2000/00/00 00:00:00'), // 抢宿舍开始日期
             grabEndDate: new Date('2000/00/00 00:00:00'), // 抢宿舍结束日期
+            waitStartDate: new Date('2000/00/00 00:00:00'), // 候补宿舍开始日期
+            waitEndDate: new Date('2000/00/00 00:00:00'), // 候补宿舍结束日期,
             //选择寝室
             selectedArea: '',
             selectedBuilding: '',
@@ -432,7 +491,7 @@ export default {
 
                 })
             }
-        }
+        },
     },
     computed: {
         // 提交宿舍步骤的描述
@@ -442,6 +501,10 @@ export default {
         // 抢宿舍步骤的描述
         grabTitle() {
             return `抢宿舍 (${this.formatDateRange(this.grabStartDate, this.grabEndDate)})`;
+        },
+        //候补宿舍
+        waitTitle() {
+            return `候补宿舍 (${this.formatDateRange(this.waitStartDate, this.waitEndDate)})`;
         },
     },
 }
@@ -453,6 +516,7 @@ export default {
             <el-steps :active="active" finish-status="success" >
                 <el-step :title="submitTitle" description="由队长提交心仪的宿舍，可以从收藏中选择，组队信息在抢宿舍阶段不可变更"></el-step>
                 <el-step :title="grabTitle" description="手速拼起来~"></el-step>
+                <el-step :title="waitTitle" description="抢宿舍阶段已结束，如果您还没有宿舍，您可以选择剩余的宿舍，但请先自己创建或加入一个人数未满的组队"></el-step>
             </el-steps>
         </div>
         <el-divider></el-divider>
@@ -475,7 +539,7 @@ export default {
                             </el-radio-group>
                         </div>
                         <div style="margin-top: 23px">
-                            选择您的组队：
+                            提交您的组队：
                             <el-select v-model="selectedTeam" clearable placeholder="请选择">
                                 <el-option
                                         v-for="item in optionsTeam"
@@ -607,6 +671,69 @@ export default {
             </div>
 
             <div v-if="active=== 2">
+                <div style="display: flex; flex-direction: column; justify-content:center; align-items: flex-start; height: 500px; margin-left: 300px; font-family: arial, sans-serif;font-size: 15px">
+                <el-card class="box-card">
+                    <div style="margin-top: 20px">
+                        <el-row>
+                            <div style="margin-top: 10px;">
+                                <span>如果您想加入未满的组队并入住他们的寝室，请去"我的组队"页面</span><br>
+                                <div style="margin-top: 23px">
+                                    <span>如果您是自己创建组队，请先去"我的组队"页面，然后在该页面执行以下操作</span><br><br>
+                                    1.提交组队：
+                                    <el-select v-model="selectedTeam" clearable placeholder="请选择">
+                                        <el-option
+                                            v-for="item in optionsTeam"
+                                            :key="item.label"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                        </el-row>
+                        <el-row>
+                            <div style="margin-top: 10px;">
+                                <span>2.创建组队并选择宿舍：</span>
+                                    <!-- 点击按钮触发对话框显示 -->
+                                    <el-button type="text" class="button" style="margin-left: 7px; font-size: 16px" @click="dialogVisible = true">选择候补寝室</el-button>
+
+                                    <!-- 对话框组件 -->
+                                    <el-dialog :visible.sync="dialogVisible" title="更换寝室" width="32%" @close="dialogVisible = false">
+                                        <!-- 对话框内容 -->
+                                        <!-- 这里可以放入更换寝室的相关内容 -->
+                                        <!-- 区域选择 -->
+                                        <el-select v-model="selectedArea" placeholder="请选择区域" @change="handleAreaChange" style="width: 120px">
+                                            <el-option v-for="area in areaOptions" :key="area.value" :label="area.label" :value="area.value"></el-option>
+                                        </el-select>
+                                        -
+                                        <!-- 楼栋选择 -->
+                                        <el-select v-model="selectedBuilding" placeholder="请选择楼栋" @change="handleBuildingChange" :disabled="!selectedArea" style="width: 120px">
+                                            <el-option v-for="building in buildingOptions" :key="building.value" :label="building.label" :value="building.value"></el-option>
+                                        </el-select>
+                                        -
+                                        <!-- 房间号选择 -->
+                                        <el-select v-model="selectedRoom" placeholder="请选择房间号" :disabled="!selectedBuilding" style="width: 125px">
+                                            <el-option v-for="room in roomOptions" :key="room.value" :label="room.label" :value="room.value"></el-option>
+                                        </el-select>
+                                        <!-- 对话框底部按钮 -->
+                                        <div style="margin-top: 20px">
+                                            <span class="dialog-footer">
+                                                <el-button @click="dialogVisible = false">取消</el-button>
+                                                <el-button type="primary" @click="resubmit">确定</el-button>
+                                            </span>
+                                        </div>
+                                    </el-dialog>
+                                    <!--                                    <el-button type="text" class="button" style="margin-left: 7px" @click="">选择候补寝室</el-button>-->
+                            </div>
+                        </el-row>
+                    </div>
+                    <div style="margin-top: 20px; margin-left: 270px">
+                        <el-button slot="reference" type="success" style="font-size: 15px" @click="wait">提交</el-button>
+                    </div>
+                </el-card>
+                </div>
+            </div>
+            <div v-if="active=== 3">
                 <!--                <span>寝室申请已经结束</span>-->
                 <el-empty :description="getDescription()"></el-empty>
             </div>
