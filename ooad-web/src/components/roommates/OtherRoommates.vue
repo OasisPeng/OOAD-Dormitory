@@ -90,7 +90,10 @@ export default {
       dialogVisible : false,
       input:null,
       inputname:null,
-      userData:null
+      userData:null,
+      waitStartDate:null,
+      waitEndDate:null,
+      curTime:null
 
     };
   },
@@ -98,8 +101,37 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('CurUser'))
     this.userData = JSON.parse(sessionStorage.getItem('UserData'))
 
-    this.getAllTeams();
+
     // this.userId = this.user.id;
+
+    this.$axios
+        .get(this.$httpUrl+'/openTime/'+ 5,{
+          withCredentials: true,
+          headers:{
+            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+          }}) //
+        .then( (res => {
+          const data = res.data.data; // 假设后端返回的数据包含日期信息
+          if (res.data.code === 2010) {
+            this.waitStartDate = new Date(data.waitOpenTime);
+            this.waitEndDate = new Date(data.waitCloseTime);
+          }else {
+            // alert('获取数据失败')
+          }
+        }))
+        .catch((error) => {
+          console.error('Failed to load date data:', error);
+        })
+
+    this.curTime = new Date().getTime()
+    if (this.curTime < this.waitStartDate){
+      this.getAllTeams();
+    }
+    else {
+      this.getAllTeamsAlt()
+    }
+
+
   },
   mounted() {
 
@@ -130,10 +162,10 @@ export default {
       }
       catch (error){console.error('验证出错', error);
       }
-
-
-
     },
+      //候补时间
+
+
 
     async getAllTeams(){
       try {
@@ -155,39 +187,18 @@ export default {
       }
       catch (error){console.error('验证出错', error);
       }
-
-
     },
-    // getTeamMembers() {  //通过队伍id获得成员信息
-    //   // console.log('getTeamMembers调用：' + this.curTeamId)
-    //   this.$axios.get(this.$httpUrl+'/users',
-    //       {
-    //         withCredentials: true,
-    //         headers:{
-    //           'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
-    //         }}
-    //   ).then(res=>{
-    //     if (res.data.code===2010) {
-    //       // 过滤队友
-    //       console.log(res.data.data)
-    //       this.teamMembers = res.data.data.filter(member => member.teamId === this.curTeamId);
-    //
-    //       console.log("组队成员信息：")
-    //       console.log('curTeamId: ' + String(this.curTeamId) )
-    //       console.log(this.teamMembers)
-    //     } else {
-    //       console.log(res.data.msg)
-    //     }
-    //   })
-    // },
     async getAllTeamsAlt(){
       try {
-        const resopnse = await axios.get(this.$httpUrl + '/teams/getUnFull/' + this.user.sex,{
+        let path = this.$httpUrl + '/team/getUnFull/' + this.userData.sex
+        console.log(path)
+        const resopnse = await axios.get(path,{
           withCredentials: true,
           headers:{
             'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
           }
         });
+
         if (resopnse.data.code == 2010){
           this.allTeams = resopnse.data.data;
           console.log('查询全部组队成功')
@@ -234,25 +245,49 @@ export default {
 
 
     async getAllTeamsavailable(){
-      try {
-        const resopnse = await axios.get(this.$httpUrl + '/teams',{
-          withCredentials: true,
-          headers:{
-            'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+      // 还未开始候补
+      if (this.curTime < this.waitStartDate) {
+        try {
+          const resopnse = await axios.get(this.$httpUrl + '/teams', {
+            withCredentials: true,
+            headers: {
+              'Authorization': "Bearer" + " " + JSON.parse(sessionStorage.getItem('CurUser')).token
+            }
+          });
+          if (resopnse.data.code == 2010) {
+            this.allTeams = resopnse.data.data.filter(member => ((member.capacity - member.current > 0) && this.checkSex(member.headId)));
+            console.log('筛选全部组队成功')
+            console.log(this.allTeams)
+          } else if (resopnse.data.code == 2011) {
+            console.error('筛选全部组队失败，请重试')
           }
-        });
-        if (resopnse.data.code == 2010){
-          this.allTeams = resopnse.data.data.filter(member => ((member.capacity - member.current > 0) && this.checkSex(member.headId)));
-          console.log('筛选全部组队成功')
-          console.log(this.allTeams)
-        }
-        else
-        if (resopnse.data.code == 2011){
-          console.error('筛选全部组队失败，请重试')
+        } catch (error) {
+          console.error('验证出错', error);
         }
       }
-      catch (error){console.error('验证出错', error);
+    // 候补时间
+      else {
+        if (this.curTime < this.waitStartDate) {
+          try {
+            const resopnse = await axios.get(this.$httpUrl + '/team/getUnFull/' +  this.userData.sex,{
+              withCredentials: true,
+              headers:{
+                'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
+              }
+            });
+            if (resopnse.data.code == 2010) {
+              this.allTeams = resopnse.data.data.filter(member => ((member.capacity - member.current > 0) && this.checkSex(member.headId)));
+              console.log('筛选全部组队成功')
+              console.log(this.allTeams)
+            } else if (resopnse.data.code == 2011) {
+              console.error('筛选全部组队失败，请重试')
+            }
+          } catch (error) {
+            console.error('验证出错', error);
+          }
+        }
       }
+
     },
 
     async createTeam(){
