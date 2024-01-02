@@ -107,16 +107,24 @@ public class SecurityConfiguration {
         SysUser sysUser = service.findByName(user.getUsername());
         String token = utils.createJwt(user, sysUser.getId(), sysUser.getUsername());
            String ip = request.getRemoteAddr();
+            System.out.println("ip:  "+ip);
+            System.out.println("username: "+ user.getUsername());
+            System.out.println(tokenMap.containsKey(user.getUsername()));
+            System.out.println(ipTokenMap.containsKey(ip));
             if (tokenMap.containsKey(user.getUsername())) {
                 utils.invalidJwt(tokenMap.get(user.getUsername()));
+                tokenMap.put(ip, "Bearer "+token);
             } else {
                 tokenMap.put(user.getUsername(), "Bearer "+token);
             }
             if (ipTokenMap.containsKey(ip)) {
                 utils.invalidJwt(ipTokenMap.get(ip));
+                ipTokenMap.put(ip, "Bearer "+token);
             } else {
                 ipTokenMap.put(ip, "Bearer "+token);
             }
+            System.out.println(tokenMap);
+            System.out.println(ipTokenMap);
         AuthorizeVO vo = new AuthorizeVO();
         vo.setExpire(utils.expireTime());
         vo.setRole(sysUser.getRole());

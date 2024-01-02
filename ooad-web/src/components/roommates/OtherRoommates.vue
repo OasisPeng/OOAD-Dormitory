@@ -110,26 +110,33 @@ export default {
           headers:{
             'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
           }}) //
-        .then( (res => {
+        .then(
+            (res => {
+              this.curTime = new Date().getTime()
           const data = res.data.data; // 假设后端返回的数据包含日期信息
           if (res.data.code === 2010) {
-            this.waitStartDate = new Date(data.waitOpenTime);
-            this.waitEndDate = new Date(data.waitCloseTime);
+            this.waitStartDate = new Date(data.openTime);
+            this.waitEndDate = new Date(data.closeTime);
+            console.log('后部时间查询成功')
+            if (this.curTime < this.waitStartDate){
+              this.getAllTeams();
+            }
+            else {
+              this.getAllTeamsAlt()
+            }
+
           }else {
-            // alert('获取数据失败')
+            console.log('候补时间查询失败')
           }
         }))
         .catch((error) => {
           console.error('Failed to load date data:', error);
         })
 
-    this.curTime = new Date().getTime()
-    if (this.curTime < this.waitStartDate){
-      this.getAllTeams();
-    }
-    else {
-      this.getAllTeamsAlt()
-    }
+
+    console.log('curtima: ' + this.curTime)
+    console.log('startTime: ' + this.waitStartDate)
+
 
 
   },
