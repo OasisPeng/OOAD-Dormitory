@@ -34,6 +34,8 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class SecurityConfiguration {
@@ -43,6 +45,7 @@ public class SecurityConfiguration {
     JwtAuthorizeFilter jwtAuthorizeFilter;
     @Resource
     ISysUserService service;
+    public static Map<String, String> tokenMap = new ConcurrentHashMap<>();
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(conf -> conf
@@ -88,7 +91,8 @@ public class SecurityConfiguration {
                         })
                         .authenticationEntryPoint(this::onAuthenticationFailure))
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(conf -> conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(conf -> conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        )
                 .addFilterBefore(jwtAuthorizeFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -101,6 +105,11 @@ public class SecurityConfiguration {
             User user = (User) authentication.getPrincipal();
         SysUser sysUser = service.findByName(user.getUsername());
         String token = utils.createJwt(user, sysUser.getId(), sysUser.getUsername());
+            if (tokenMap.containsKey(user.getUsername())) {
+                utils.invalidJwt(tokenMap.get(user.getUsername()));
+            } else {
+                tokenMap.put(user.getUsername(), "Bearer "+token);
+            }
         AuthorizeVO vo = new AuthorizeVO();
         vo.setExpire(utils.expireTime());
         vo.setRole(sysUser.getRole());
