@@ -99,11 +99,9 @@ public class FavouriteDormController {
             result.setData("OK");
             result.setMsg("收藏成功");
         } else {
-            Dorm dorm = dormService.selectByID(favouriteDorm.getDormId());
-            dorm.setFavourite(dorm.getFavourite()+1);
             result.setCode(Code.INSERT_ERR);
             result.setData("Err");
-            result.setMsg("收藏失败，系统错误");
+            result.setMsg("收藏失败，你的组队可能已经收藏过该寝室");
         }
         return result;
     }
@@ -112,8 +110,6 @@ public class FavouriteDormController {
         Result result = new Result();
         int re = service.delete(favouriteDorm);
         if (re == 1) {
-            Dorm dorm = dormService.selectByID(favouriteDorm.getDormId());
-            dorm.setFavourite(dorm.getFavourite()-1);
             result.setCode(Code.DELETE_OK);
             result.setData("OK");
             result.setMsg("取消收藏成功");

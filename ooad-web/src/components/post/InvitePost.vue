@@ -32,7 +32,6 @@
     </el-card>
 
     <el-card class="tab">
-
       <el-table :data="tableData" style="width: 100%">
         <el-table-column type="selection" width="55">
         </el-table-column>

@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Transactional
 public interface ITeamService {
+    public List<Team> getSameSex(String sex);
     public int Update(Team team);
     public Team selectByID(int id);
     public List<Team> selectAll();

@@ -146,7 +146,7 @@ export default {
       if (this.$router.history.current.query.type === 1) {
 
         if(this.isFans){
-          this.$axios.delete(this.$httpUrl + `/favouriteTeamPost`,{
+          this.$axios.delete(this.$httpUrl + `/favouritePersonPost`,{
             data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
             headers:{
@@ -156,7 +156,7 @@ export default {
             this.isFans = !this.isFans
           })
         }else{
-          this.$axios.post(this.$httpUrl + `/favouriteTeamPost`,{
+          this.$axios.post(this.$httpUrl + `/favouritePersonPost`,{
             data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
             headers:{
@@ -183,7 +183,7 @@ export default {
           //   this.isFans = !this.isFans
           // })
 
-          this.$axios.delete(this.$httpUrl + `/favouritePersonPost`, {
+          this.$axios.delete(this.$httpUrl + `/favouriteTeamPost`, {
             data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
             headers:{
@@ -193,7 +193,7 @@ export default {
             this.isFans = !this.isFans
           })
         }else {
-          this.$axios.post(this.$httpUrl + `/favouritePersonPost`, data, {
+          this.$axios.post(this.$httpUrl + `/favouriteTeamPost`, data, {
             data:data,
             withCredentials: true, // 允许跨域请求中的Cookie
             headers:{

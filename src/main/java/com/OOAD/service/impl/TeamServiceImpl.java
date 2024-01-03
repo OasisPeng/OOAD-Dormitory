@@ -14,6 +14,7 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +36,21 @@ public class TeamServiceImpl implements ITeamService{
     UserDao userDao;
     @Autowired
     DormDao dormDao;
+
+    @Override
+    public List<Team> getSameSex(String sex) {
+        List<Team> teams = teamDao.selectList(null);
+        List<Team> re = new ArrayList<>();
+        for (int i = 0; i < teams.size(); i++) {
+            Integer headId = teams.get(i).getHeadId();
+            User user = userDao.selectById(headId);
+            if (Objects.equals(user.getSex(), sex) && teams.get(i).getCapacity() > teams.get(i).getCurrent()) {
+                re.add(teams.get(i));
+            }
+        }
+        return re;
+    }
+
     @Override
     public int Update(Team team) {
         return teamDao.updateById(team);

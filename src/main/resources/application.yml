@@ -2,12 +2,12 @@ server:
   port: 8090
 spring:
   cors:
-    allowed-origins: "http://localhost:8080"
+    allowed-origins: "http://119.23.104.193:8080"
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://203.195.66.67:3306/OOAD
-    username: hailong
+    url: jdbc:mysql://119.23.104.193:3306/OOAD
+    username: root
     password: 337845818
     hikari:
       maximum-pool-size: 1000
@@ -15,6 +15,11 @@ spring:
     jwt:
       key: aukhcu
       expire: 7
+  data:
+    redis:
+      host: 119.23.104.193
+      port: 6379
+
 #mybatis-plus:
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

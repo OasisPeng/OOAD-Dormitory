@@ -23,6 +23,22 @@ import java.util.List;
 public class TeamController {
     @Autowired
     TeamServiceImpl teamService;
+
+    @GetMapping("/getSameSex/{sex}")
+    public Result getSameSex(@PathVariable String sex) {
+        List<Team> list = teamService.getSameSex(sex);
+        Result result = new Result();
+        if (list == null || list.isEmpty()) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败或查询为空，请重试");
+        } else {
+            result.setData(list);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
     @GetMapping("/{id}")
     public Result GetByID(@PathVariable int id) {
         Team team = teamService.selectByID(id);
