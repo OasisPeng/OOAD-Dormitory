@@ -21,6 +21,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUser sysUser = this.findByName(username);
+//        System.out.println(sysUser);
         if (sysUser == null) {
             throw new UsernameNotFoundException("用户名或者密码错误");
         }

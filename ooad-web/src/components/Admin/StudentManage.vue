@@ -207,7 +207,7 @@ export default {
       this.$nextTick(() => {//异步处理
         //赋值到表单,form是表单内容
         this.form.id = row.id;
-        this.form.passwoed = row.id;
+        this.form.password = row.password;
         this.form.name = row.name;
                 this.form.sex = row.sex;
                 this.form.college = row.college;
@@ -247,6 +247,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.form.id) {//表示修改
+            console.log(this.form.id)
             this.doMod();
           } else {
             this.doSave();
@@ -312,10 +313,6 @@ export default {
     return {
       targetTeam:null,
       currentTeam: null,
-      List:[{
-        "id": 12111119,
-        "password": 123
-      }],
       jsonArray:[],
 
       dormSelction:[],
@@ -327,18 +324,18 @@ export default {
       name: '',
       centerDialogVisible: false,
       form: {
-        id: '',
-        passwoed: '',
-        name: '',
+          sid: '',
+          passwoed: '',
+          name: '',
           sex:'',
           college:'',
           studentType:'',
           grade:''
       },
       rules: {
-          id: [
-              { required: true, message: '请输入id', trigger: 'blur' }
-          ],
+                sid: [
+                    { required: true, message: '请输入学号', trigger: 'blur' }
+                ],
                 name: [
                     { required: true, message: '请输入姓名', trigger: 'blur' }
                 ],
@@ -358,7 +355,7 @@ export default {
 
 
       csvVisible: false,
-      id: '',
+      sid: '',
       file: {},
       formMaxSize: 10, // 上传文件大小
       formFileList: [], // 显示上传文件
@@ -366,7 +363,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.id)
+    console.log(this.sid)
   }
 }
 </script>
@@ -385,7 +382,7 @@ export default {
               :header-cell-style="{ background:'#f2f5fc', color: '#555555'}"
               border
     >
-        <el-table-column prop="id" label="学号" width="140">
+        <el-table-column prop="sid" label="学号" width="140">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="120">
       </el-table-column>
@@ -430,9 +427,9 @@ export default {
         width="30%"
         center>
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-                <el-form-item label="学号" prop="id">
+                <el-form-item label="学号" prop="sid">
                     <el-col :span="20">
-                        <el-input v-model="form.id"></el-input>
+                        <el-input v-model="form.sid"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="姓名" prop="name">

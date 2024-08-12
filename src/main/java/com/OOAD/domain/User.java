@@ -1,12 +1,11 @@
 package com.OOAD.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -17,15 +16,18 @@ import lombok.EqualsAndHashCode;
  * @since 2023-10-30
  */
 @Data
+@Slf4j
 @EqualsAndHashCode(callSuper = false)
 @TableName("users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     private String sex;
 
-    private Integer id;
+    private Integer sid;
 
     private Integer teamId;
 

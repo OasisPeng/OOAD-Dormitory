@@ -2,7 +2,6 @@ package com.OOAD.service.impl;
 
 import com.OOAD.dao.SysUserDao;
 import com.OOAD.dao.UserDao;
-import com.OOAD.domain.Dorm;
 import com.OOAD.domain.SysUser;
 import com.OOAD.domain.User;
 import com.OOAD.service.IUserService;
@@ -10,8 +9,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -80,6 +77,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     public User getById(int id) {
        return userDao.selectById(id);
     }
+    @Override
+    public List<User> getBySid(int sid) {
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(User::getSid, sid);
+        return  userDao.selectList(lqw);
+    }
     @CacheEvict(value = "user", allEntries = true)
     @Override
     public boolean deleteById(int id) {
@@ -103,8 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         }
         SysUser sysUser = new SysUser();
         sysUser.setRole("user");
-        sysUser.setId(user.getId());
-        sysUser.setUsername(user.getId().toString());
+        sysUser.setUsername(user.getSid().toString());
         sysUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setPassword(sysUser.getPassword());
         int i = userDao.insert(user);
@@ -134,8 +136,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         for (User user: list) {
             SysUser sysUser = new SysUser();
             sysUser.setRole("user");
-            sysUser.setId(user.getId());
-            sysUser.setUsername(user.getId().toString());
+            sysUser.setUsername(user.getSid().toString());
             sysUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             user.setPassword(sysUser.getPassword());
             int id = user.getId();
@@ -156,7 +157,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
 
     @Override
     public List<User> getByTeamId(int teamId) {
-        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper();
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getTeamId, teamId);
         return userDao.selectList(lqw);
     }

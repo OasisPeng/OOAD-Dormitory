@@ -29,15 +29,15 @@ public class JwtAuthorizeFilter extends OncePerRequestFilter {
             response.setHeader("Access-Control-Allow-Credentials", "false");
             response.setContentType("application/json;charset=utf-8");
             response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setHeader("Access-Control-Allow-Origin", "http://119.23.104.193:8080");
+            response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
             response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
             return;
         }
         String authorization = request.getHeader("Authorization");
-        System.out.println(authorization);
+//        System.out.println(authorization);
         DecodedJWT jwt = utils.resolveJwt(authorization);
-        System.out.println(jwt);
+//        System.out.println(jwt);
         if (jwt != null) {
             UserDetails user = utils.toUser(jwt);
             UsernamePasswordAuthenticationToken authentication =

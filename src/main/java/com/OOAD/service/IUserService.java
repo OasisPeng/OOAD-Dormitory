@@ -26,6 +26,8 @@ public interface IUserService {
 
     public User getById(int id);
 
+    List<User> getBySid(int sid);
+
     public boolean deleteById(int id);
 
     public boolean insert(User user);

@@ -60,6 +60,21 @@ public class UserController {
         }
         return result;
     }
+    @GetMapping("/sid/{sid}")
+    public Result getBySid(@PathVariable int sid) {
+        User user = userService.getBySid(sid).get(0);
+        Result result = new Result();
+        if (user == null) {
+            result.setData("Err");
+            result.setCode(Code.GET_Err);
+            result.setMsg("查询失败，请重试");
+        } else {
+            result.setData(user);
+            result.setCode(Code.GET_OK);
+            result.setMsg("查询成功");
+        }
+        return result;
+    }
     @PutMapping
     public Result updateAUser(@RequestBody User user) {
         boolean flag = userService.updateById(user);
@@ -92,7 +107,7 @@ public class UserController {
         return result;
     }
 
-    @PostMapping()
+    @PostMapping
     public Result Insert(@RequestBody User user) {
         boolean flag = userService.insert(user);
         Result result = new Result();

@@ -227,7 +227,7 @@ export default {
           console.log(JSON.parse(sessionStorage.getItem('CurUser')));
           this.$message.success(res.data.msg);
           //获取用户的完整信息，存入sessionStorage
-            this.$axios.get(this.$httpUrl+'/user/'+JSON.parse(sessionStorage.getItem('CurUser')).id, {
+            this.$axios.get(this.$httpUrl+'/user/sid/'+JSON.parse(sessionStorage.getItem('CurUser')).username,{
                 withCredentials: true,
                 headers:{
                     'Authorization':"Bearer"+" "+JSON.parse(sessionStorage.getItem('CurUser')).token
@@ -241,6 +241,8 @@ export default {
                 } else {
                   this.$message.warning(res.data.msg);
                   this.$router.push({ name:'index' });
+                  console.log(111111)
+
                     // 登录失败，可以显示错误消息
                 }
             })
