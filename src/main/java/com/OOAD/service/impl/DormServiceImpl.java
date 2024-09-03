@@ -11,7 +11,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     @Autowired
     TeamDao teamDao;
     @Override
+    @CacheEvict(value = "dorms", allEntries = true)
     public boolean insert(Dorm dorm) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getDistribution, dorm.getDistribution()).eq(Dorm::getBuilding, dorm.getBuilding()).eq(Dorm::getRoom, dorm.getRoom());;
@@ -46,6 +50,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @CacheEvict(value = "dorms", allEntries = true)
     public boolean deleteByID(int id) {
        int i = dormDao.deleteById(id);
        if (i == 1) {
@@ -56,6 +61,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#id", sync = true)
     public Dorm selectByID(int id) {
 
         Dorm dorm = dormDao.selectById(id);
@@ -67,6 +73,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @CacheEvict(value = "dorms", allEntries = true)
     public boolean updateByID(Dorm dorm) {
         Dorm dorm1 = dormDao.selectById(dorm.getId());
         if (dorm1 == null) {
@@ -82,17 +89,20 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "'allDorms'", sync = true)
     public List<Dorm> getAll() {
         return dormDao.selectList(null);
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#pageSize + '-' + #pageNumber", sync = true)
     public List<Dorm> getAll(int pageSize, int pageNumber) {
         Page<Dorm> page = new Page<>(pageNumber, pageSize);
         return dormDao.selectPage(page,null).getRecords();
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#dis", sync = true)
     public List<Dorm> selectByDis(String dis) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getDistribution, dis);
@@ -101,6 +111,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
 
 
     @Override
+    @Cacheable(value = "dorms", key = "#pageSize + '-' + #pageNumber + '-' + #dis", sync = true)
     public List<Dorm> selectByDis(int pageSize, int pageNumber, String dis) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getDistribution, dis);
@@ -109,6 +120,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#pageSize + '-' + #pageNumber + '-' + #building", sync = true)
     public List<Dorm> selectByBuilding(int pageSize, int pageNumber, String building) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getBuilding, building);
@@ -117,6 +129,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#pageSize + '-' + #pageNumber + '-' + #building + '-' + #roomNumber", sync = true)
     public List<Dorm> selectByRoomNumber(int pageSize, int pageNumber, String building, String roomNumber) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getBuilding, building).eq(Dorm::getRoom, roomNumber);
@@ -125,6 +138,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#pageSize + '-' + #pageNumber + '-' + #floor", sync = true)
     public List<Dorm> selectByFloor(int pageSize, int pageNumber, int floor) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getFloor, floor);
@@ -133,6 +147,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @CacheEvict(value = "dorms", allEntries = true)
     public int insertByList(List<Dorm> list) {
         int size = 0;
         for (Dorm dorm: list) {
@@ -143,6 +158,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @CacheEvict(value = "dorms", allEntries = true)
     public int qiang(int id) {
         Dorm dorm = dormDao.selectById(id);
         if (Objects.equals(dorm.getAvailable(), "否")) {
@@ -154,6 +170,7 @@ public class DormServiceImpl  extends ServiceImpl<DormDao, Dorm> implements IDor
     }
 
     @Override
+    @Cacheable(value = "dorms", key = "#dis + '-' + #building", sync = true)
     public List<Dorm> SelectAvailableRo(String dis, String building) {
         LambdaQueryWrapper<Dorm> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dorm::getAvailable, '是');

@@ -32,7 +32,8 @@ Vue.filter('timefilter',function(originVal){
 
 */
 Vue.prototype.$axios=axios;
-Vue.prototype.$httpUrl='http://8.134.23.156:8090'
+// Vue.prototype.$httpUrl='http://8.134.23.156:8090'
+Vue.prototype.$httpUrl='http://localhost:8090'
 Vue.config.productionTip = false
 Vue.use(ElementUI,{size:'small'});
 Vue.use(VueRouter);

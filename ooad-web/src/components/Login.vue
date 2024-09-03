@@ -8,7 +8,7 @@
 
     <div class="main">
       <div class="title-container">
-        <h2  class="conference-title" >Dormitory Selection System</h2>
+        <h2  class="conference-title" >Sustech 研究生宿舍选择系统</h2>
       </div>
       <div class="buttons3">
         <div v-if="button1Visible" @click="showLoginDialog" class="enterBut">

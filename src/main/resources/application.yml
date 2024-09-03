@@ -1,6 +1,10 @@
 server:
   port: 8090
 spring:
+  autoconfigure:
+      exclude:
+        - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
   cors:
     allowed-origins: "http://8.134.23.156:8080"
   datasource:
@@ -11,16 +15,21 @@ spring:
     password: ooadlocalhost
     hikari:
       maximum-pool-size: 1000
-  security:
-    jwt:
-      key: aukhcu
-      expire: 7
+#  security:
+#    jwt:
+#      key: aukhcu
+#      expire: 7
   data:
     redis:
       host: localhost
       port: 6379
-
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: DEBUG
