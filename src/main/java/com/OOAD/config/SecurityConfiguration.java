@@ -82,7 +82,7 @@ public class SecurityConfiguration {
                                 response.setHeader("Access-Control-Allow-Credentials", "true");
                                 response.setContentType("application/json;charset=utf-8");
                                 response.setHeader("Access-Control-Allow-Credentials", "true");
-                                response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+                                response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
                                 response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
                                 response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
                                 result.setCode(403);
@@ -101,7 +101,7 @@ public class SecurityConfiguration {
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+            response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
             response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
             User user = (User) authentication.getPrincipal();
@@ -144,7 +144,7 @@ public class SecurityConfiguration {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
         response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
         result.setCode(401);
         result.setMsg("登录信息错误");
@@ -156,7 +156,7 @@ public class SecurityConfiguration {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
         response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
         PrintWriter out = response.getWriter();
         String auth = request.getHeader("Authorization");
@@ -175,7 +175,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080")); // 指定允许的域
+        configuration.setAllowedOrigins(Collections.singletonList("http://8.134.23.156:8080")); // 指定允许的域
         configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
