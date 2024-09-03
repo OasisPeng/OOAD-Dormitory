@@ -15,10 +15,10 @@ spring:
     password: ooadlocalhost
     hikari:
       maximum-pool-size: 1000
-#  security:
-#    jwt:
-#      key: aukhcu
-#      expire: 7
+  security:
+    jwt:
+      key: aukhcu
+      expire: 7
   data:
     redis:
       host: localhost
