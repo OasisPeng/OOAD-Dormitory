@@ -7,18 +7,15 @@ import com.OOAD.domain.SysUser;
 import com.OOAD.filter.JwtAuthorizeFilter;
 import com.OOAD.service.ISysUserService;
 import com.OOAD.util.JwtUtils;
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,10 +24,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -88,7 +82,7 @@ public class SecurityConfiguration {
                                 response.setHeader("Access-Control-Allow-Credentials", "true");
                                 response.setContentType("application/json;charset=utf-8");
                                 response.setHeader("Access-Control-Allow-Credentials", "true");
-                                response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
+                                response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
                                 response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
                                 response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
                                 result.setCode(403);
@@ -107,7 +101,7 @@ public class SecurityConfiguration {
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
             response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
             User user = (User) authentication.getPrincipal();
@@ -150,7 +144,7 @@ public class SecurityConfiguration {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
         result.setCode(401);
         result.setMsg("登录信息错误");
@@ -162,7 +156,7 @@ public class SecurityConfiguration {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", "http://8.134.23.156:8080");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         response.setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, OPTIONS");
         PrintWriter out = response.getWriter();
         String auth = request.getHeader("Authorization");
@@ -181,7 +175,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://8.134.23.156:8080")); // 指定允许的域
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080")); // 指定允许的域
         configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");

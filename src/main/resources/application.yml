@@ -1,10 +1,6 @@
 server:
   port: 8090
 spring:
-  autoconfigure:
-      exclude:
-        - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-
   cors:
     allowed-origins: "http://8.134.23.156:8080"
   datasource:
@@ -28,8 +24,8 @@ mybatis-plus:
     map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
